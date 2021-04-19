@@ -11,8 +11,4 @@ public interface RetraitDAO {
 	List<Retrait> selectAll() throws DALException;
 
 	void insert(Retrait object) throws DALException;
-
-	void update(Retrait object) throws DALException;
-
-	void remove(Retrait article) throws DALException;
 }
