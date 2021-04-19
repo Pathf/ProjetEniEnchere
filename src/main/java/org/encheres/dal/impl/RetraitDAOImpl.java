@@ -25,17 +25,4 @@ public class RetraitDAOImpl implements RetraitDAO {
 		// TODO Auto-generated method stub
 
 	}
-
-	@Override
-	public void update(Retrait object) throws DALException {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void remove(Retrait article) throws DALException {
-		// TODO Auto-generated method stub
-
-	}
-
 }
