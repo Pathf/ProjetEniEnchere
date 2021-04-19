@@ -4,11 +4,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
 import java.util.List;
 
-import org.encheres.bo.ArticleVendu;
 import org.encheres.bo.Enchere;
 import org.encheres.dal.DALException;
 import org.encheres.dal.DAOTools;
@@ -51,7 +48,7 @@ public class EnchereDAOImpl implements EnchereDAO {
 
 	@Override
 	public List<Enchere> selectUtilisateur(Integer id_utilisateur) throws DALException {
-		List<ArticleVendu> articles = new ArrayList<>();
+		/*List<ArticleVendu> articles = new ArrayList<>();
 		try (	Connection connection = DAOTools.getConnection();
 				Statement statement = connection.createStatement();
 				) {
@@ -77,13 +74,13 @@ public class EnchereDAOImpl implements EnchereDAO {
 			}
 		} catch (SQLException e) {
 			throw new DALException("Select All failed - ", e);
-		}
-		return articles;
+		}*/
+		return null;
 	}
 
 	@Override
 	public void insert(Enchere articleVendu) throws DALException {
-		try (	Connection connection = DAOTools.getConnection();
+		/*try (	Connection connection = DAOTools.getConnection();
 				PreparedStatement preparedStatement = connection.prepareStatement(SQLINSERT, Statement.RETURN_GENERATED_KEYS);
 				){
 			preparedStatement.setString(1, articleVendu.getNom_article());
@@ -105,12 +102,12 @@ public class EnchereDAOImpl implements EnchereDAO {
 			}
 		} catch (SQLException e) {
 			throw new DALException("Insert articleVendu failed - " + articleVendu + " - ", e);
-		}
+		}*/
 	}
 
 	@Override
 	public void update(Enchere articleVendu) throws DALException {
-		try (	Connection connection = DAOTools.getConnection();
+		/*try (	Connection connection = DAOTools.getConnection();
 				PreparedStatement preparedStatement = connection.prepareStatement(SQLUPDATE);
 				){
 			preparedStatement.setString(1, articleVendu.getNom_article());
@@ -126,6 +123,6 @@ public class EnchereDAOImpl implements EnchereDAO {
 			preparedStatement.executeUpdate();
 		} catch (SQLException e) {
 			throw new DALException("Update articleVendu failed - " + articleVendu + " - ", e);
-		}
+		}*/
 	}
 }
