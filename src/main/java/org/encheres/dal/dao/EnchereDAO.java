@@ -8,11 +8,9 @@ import org.encheres.dal.DALException;
 public interface EnchereDAO {
 	Enchere selectById(Integer id) throws DALException;
 
-	List<Enchere> selectAll() throws DALException;
+	List<Enchere> selectUtilisateur(Integer id_utilisateur) throws DALException;
 
-	void insert(Enchere object) throws DALException;
+	void insert(Enchere enchere) throws DALException;
 
-	void update(Enchere object) throws DALException;
-
-	void remove(Enchere article) throws DALException;
+	void update(Enchere enchere) throws DALException;
 }
