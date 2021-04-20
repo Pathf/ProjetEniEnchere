@@ -15,14 +15,17 @@ import org.encheres.dal.dao.EnchereDAO;
 
 public class EnchereDAOImpl implements EnchereDAO {
 	// Join articleVendu et utilisateur
-	private static String SQLSELECT_ID = "SELECT * FROM ENCHERES as e INNER JOIN ARTICLES_VENDUS as a ON e.no_article = a.no_article INNER JOIN UTILISATEURS as u ON e.no_utilisateur = u.no_utilisateur WHERE e.no_enchere=?";
+	private static String SQLSELECT_ID = "SELECT e.date_enchere, e.montant_enchere, a.no_article, u.no_utilisateur FROM ENCHERES as e INNER JOIN ARTICLES_VENDUS as a ON e.no_article = a.no_article INNER JOIN UTILISATEURS as u ON e.no_utilisateur = u.no_utilisateur WHERE e.no_enchere=?";
 	private static String SQLSELECT_UTILISATEUR = "SELECT * FROM ENCHERES as e INNER JOIN ARTICLES_VENDUS as a ON e.no_article = a.no_article INNER JOIN UTILISATEURS as u ON e.no_utilisateur = u.no_utilisateur WHERE no_utilisateur=?";
 	private static String SQLINSERT = "INSERT INTO ENCHERES (date_enchere, montant_enchere, no_article, no_utilisateur) VALUES (?, ?, ?, ?)";
 	private static String SQLUPDATE = "UPDATE ENCHERES SET date_enchere=?, montant_enchere=?, no_article=?, no_utilisateur=?";
 
+	//TODO : Opti eventuelle
 	@Override
 	public Enchere selectById(Integer id) throws DALException {
 		Enchere enchere = null;
+		int no_article = -1;
+		int no_utilisateur = -1;
 		try (	Connection connection = DAOTools.getConnection();
 				PreparedStatement preparedStatement = connection.prepareStatement(SQLSELECT_ID);
 				) {
@@ -30,15 +33,15 @@ public class EnchereDAOImpl implements EnchereDAO {
 
 			try (ResultSet rs = preparedStatement.executeQuery();){
 				if(rs.next()){
-					ArticleVenduDAOImpl articleVenduDAOImpl = new ArticleVenduDAOImpl();
-					UtilisateurDAOImpl utilisateurDAOImpl = new UtilisateurDAOImpl();
 					enchere = new Enchere(
 							id,
 							rs.getDate("date_enchere"),
 							rs.getInt("montant_enchere"),
-							articleVenduDAOImpl.selectById(rs.getInt("no_article")),
-							utilisateurDAOImpl.selectById(rs.getInt("no_utilisateur"))
+							null,
+							null
 							);
+					no_article = rs.getInt("no_article");
+					no_utilisateur = rs.getInt("no_utilisateur");
 				}
 			}catch (SQLException e) {
 				throw new DALException("Select BYID failed - close failed for rs -  ", e);
@@ -46,12 +49,29 @@ public class EnchereDAOImpl implements EnchereDAO {
 		} catch (SQLException e) {
 			throw new DALException("Select BYID failed - ", e);
 		}
+
+		try {
+			if(no_article != -1 && no_utilisateur != -1) {
+				ArticleVenduDAOImpl articleVenduDAOImpl = new ArticleVenduDAOImpl();
+				enchere.setArticle(articleVenduDAOImpl.selectById(no_article));
+				UtilisateurDAOImpl utilisateurDAOImpl = new UtilisateurDAOImpl();
+				enchere.setUtilisateur(utilisateurDAOImpl.selectById(no_utilisateur));
+			} else {
+				throw new DALException("Select BYID failed - le no_article ou le no_utilisateur n'est pas référencé");
+			}
+		} catch (Exception e) {
+			throw new DALException("Select BYID failed - close failed for rs -  ", e);
+		}
+
 		return enchere;
 	}
 
+	// TODO : a voir pour les -1 et pour l'opti
 	@Override
 	public List<Enchere> selectUtilisateur(Integer id_utilisateur) throws DALException {
 		List<Enchere> encheres = new ArrayList<>();
+		List<Integer> no_articles = new ArrayList<>();
+		List<Integer> no_utilisateurs = new ArrayList<>();
 		try (	Connection connection = DAOTools.getConnection();
 				Statement statement = connection.createStatement();
 				) {
@@ -59,15 +79,15 @@ public class EnchereDAOImpl implements EnchereDAO {
 
 			try (ResultSet rs = statement.getResultSet();){
 				if(rs.next()){
-					ArticleVenduDAOImpl articleVenduDAOImpl = new ArticleVenduDAOImpl();
-					UtilisateurDAOImpl utilisateurDAOImpl = new UtilisateurDAOImpl();
 					encheres.add(new Enchere(
 							rs.getInt("no_enchere"),
 							rs.getDate("date_enchere"),
 							rs.getInt("montant_enchere"),
-							articleVenduDAOImpl.selectById(rs.getInt("no_article")),
-							utilisateurDAOImpl.selectById(rs.getInt("no_utilisateur"))
+							null,
+							null
 							));
+					no_articles.add((rs.getInt("no_article") != 0) ? rs.getInt("no_article") : -1);
+					no_utilisateurs.add((rs.getInt("no_utilisateur") != 0) ? rs.getInt("no_utilisateur") : -1);
 				}
 			}catch (SQLException e) {
 				throw new DALException("Select utilisateur failed - close failed for rs -  ", e);
@@ -75,6 +95,28 @@ public class EnchereDAOImpl implements EnchereDAO {
 		} catch (SQLException e) {
 			throw new DALException("Select utilisateur failed - ", e);
 		}
+
+		try {
+			ArticleVenduDAOImpl articleVenduDAOImpl = new ArticleVenduDAOImpl();
+			for(int i=0; i < no_articles.size(); i++) {
+				if(no_articles.get(i) != -1) {
+					encheres.get(i).setArticle(articleVenduDAOImpl.selectById(no_articles.get(i)));
+				} else {
+					throw new DALException("Select BYID failed - le no_article n'est pas référencé");
+				}
+			}
+			UtilisateurDAOImpl utilisateurDAOImpl = new UtilisateurDAOImpl();
+			for(int i=0; i < no_utilisateurs.size(); i++) {
+				if(no_utilisateurs.get(i) != -1) {
+					encheres.get(i).setUtilisateur(utilisateurDAOImpl.selectById(no_utilisateurs.get(i)));
+				} else {
+					throw new DALException("Select BYID failed - le no_utilisateur n'est pas référencé");
+				}
+			}
+		} catch (Exception e) {
+			throw new DALException("Select BYID failed - close failed for rs -  ", e);
+		}
+
 		return encheres;
 	}
 
