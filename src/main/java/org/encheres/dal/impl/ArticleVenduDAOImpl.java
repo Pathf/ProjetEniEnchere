@@ -20,9 +20,14 @@ public class ArticleVenduDAOImpl implements ArticleVenduDAO {
 	private static String SQLINSERT = "INSERT INTO ARTICLES_VENDUS (nom_article, description, date_debut_encheres, date_fin_encheres, prix_initial, prix_vente, no_utilisateur, no_categorie, no_retrait) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 	private static String SQLUPDATE = "UPDATE ARTICLES_VENDUS SET nom_article=?, description=?, date_debut_encheres=?, date_fin_encheres=?, prix_initial=?, prix_vente=?, no_utilisateur=?, no_categorie=?, no_retrait=?";
 
+	// TODO : A voir
 	@Override
 	public ArticleVendu selectById(Integer id) throws DALException {
 		ArticleVendu article = null;
+		int no_utilisateur = -1;
+		int no_categorie = -1;
+		int no_retrait = -1;
+
 		try (	Connection connection = DAOTools.getConnection();
 				PreparedStatement preparedStatement = connection.prepareStatement(SQLSELECT_ID);
 				) {
@@ -30,9 +35,6 @@ public class ArticleVenduDAOImpl implements ArticleVenduDAO {
 
 			try (ResultSet rs = preparedStatement.executeQuery();){
 				if(rs.next()){
-					UtilisateurDAOImpl utilisateurDAOImpl = new UtilisateurDAOImpl();
-					CategorieDAOImpl categorieDAOImpl = new CategorieDAOImpl();
-					RetraitDAOImpl retraitDAOImpl = new RetraitDAOImpl();
 					article = new ArticleVendu(
 							id,
 							rs.getString("nom_article").trim(),
@@ -41,10 +43,13 @@ public class ArticleVenduDAOImpl implements ArticleVenduDAO {
 							rs.getDate("date_fin_encheres"),
 							rs.getInt("prix_initial"),
 							rs.getInt("prix_vente"),
-							utilisateurDAOImpl.selectById(rs.getInt("no_utilisateur")),
-							categorieDAOImpl.selectById(rs.getInt("no_categorie")),
-							retraitDAOImpl.selectById(rs.getInt("no_retrait"))
+							null,
+							null,
+							null
 							);
+					no_utilisateur = rs.getInt("no_utilisateur");
+					no_categorie = rs.getInt("no_categorie");
+					no_retrait = rs.getInt("no_retrait");
 				}
 			}catch (SQLException e) {
 				throw new DALException("Select BYID failed - close failed for rs -  ", e);
@@ -52,9 +57,25 @@ public class ArticleVenduDAOImpl implements ArticleVenduDAO {
 		} catch (SQLException e) {
 			throw new DALException("Select BYID failed - ", e);
 		}
+		try {
+			if(no_utilisateur != -1 && no_categorie != -1 && no_retrait != -1) {
+				UtilisateurDAOImpl utilisateurDAOImpl = new UtilisateurDAOImpl();
+				article.setUtilisateur(utilisateurDAOImpl.selectById(no_utilisateur));
+				CategorieDAOImpl categorieDAOImpl = new CategorieDAOImpl();
+				article.setCategorie(categorieDAOImpl.selectById(no_categorie));
+				RetraitDAOImpl retraitDAOImpl = new RetraitDAOImpl();
+				article.setRetrait(retraitDAOImpl.selectById(no_retrait));
+			} else {
+				throw new DALException("Select BYID failed - le no_utilisateur et/ou le no_categorie et/ou le no_retrait n'est/ne sont pas référencé");
+			}
+		} catch (Exception e) {
+			throw new DALException("Select BYID failed - close failed for rs -  ", e);
+		}
+
 		return article;
 	}
 
+	// FIXME : A faire
 	@Override
 	public List<ArticleVendu> selectAll() throws DALException {
 		List<ArticleVendu> articles = new ArrayList<>();
