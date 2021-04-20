@@ -14,17 +14,17 @@ public class ArticleVendu {
 	Integer prix_vente;
 
 	// FK : Utilisateurs
-	Integer no_utilisateur;
+	Utilisateur no_utilisateur;
 
 	// FK : Categorie
-	Integer no_categorie;
+	Categorie no_categorie;
 
 	// FK : Retrait
-	Integer no_retrait;
+	Retrait no_retrait;
 
 	public ArticleVendu(Integer no_article, String nom_article, String description, Date date_debut_encheres,
-			Date date_fin_encheres, Integer prix_initial, Integer prix_vente, Integer no_utilisateur,
-			Integer no_categorie, Integer no_retrait) {
+			Date date_fin_encheres, Integer prix_initial, Integer prix_vente, Utilisateur no_utilisateur,
+			Categorie no_categorie, Retrait no_retrait) {
 		this.no_article = no_article;
 		this.nom_article = nom_article;
 		this.description = description;
@@ -93,27 +93,27 @@ public class ArticleVendu {
 		this.prix_vente = prix_vente;
 	}
 
-	public Integer getNo_utilisateur() {
+	public Utilisateur getNo_utilisateur() {
 		return this.no_utilisateur;
 	}
 
-	public void setNo_utilisateur(Integer no_utilisateur) {
+	public void setNo_utilisateur(Utilisateur no_utilisateur) {
 		this.no_utilisateur = no_utilisateur;
 	}
 
-	public Integer getNo_categorie() {
+	public Categorie getNo_categorie() {
 		return this.no_categorie;
 	}
 
-	public void setNo_categorie(Integer no_categorie) {
+	public void setNo_categorie(Categorie no_categorie) {
 		this.no_categorie = no_categorie;
 	}
 
-	public Integer getNo_retrait() {
+	public Retrait getNo_retrait() {
 		return this.no_retrait;
 	}
 
-	public void setNo_retrait(Integer no_retrait) {
+	public void setNo_retrait(Retrait no_retrait) {
 		this.no_retrait = no_retrait;
 	}
 

@@ -10,13 +10,13 @@ public class Enchere {
 	Integer montant_enchere;
 
 	// FK : ArticleVendu
-	Integer no_article;
+	ArticleVendu no_article;
 
 	// FK : Utilisateurs
-	Integer no_utilisateur;
+	Utilisateur no_utilisateur;
 
-	public Enchere(Integer no_enchere, Date date_enchere, Integer montant_enchere, Integer no_article,
-			Integer no_utilisateur) {
+	public Enchere(Integer no_enchere, Date date_enchere, Integer montant_enchere, ArticleVendu no_article,
+			Utilisateur no_utilisateur) {
 		this.no_enchere = no_enchere;
 		this.date_enchere = date_enchere;
 		this.montant_enchere = montant_enchere;
@@ -48,19 +48,19 @@ public class Enchere {
 		this.montant_enchere = montant_enchere;
 	}
 
-	public Integer getNo_article() {
+	public ArticleVendu getNo_article() {
 		return this.no_article;
 	}
 
-	public void setNo_article(Integer no_article) {
+	public void setNo_article(ArticleVendu no_article) {
 		this.no_article = no_article;
 	}
 
-	public Integer getNo_utilisateur() {
+	public Utilisateur getNo_utilisateur() {
 		return this.no_utilisateur;
 	}
 
-	public void setNo_utilisateur(Integer no_utilisateur) {
+	public void setNo_utilisateur(Utilisateur no_utilisateur) {
 		this.no_utilisateur = no_utilisateur;
 	}
 
