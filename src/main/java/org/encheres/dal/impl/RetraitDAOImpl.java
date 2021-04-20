@@ -18,6 +18,7 @@ public class RetraitDAOImpl implements RetraitDAO {
 	private static String SQLSELECT_ID = "Select * from RETRAITS WHERE no_retrait=?";
 	private static String SQLSELECT_ALL = "Select * from RETRAITS";
 	private static String SQLINSERT = "INSERT INTO RETRAITS (rue, code_postal, ville) VALUES (?, ?, ?)";
+	private static String SQLUPDATE = "UPDATE RETRAITS SET rue=?, code_postal=?, ville=?";
 
 	@Override
 	public Retrait selectById(Integer id) throws DALException {
@@ -88,6 +89,20 @@ public class RetraitDAOImpl implements RetraitDAO {
 			}
 		} catch (SQLException e) {
 			throw new DALException("Insert retrait failed - " + retrait + " - ", e);
+		}
+	}
+
+	@Override
+	public void update(Retrait retrait) throws DALException {
+		try (	Connection connection = DAOTools.getConnection();
+				PreparedStatement preparedStatement = connection.prepareStatement(SQLUPDATE);
+				){
+			preparedStatement.setString(1, retrait.getRue());
+			preparedStatement.setString(2, retrait.getCode_postal());
+			preparedStatement.setString(3, retrait.getVille());
+			preparedStatement.executeUpdate();
+		} catch (SQLException e) {
+			throw new DALException("Update retrait failed - " + retrait + " - ", e);
 		}
 	}
 }
