@@ -14,17 +14,17 @@ public class ArticleVendu {
 	Integer prix_vente;
 
 	// FK : Utilisateurs
-	Utilisateur no_utilisateur;
+	Utilisateur utilisateur;
 
 	// FK : Categorie
-	Categorie no_categorie;
+	Categorie categorie;
 
 	// FK : Retrait
-	Retrait no_retrait;
+	Retrait retrait;
 
 	public ArticleVendu(Integer no_article, String nom_article, String description, Date date_debut_encheres,
-			Date date_fin_encheres, Integer prix_initial, Integer prix_vente, Utilisateur no_utilisateur,
-			Categorie no_categorie, Retrait no_retrait) {
+			Date date_fin_encheres, Integer prix_initial, Integer prix_vente, Utilisateur utilisateur,
+			Categorie categorie, Retrait retrait) {
 		this.no_article = no_article;
 		this.nom_article = nom_article;
 		this.description = description;
@@ -32,9 +32,9 @@ public class ArticleVendu {
 		this.date_fin_encheres = date_fin_encheres;
 		this.prix_initial = prix_initial;
 		this.prix_vente = prix_vente;
-		this.no_utilisateur = no_utilisateur;
-		this.no_categorie = no_categorie;
-		this.no_retrait = no_retrait;
+		this.utilisateur = utilisateur;
+		this.categorie = categorie;
+		this.retrait = retrait;
 	}
 
 	public Integer getNo_article() {
@@ -93,28 +93,29 @@ public class ArticleVendu {
 		this.prix_vente = prix_vente;
 	}
 
-	public Utilisateur getNo_utilisateur() {
-		return this.no_utilisateur;
+
+	public Utilisateur getUtilisateur() {
+		return this.utilisateur;
 	}
 
-	public void setNo_utilisateur(Utilisateur no_utilisateur) {
-		this.no_utilisateur = no_utilisateur;
+	public void setUtilisateur(Utilisateur utilisateur) {
+		this.utilisateur = utilisateur;
 	}
 
-	public Categorie getNo_categorie() {
-		return this.no_categorie;
+	public Categorie getCategorie() {
+		return this.categorie;
 	}
 
-	public void setNo_categorie(Categorie no_categorie) {
-		this.no_categorie = no_categorie;
+	public void setCategorie(Categorie categorie) {
+		this.categorie = categorie;
 	}
 
-	public Retrait getNo_retrait() {
-		return this.no_retrait;
+	public Retrait getRetrait() {
+		return this.retrait;
 	}
 
-	public void setNo_retrait(Retrait no_retrait) {
-		this.no_retrait = no_retrait;
+	public void setRetrait(Retrait retrait) {
+		this.retrait = retrait;
 	}
 
 	@Override
@@ -125,9 +126,9 @@ public class ArticleVendu {
 		result = prime * result + ((this.date_fin_encheres == null) ? 0 : this.date_fin_encheres.hashCode());
 		result = prime * result + ((this.description == null) ? 0 : this.description.hashCode());
 		result = prime * result + ((this.no_article == null) ? 0 : this.no_article.hashCode());
-		result = prime * result + ((this.no_categorie == null) ? 0 : this.no_categorie.hashCode());
-		result = prime * result + ((this.no_retrait == null) ? 0 : this.no_retrait.hashCode());
-		result = prime * result + ((this.no_utilisateur == null) ? 0 : this.no_utilisateur.hashCode());
+		result = prime * result + ((this.categorie == null) ? 0 : this.categorie.hashCode());
+		result = prime * result + ((this.retrait == null) ? 0 : this.retrait.hashCode());
+		result = prime * result + ((this.utilisateur == null) ? 0 : this.utilisateur.hashCode());
 		result = prime * result + ((this.nom_article == null) ? 0 : this.nom_article.hashCode());
 		result = prime * result + ((this.prix_initial == null) ? 0 : this.prix_initial.hashCode());
 		result = prime * result + ((this.prix_vente == null) ? 0 : this.prix_vente.hashCode());
@@ -158,13 +159,13 @@ public class ArticleVendu {
 		if (!Objects.equals(this.no_article, other.no_article)) {
 			return false;
 		}
-		if (!Objects.equals(this.no_categorie, other.no_categorie)) {
+		if (!Objects.equals(this.categorie, other.categorie)) {
 			return false;
 		}
-		if (!Objects.equals(this.no_retrait, other.no_retrait)) {
+		if (!Objects.equals(this.retrait, other.retrait)) {
 			return false;
 		}
-		if (!Objects.equals(this.no_utilisateur, other.no_utilisateur)) {
+		if (!Objects.equals(this.utilisateur, other.utilisateur)) {
 			return false;
 		}
 		if (!Objects.equals(this.nom_article, other.nom_article)) {
@@ -184,7 +185,7 @@ public class ArticleVendu {
 		return "ArticleVendu [no_article=" + this.no_article + ", nom_article=" + this.nom_article + ", description="
 				+ this.description + ", date_debut_encheres=" + this.date_debut_encheres + ", date_fin_encheres="
 				+ this.date_fin_encheres + ", prix_initial=" + this.prix_initial + ", prix_vente=" + this.prix_vente
-				+ ", no_utilisateur=" + this.no_utilisateur + ", no_categorie=" + this.no_categorie + ", no_retrait=" + this.no_retrait
+				+ ", no_utilisateur=" + this.utilisateur + ", no_categorie=" + this.categorie + ", no_retrait=" + this.retrait
 				+ "]";
 	}
 }

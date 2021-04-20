@@ -10,18 +10,18 @@ public class Enchere {
 	Integer montant_enchere;
 
 	// FK : ArticleVendu
-	ArticleVendu no_article;
+	ArticleVendu article;
 
 	// FK : Utilisateurs
-	Utilisateur no_utilisateur;
+	Utilisateur utilisateur;
 
-	public Enchere(Integer no_enchere, Date date_enchere, Integer montant_enchere, ArticleVendu no_article,
-			Utilisateur no_utilisateur) {
+	public Enchere(Integer no_enchere, Date date_enchere, Integer montant_enchere, ArticleVendu article,
+			Utilisateur utilisateur) {
 		this.no_enchere = no_enchere;
 		this.date_enchere = date_enchere;
 		this.montant_enchere = montant_enchere;
-		this.no_article = no_article;
-		this.no_utilisateur = no_utilisateur;
+		this.article = article;
+		this.utilisateur = utilisateur;
 	}
 
 	public Integer getNo_enchere() {
@@ -48,20 +48,20 @@ public class Enchere {
 		this.montant_enchere = montant_enchere;
 	}
 
-	public ArticleVendu getNo_article() {
-		return this.no_article;
+	public ArticleVendu getArticle() {
+		return this.article;
 	}
 
-	public void setNo_article(ArticleVendu no_article) {
-		this.no_article = no_article;
+	public void setArticle(ArticleVendu article) {
+		this.article = article;
 	}
 
-	public Utilisateur getNo_utilisateur() {
-		return this.no_utilisateur;
+	public Utilisateur getUtilisateur() {
+		return this.utilisateur;
 	}
 
-	public void setNo_utilisateur(Utilisateur no_utilisateur) {
-		this.no_utilisateur = no_utilisateur;
+	public void setUtilisateur(Utilisateur utilisateur) {
+		this.utilisateur = utilisateur;
 	}
 
 	@Override
@@ -70,9 +70,9 @@ public class Enchere {
 		int result = 1;
 		result = prime * result + ((this.date_enchere == null) ? 0 : this.date_enchere.hashCode());
 		result = prime * result + ((this.montant_enchere == null) ? 0 : this.montant_enchere.hashCode());
-		result = prime * result + ((this.no_article == null) ? 0 : this.no_article.hashCode());
+		result = prime * result + ((this.article == null) ? 0 : this.article.hashCode());
 		result = prime * result + ((this.no_enchere == null) ? 0 : this.no_enchere.hashCode());
-		result = prime * result + ((this.no_utilisateur == null) ? 0 : this.no_utilisateur.hashCode());
+		result = prime * result + ((this.utilisateur == null) ? 0 : this.utilisateur.hashCode());
 		return result;
 	}
 
@@ -94,13 +94,13 @@ public class Enchere {
 		if (!Objects.equals(this.montant_enchere, other.montant_enchere)) {
 			return false;
 		}
-		if (!Objects.equals(this.no_article, other.no_article)) {
+		if (!Objects.equals(this.article, other.article)) {
 			return false;
 		}
 		if (!Objects.equals(this.no_enchere, other.no_enchere)) {
 			return false;
 		}
-		if (!Objects.equals(this.no_utilisateur, other.no_utilisateur)) {
+		if (!Objects.equals(this.utilisateur, other.utilisateur)) {
 			return false;
 		}
 		return true;
@@ -109,6 +109,6 @@ public class Enchere {
 	@Override
 	public String toString() {
 		return "Enchere [no_enchere=" + this.no_enchere + ", date_enchere=" + this.date_enchere + ", montant_enchere="
-				+ this.montant_enchere + ", no_article=" + this.no_article + ", no_utilisateur=" + this.no_utilisateur + "]";
+				+ this.montant_enchere + ", no_article=" + this.article + ", no_utilisateur=" + this.utilisateur + "]";
 	}
 }
