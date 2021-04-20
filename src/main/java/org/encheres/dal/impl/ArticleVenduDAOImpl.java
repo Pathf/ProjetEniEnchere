@@ -30,6 +30,9 @@ public class ArticleVenduDAOImpl implements ArticleVenduDAO {
 
 			try (ResultSet rs = preparedStatement.executeQuery();){
 				if(rs.next()){
+					UtilisateurDAOImpl utilisateurDAOImpl = new UtilisateurDAOImpl();
+					CategorieDAOImpl categorieDAOImpl = new CategorieDAOImpl();
+					RetraitDAOImpl retraitDAOImpl = new RetraitDAOImpl();
 					article = new ArticleVendu(
 							id,
 							rs.getString("nom_article").trim(),
@@ -38,9 +41,9 @@ public class ArticleVenduDAOImpl implements ArticleVenduDAO {
 							rs.getDate("date_fin_encheres"),
 							rs.getInt("prix_initial"),
 							rs.getInt("prix_vente"),
-							rs.getInt("no_utilisateur"),
-							rs.getInt("no_categorie"),
-							rs.getInt("no_retrait")
+							utilisateurDAOImpl.selectById(rs.getInt("no_utilisateur")),
+							categorieDAOImpl.selectById(rs.getInt("no_categorie")),
+							retraitDAOImpl.selectById(rs.getInt("no_retrait"))
 							);
 				}
 			}catch (SQLException e) {
@@ -62,6 +65,9 @@ public class ArticleVenduDAOImpl implements ArticleVenduDAO {
 
 			try (ResultSet rs = statement.getResultSet();){
 				if(rs.next()){
+					UtilisateurDAOImpl utilisateurDAOImpl = new UtilisateurDAOImpl();
+					CategorieDAOImpl categorieDAOImpl = new CategorieDAOImpl();
+					RetraitDAOImpl retraitDAOImpl = new RetraitDAOImpl();
 					articles.add(new ArticleVendu(
 							rs.getInt("id"),
 							rs.getString("nom_article").trim(),
@@ -70,9 +76,9 @@ public class ArticleVenduDAOImpl implements ArticleVenduDAO {
 							rs.getDate("date_fin_encheres"),
 							rs.getInt("prix_initial"),
 							rs.getInt("prix_vente"),
-							rs.getInt("no_utilisateur"),
-							rs.getInt("no_categorie"),
-							rs.getInt("no_retrait")
+							utilisateurDAOImpl.selectById(rs.getInt("no_utilisateur")),
+							categorieDAOImpl.selectById(rs.getInt("no_categorie")),
+							retraitDAOImpl.selectById(rs.getInt("no_retrait"))
 							));
 				}
 			}catch (SQLException e) {
@@ -95,9 +101,9 @@ public class ArticleVenduDAOImpl implements ArticleVenduDAO {
 			preparedStatement.setDate(4, articleVendu.getDate_fin_encheres());
 			preparedStatement.setInt(5, articleVendu.getPrix_initial());
 			preparedStatement.setInt(6, articleVendu.getPrix_vente());
-			preparedStatement.setInt(7, articleVendu.getNo_utilisateur());
-			preparedStatement.setInt(8, articleVendu.getNo_categorie());
-			preparedStatement.setInt(9, articleVendu.getNo_retrait());
+			preparedStatement.setInt(7, articleVendu.getUtilisateur().getNo_utilisateur());
+			preparedStatement.setInt(8, articleVendu.getCategorie().getNo_categorie());
+			preparedStatement.setInt(9, articleVendu.getRetrait().getNo_retrait());
 
 			preparedStatement.executeUpdate();
 
@@ -122,9 +128,9 @@ public class ArticleVenduDAOImpl implements ArticleVenduDAO {
 			preparedStatement.setDate(4, articleVendu.getDate_fin_encheres());
 			preparedStatement.setInt(5, articleVendu.getPrix_initial());
 			preparedStatement.setInt(6, articleVendu.getPrix_vente());
-			preparedStatement.setInt(7, articleVendu.getNo_utilisateur());
-			preparedStatement.setInt(8, articleVendu.getNo_categorie());
-			preparedStatement.setInt(9, articleVendu.getNo_retrait());
+			preparedStatement.setInt(7, articleVendu.getUtilisateur().getNo_utilisateur());
+			preparedStatement.setInt(8, articleVendu.getCategorie().getNo_categorie());
+			preparedStatement.setInt(9, articleVendu.getRetrait().getNo_retrait());
 
 			preparedStatement.executeUpdate();
 		} catch (SQLException e) {

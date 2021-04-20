@@ -14,9 +14,9 @@ import org.encheres.dal.DAOTools;
 import org.encheres.dal.dao.EnchereDAO;
 
 public class EnchereDAOImpl implements EnchereDAO {
-
-	private static String SQLSELECT_ID = "Select * from ENCHERES WHERE no_enchere=?";
-	private static String SQLSELECT_UTILISATEUR = "Select * from ENCHERES WHERE no_utilisateur=?";
+	// Join articleVendu et utilisateur
+	private static String SQLSELECT_ID = "SELECT * FROM ENCHERES as e INNER JOIN ARTICLES_VENDUS as a ON e.no_article = a.no_article INNER JOIN UTILISATEURS as u ON e.no_utilisateur = u.no_utilisateur WHERE e.no_enchere=?";
+	private static String SQLSELECT_UTILISATEUR = "SELECT * FROM ENCHERES as e INNER JOIN ARTICLES_VENDUS as a ON e.no_article = a.no_article INNER JOIN UTILISATEURS as u ON e.no_utilisateur = u.no_utilisateur WHERE no_utilisateur=?";
 	private static String SQLINSERT = "INSERT INTO ENCHERES (date_enchere, montant_enchere, no_article, no_utilisateur) VALUES (?, ?, ?, ?)";
 	private static String SQLUPDATE = "UPDATE ENCHERES SET date_enchere=?, montant_enchere=?, no_article=?, no_utilisateur=?";
 
@@ -30,12 +30,14 @@ public class EnchereDAOImpl implements EnchereDAO {
 
 			try (ResultSet rs = preparedStatement.executeQuery();){
 				if(rs.next()){
+					ArticleVenduDAOImpl articleVenduDAOImpl = new ArticleVenduDAOImpl();
+					UtilisateurDAOImpl utilisateurDAOImpl = new UtilisateurDAOImpl();
 					enchere = new Enchere(
 							id,
 							rs.getDate("date_enchere"),
 							rs.getInt("montant_enchere"),
-							rs.getInt("no_article"),
-							rs.getInt("no_utilisateur")
+							articleVenduDAOImpl.selectById(rs.getInt("no_article")),
+							utilisateurDAOImpl.selectById(rs.getInt("no_utilisateur"))
 							);
 				}
 			}catch (SQLException e) {
@@ -57,12 +59,14 @@ public class EnchereDAOImpl implements EnchereDAO {
 
 			try (ResultSet rs = statement.getResultSet();){
 				if(rs.next()){
+					ArticleVenduDAOImpl articleVenduDAOImpl = new ArticleVenduDAOImpl();
+					UtilisateurDAOImpl utilisateurDAOImpl = new UtilisateurDAOImpl();
 					encheres.add(new Enchere(
 							rs.getInt("no_enchere"),
 							rs.getDate("date_enchere"),
 							rs.getInt("montant_enchere"),
-							rs.getInt("no_article"),
-							rs.getInt("no_utilisateur")
+							articleVenduDAOImpl.selectById(rs.getInt("no_article")),
+							utilisateurDAOImpl.selectById(rs.getInt("no_utilisateur"))
 							));
 				}
 			}catch (SQLException e) {
@@ -81,13 +85,13 @@ public class EnchereDAOImpl implements EnchereDAO {
 				){
 			preparedStatement.setDate(1, enchere.getDate_enchere());
 			preparedStatement.setInt(2, enchere.getMontant_enchere());
-			preparedStatement.setInt(3, enchere.getNo_article());
-			preparedStatement.setInt(4, enchere.getNo_utilisateur());
+			preparedStatement.setInt(3, enchere.getArticle().getNo_article());
+			preparedStatement.setInt(4, enchere.getUtilisateur().getNo_utilisateur());
 
 			preparedStatement.executeUpdate();
 
 			try(ResultSet rs = preparedStatement.getGeneratedKeys()){
-				enchere.setNo_article(rs.getInt(1));
+				enchere.setNo_enchere(rs.getInt(1));
 			} catch (SQLException e) {
 				throw new DALException("Insert enchere return key failed - " + enchere + " - ", e);
 			}
@@ -103,8 +107,8 @@ public class EnchereDAOImpl implements EnchereDAO {
 				){
 			preparedStatement.setDate(1, enchere.getDate_enchere());
 			preparedStatement.setInt(2, enchere.getMontant_enchere());
-			preparedStatement.setInt(3, enchere.getNo_article());
-			preparedStatement.setInt(4, enchere.getNo_utilisateur());
+			preparedStatement.setInt(3, enchere.getArticle().getNo_article());
+			preparedStatement.setInt(4, enchere.getUtilisateur().getNo_utilisateur());
 
 			preparedStatement.executeUpdate();
 		} catch (SQLException e) {
