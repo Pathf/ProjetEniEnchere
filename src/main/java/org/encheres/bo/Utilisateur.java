@@ -121,7 +121,7 @@ public class Utilisateur {
 		this.credit = credit;
 	}
 
-	public boolean isAdministrateur() {
+	public boolean getAdministrateur() {
 		return this.administrateur;
 	}
 
