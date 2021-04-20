@@ -17,9 +17,8 @@ public class EnchereDAOImpl implements EnchereDAO {
 
 	private static String SQLSELECT_ID = "Select * from ENCHERES WHERE no_enchere=?";
 	private static String SQLSELECT_UTILISATEUR = "Select * from ENCHERES WHERE no_utilisateur=?";
-	//TODO
-	private static String SQLINSERT = "INSERT INTO ENCHERES (no_enchere, date_enchere, montant_enchere, no_article, no_utilisateur) VALUES (?, ?, ?, ?, ?)";
-	private static String SQLUPDATE = "UPDATE ARTICLES_VENDUS SET nom_article=?, description=?, date_debut_encheres=?, date_fin_encheres=?, prix_initial=?, prix_vente=?, no_utilisateur=?, no_categorie=?, no_retrait=?";
+	private static String SQLINSERT = "INSERT INTO ENCHERES (date_enchere, montant_enchere, no_article, no_utilisateur) VALUES (?, ?, ?, ?)";
+	private static String SQLUPDATE = "UPDATE ENCHERES SET date_enchere=?, montant_enchere=?, no_article=?, no_utilisateur=?";
 
 	@Override
 	public Enchere selectById(Integer id) throws DALException {
@@ -74,7 +73,7 @@ public class EnchereDAOImpl implements EnchereDAO {
 		}
 		return encheres;
 	}
-	// no_enchere, date_enchere, montant_enchere, no_article, no_utilisateur
+
 	@Override
 	public void insert(Enchere enchere) throws DALException {
 		try (	Connection connection = DAOTools.getConnection();
