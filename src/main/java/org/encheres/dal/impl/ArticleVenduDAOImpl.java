@@ -79,6 +79,9 @@ public class ArticleVenduDAOImpl implements ArticleVenduDAO {
 	@Override
 	public List<ArticleVendu> selectAll() throws DALException {
 		List<ArticleVendu> articles = new ArrayList<>();
+		List<Integer> no_utilisateurs = new ArrayList<>();
+		List<Integer> no_categories = new ArrayList<>();
+		List<Integer> no_retraits = new ArrayList<>();
 		try (	Connection connection = DAOTools.getConnection();
 				Statement statement = connection.createStatement();
 				) {
@@ -86,9 +89,7 @@ public class ArticleVenduDAOImpl implements ArticleVenduDAO {
 
 			try (ResultSet rs = statement.getResultSet();){
 				if(rs.next()){
-					UtilisateurDAOImpl utilisateurDAOImpl = new UtilisateurDAOImpl();
-					CategorieDAOImpl categorieDAOImpl = new CategorieDAOImpl();
-					RetraitDAOImpl retraitDAOImpl = new RetraitDAOImpl();
+
 					articles.add(new ArticleVendu(
 							rs.getInt("id"),
 							rs.getString("nom_article").trim(),
@@ -97,10 +98,13 @@ public class ArticleVenduDAOImpl implements ArticleVenduDAO {
 							rs.getDate("date_fin_encheres"),
 							rs.getInt("prix_initial"),
 							rs.getInt("prix_vente"),
-							utilisateurDAOImpl.selectById(rs.getInt("no_utilisateur")),
-							categorieDAOImpl.selectById(rs.getInt("no_categorie")),
-							retraitDAOImpl.selectById(rs.getInt("no_retrait"))
+							null,
+							null,
+							null
 							));
+					no_utilisateurs.add((rs.getInt("no_utilisateur") != 0) ? rs.getInt("no_utilisateur") : -1);
+					no_categories.add((rs.getInt("no_categorie") != 0) ? rs.getInt("no_categorie") : -1);
+					no_retraits.add((rs.getInt("no_retrait") != 0) ? rs.getInt("no_retrait") : -1);
 				}
 			}catch (SQLException e) {
 				throw new DALException("Select ALL failed - close failed for rs -  ", e);
@@ -108,6 +112,36 @@ public class ArticleVenduDAOImpl implements ArticleVenduDAO {
 		} catch (SQLException e) {
 			throw new DALException("Select All failed - ", e);
 		}
+
+		try {
+			UtilisateurDAOImpl utilisateurDAOImpl = new UtilisateurDAOImpl();
+			for(int i=0; i < no_utilisateurs.size(); i++) {
+				if(no_utilisateurs.get(i) != -1) {
+					articles.get(i).setUtilisateur(utilisateurDAOImpl.selectById(no_utilisateurs.get(i)));
+				} else {
+					throw new DALException("Select BYID failed - le no_utilisateur n'est pas référencé");
+				}
+			}
+			CategorieDAOImpl categorieDAOImpl = new CategorieDAOImpl();
+			for(int i=0; i < no_categories.size(); i++) {
+				if(no_categories.get(i) != -1) {
+					articles.get(i).setCategorie(categorieDAOImpl.selectById(no_categories.get(i)));
+				} else {
+					throw new DALException("Select BYID failed - le no_categorie n'est pas référencé");
+				}
+			}
+			RetraitDAOImpl retraitDAOImpl = new RetraitDAOImpl();
+			for(int i=0; i < no_retraits.size(); i++) {
+				if(no_retraits.get(i) != -1) {
+					articles.get(i).setRetrait(retraitDAOImpl.selectById(no_retraits.get(i)));
+				} else {
+					throw new DALException("Select BYID failed - le no_retrait n'est pas référencé");
+				}
+			}
+		} catch (Exception e) {
+			throw new DALException("Select BYID failed - close failed for rs -  ", e);
+		}
+
 		return articles;
 	}
 
