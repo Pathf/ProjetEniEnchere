@@ -20,7 +20,7 @@ public class DAOTools {
 		passworddb = Settings.getProperties("passworddb");
 
 		System.out.println("--------------------------");
-		System.out.println("Connexion à la base de donnée CHIFUMI");
+		System.out.println("Connexion à la base de donnée TROCENCHERE");
 		System.out.println("----");
 		System.out.println("Url : " + urldb);
 		System.out.println("Identifiant utilisé : " + userdb);
