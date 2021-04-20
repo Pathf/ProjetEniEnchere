@@ -75,7 +75,7 @@ public class ArticleVenduDAOImpl implements ArticleVenduDAO {
 		return article;
 	}
 
-	// FIXME : A faire
+	// TODO: A optimiser
 	@Override
 	public List<ArticleVendu> selectAll() throws DALException {
 		List<ArticleVendu> articles = new ArrayList<>();
