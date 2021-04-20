@@ -2,11 +2,15 @@
     pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
-<head>
-<meta charset="UTF-8">
-<title>Connexion</title>
+<jsp:include page="/WEB-INF/fragments/head.jsp"></jsp:include>
 </head>
 <body>
+
+
+<div class="container text-center text-white">
+		<h1>Connexion</h1>
+</div>
+
 	<form action="connexion" method="post">
 		<label for="identifiant" >Identifiant :</label> <input id="identifiant" type="text" name="identifiant">
 		<br />
@@ -16,4 +20,5 @@
 		<a href="">Mot de passe oublié</a> 
 	</form>
 </body>
+<%@ include file="/WEB-INF/fragments/footer.html" %>
 </html>
