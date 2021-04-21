@@ -67,8 +67,17 @@
 	        </c:otherwise>
         </c:choose>
 
-				      	
-<%-- 	<% String pseudo = (String)session.getAttribute("pseudo"); %>
+		<c:choose>
+		 <c:when test="${pseudo != null}">
+		    <p>connecté comme ${pseudo}<p>
+		 </c:when>
+		
+		 <c:otherwise>
+		    <p>non connecté<p>
+		 </c:otherwise>
+		</c:choose>
+				      	 
+<%-- <% String pseudo = (String)session.getAttribute("pseudo"); %>
 	<%=pseudo%> --%>
 </body>
 <%@ include file="/WEB-INF/fragments/footer.html" %>

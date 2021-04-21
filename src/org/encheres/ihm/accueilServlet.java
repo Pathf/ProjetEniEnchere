@@ -23,7 +23,7 @@ import org.encheres.bo.Utilisateur;
 /**
  * Servlet implementation class accueilServlet
  */
-@WebServlet("/accueil")
+@WebServlet("/encheres")
 public class accueilServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private ArticleVenduManager articleVenduManager = ArticleVenduManager.getInstance();
