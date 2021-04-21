@@ -27,8 +27,27 @@ public class UtilisateurManager {
 		try {
 			utilisateur = this.utilisateurDAO.selectById(id);
 		} catch (DALException e) {
-			throw new UtilisateurManagerException("getUtilisateur failed - ", e);
+			throw new UtilisateurManagerException("getUtilisateur failed - \n" + e);
 		}
+		return utilisateur;
+	}
+
+	public Utilisateur getUtilisateurConnexion(String identifiant, String mdp) throws UtilisateurManagerException {
+		Utilisateur utilisateur = null;
+		try {
+			if(identifiant.contains("@") && identifiant.contains(".")) {
+				utilisateur = this.utilisateurDAO.selectByEmailEtMdp(identifiant, mdp);
+			} else {
+				utilisateur = this.utilisateurDAO.selectByPseudoEtMdp(identifiant, mdp);
+			}
+		} catch (DALException e) {
+			throw new UtilisateurManagerException("getUtilisateurConnexion failed - \n" + e);
+		}
+
+		if(utilisateur == null) {
+			throw new UtilisateurManagerException("getUtilisateurConnexion failed: pas d'utilisateur - \n");
+		}
+
 		return utilisateur;
 	}
 

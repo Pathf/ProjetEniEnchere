@@ -2,6 +2,11 @@
 --   type :      SQL Server 2012
 --
 
+DROP TABLE IF EXISTS ENCHERES;
+DROP TABLE IF EXISTS ARTICLES_VENDUS;
+DROP TABLE IF EXISTS UTILISATEURS;
+DROP TABLE IF EXISTS RETRAITS;
+DROP TABLE IF EXISTS CATEGORIES;
 
 
 CREATE TABLE CATEGORIES (
@@ -99,7 +104,7 @@ ON DELETE NO ACTION
 -- data table CATEGORIES
 INSERT INTO CATEGORIES(libelle) VALUES ('Informatique');
 INSERT INTO CATEGORIES (libelle) VALUES ('Ameublement');
-INSERT INTO CATEGORIES (libelle) VALUES ('Vêtement');
+INSERT INTO CATEGORIES (libelle) VALUES ('VÃ©tement');
 INSERT INTO CATEGORIES (libelle) VALUES ('Sport&Loisirs');
 
 -- data table RETRAITS
@@ -130,3 +135,4 @@ INSERT INTO ENCHERES ( date_enchere, montant_enchere, no_article, no_utilisateur
 INSERT INTO ENCHERES ( date_enchere, montant_enchere, no_article, no_utilisateur ) VALUES ( GETDATE(), 11, 1, 4 );
 INSERT INTO ENCHERES ( date_enchere, montant_enchere, no_article, no_utilisateur ) VALUES ( GETDATE(), 12, 1, 3 );
 INSERT INTO ENCHERES ( date_enchere, montant_enchere, no_article, no_utilisateur ) VALUES ( GETDATE(), 13, 1, 5 );
+

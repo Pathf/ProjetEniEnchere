@@ -14,6 +14,9 @@ public class ConstantesSQL {
 		return requeteSelectInnerJoin(new String[] {table}, champs, champWheres);
 	}
 
+	// String t1 = "table1 no_retrait"
+	// String t2 = "table2 no_user"
+	// -> Select * from table1 INNER JOIN table2 ON table1.no_retrait = table2.no_user
 	public static final String requeteSelectInnerJoin(String[] tables, String[] champs, String[] champWheres) {
 		StringBuffer sb = new StringBuffer();
 		sb.append("SELECT ");
@@ -54,8 +57,13 @@ public class ConstantesSQL {
 			sb.append(" WHERE ");
 			for(String champWhere : champWheres) {
 				sb.append(champWhere);
-				sb.append("=?,");
+				sb.append("=?");
+				sb.append(" AND ");
 			}
+			sb.deleteCharAt(sb.length()-1);
+			sb.deleteCharAt(sb.length()-1);
+			sb.deleteCharAt(sb.length()-1);
+			sb.deleteCharAt(sb.length()-1);
 			sb.deleteCharAt(sb.length()-1);
 		}
 

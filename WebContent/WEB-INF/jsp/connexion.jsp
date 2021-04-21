@@ -6,7 +6,6 @@
 </head>
 <body>
 
-
 <div class="container text-center text-black">
 		<h1>Connexion</h1>
 </div>
@@ -15,6 +14,7 @@
 		<label for="identifiant" >Identifiant :</label> <input id="identifiant" type="text" name="identifiant">
 		<br />
 		<label for="mdp" >Mot de passe :</label> <input id="mdp" type="text" name="mdp">
+		<br />
 		<button>Connexion</button>
 		<input type="checkbox" name="souvenir" id="souvenir"> <label for="souvenir">Se souvenir de moi</label>
 		<a href="">Mot de passe oublié</a> 
