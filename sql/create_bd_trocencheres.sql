@@ -104,7 +104,7 @@ ON DELETE NO ACTION
 -- data table CATEGORIES
 INSERT INTO CATEGORIES(libelle) VALUES ('Informatique');
 INSERT INTO CATEGORIES (libelle) VALUES ('Ameublement');
-INSERT INTO CATEGORIES (libelle) VALUES ('Vêtement');
+INSERT INTO CATEGORIES (libelle) VALUES ('VÃ©tement');
 INSERT INTO CATEGORIES (libelle) VALUES ('Sport&Loisirs');
 
 -- data table RETRAITS
