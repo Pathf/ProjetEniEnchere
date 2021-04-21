@@ -19,6 +19,9 @@
 		<input type="checkbox" name="souvenir" id="souvenir"> <label for="souvenir">Se souvenir de moi</label>
 		<a href="">Mot de passe oublié</a> 
 	</form>
+	<form action="inscription" method="get">
+		<button>Créer un compte</button>
+	</form>
 </body>
 <%@ include file="/WEB-INF/fragments/footer.html" %>
 </html>
