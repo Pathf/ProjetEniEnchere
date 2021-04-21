@@ -77,7 +77,9 @@ public class CategorieDAOImpl implements CategorieDAO {
 			preparedStatement.executeUpdate();
 
 			try(ResultSet rs = preparedStatement.getGeneratedKeys()){
-				categorie.setNo_categorie(rs.getInt(1));
+				if(rs.next()) {
+					categorie.setNo_categorie(rs.getInt(1));
+				}
 			} catch (SQLException e) {
 				throw new DALException("Insert categorie return key failed - " + categorie + " - ", e);
 			}

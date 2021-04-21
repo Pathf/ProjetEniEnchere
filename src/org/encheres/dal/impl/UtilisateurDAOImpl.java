@@ -21,8 +21,9 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
 	private static final String[] CHAMPS = new String[]{"pseudo","nom","prenom","email","telephone","rue","code_postal","ville","mot_de_passe","credit","administrateur"};
 
 	private static final String SQLSELECT_ID = ConstantesSQL.requeteSelect(TABLE, null, IDS);
-	private static final String SQLSELECT_PSEUDO = ConstantesSQL.requeteSelect(TABLE, null, new String[] {"pseudo","mot_de_passe"});
-	private static final String SQLSELECT_EMAIL = ConstantesSQL.requeteSelect(TABLE, null, new String[] {"email","mot_de_passe"});
+	private static final String SQLSELECT_PSEUDO = ConstantesSQL.requeteSelect(TABLE, null, new String[] {"pseudo"} );
+	private static final String SQLSELECT_PSEUDO_MDP = ConstantesSQL.requeteSelect(TABLE, null, new String[] {"pseudo","mot_de_passe"});
+	private static final String SQLSELECT_EMAIL_MDP = ConstantesSQL.requeteSelect(TABLE, null, new String[] {"email","mot_de_passe"});
 	private static final String SQLSELECT_ALL = ConstantesSQL.requeteSelect(TABLE);
 	private static final String SQLINSERT = ConstantesSQL.requeteInsert(TABLE, CHAMPS);
 	private static final String SQLUPDATE = ConstantesSQL.requeteUpdate(TABLE, CHAMPS);
@@ -54,10 +55,44 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
 							);
 				}
 			}catch (SQLException e) {
-				throw new DALException("Select BYID failed - close failed for rs -  ", e);
+				throw new DALException("Select BYID failed - close failed for rs -  \n"+ e);
 			}
 		} catch (SQLException e) {
-			throw new DALException("Select BYID failed - ", e);
+			throw new DALException("Select BYID failed - \n"+ e);
+		}
+		return utilisateur;
+	}
+	
+	@Override
+	public Utilisateur selectByPseudo(String pseudo) throws DALException {
+		Utilisateur utilisateur = null;
+		try (	Connection connection = DAOTools.getConnection();
+				PreparedStatement preparedStatement = connection.prepareStatement(SQLSELECT_PSEUDO);
+				) {
+			preparedStatement.setString(1, pseudo);
+
+			try (ResultSet rs = preparedStatement.executeQuery();){
+				if(rs.next()){
+					utilisateur = new Utilisateur(
+							rs.getInt("no_utilisateur"),
+							rs.getString("pseudo"),
+							rs.getString("nom"),
+							rs.getString("prenom"),
+							rs.getString("email"),
+							rs.getString("telephone"),
+							rs.getString("rue"),
+							rs.getString("code_postal"),
+							rs.getString("ville"),
+							rs.getString("mot_de_passe"),
+							rs.getInt("credit"),
+							rs.getBoolean("administrateur")
+							);
+				}
+			}catch (SQLException e) {
+				throw new DALException("Select BYPSEUDO failed - close failed for rs -  ", e);
+			}
+		} catch (SQLException e) {
+			throw new DALException("Select BYPSEUDO failed - ", e);
 		}
 		return utilisateur;
 	}
@@ -66,7 +101,7 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
 	public Utilisateur selectByEmailEtMdp(String identifiant, String mdp) throws DALException {
 		Utilisateur utilisateur = null;
 		try (	Connection connection = DAOTools.getConnection();
-				PreparedStatement preparedStatement = connection.prepareStatement(SQLSELECT_EMAIL);
+				PreparedStatement preparedStatement = connection.prepareStatement(SQLSELECT_EMAIL_MDP);
 				) {
 			preparedStatement.setString(1, identifiant);
 			preparedStatement.setString(2, mdp);
@@ -89,10 +124,10 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
 							);
 				}
 			}catch (SQLException e) {
-				throw new DALException("Select BYEMAIL failed - close failed for rs -  ", e);
+				throw new DALException("Select BYEMAIL failed - close failed for rs -  \n"+ e);
 			}
 		} catch (SQLException e) {
-			throw new DALException("Select BYEMAIL failed - ", e);
+			throw new DALException("Select BYEMAIL failed - \n"+ e);
 		}
 		return utilisateur;
 	}
@@ -101,7 +136,7 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
 	public Utilisateur selectByPseudoEtMdp(String identifiant, String mdp) throws DALException {
 		Utilisateur utilisateur = null;
 		try (	Connection connection = DAOTools.getConnection();
-				PreparedStatement preparedStatement = connection.prepareStatement(SQLSELECT_PSEUDO);
+				PreparedStatement preparedStatement = connection.prepareStatement(SQLSELECT_PSEUDO_MDP);
 				) {
 			preparedStatement.setString(1, identifiant);
 			preparedStatement.setString(2, mdp);
@@ -141,7 +176,7 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
 			statement.execute(SQLSELECT_ALL);
 
 			try (ResultSet rs = statement.getResultSet();){
-				if(rs.next()){
+				while(rs.next()){
 					utilisateur.add(new Utilisateur(
 							rs.getInt("no_utilisateur"),
 							rs.getString("pseudo"),
@@ -158,10 +193,10 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
 							));
 				}
 			}catch (SQLException e) {
-				throw new DALException("Select ALL failed - close failed for rs -  ", e);
+				throw new DALException("Select ALL failed - close failed for rs -  \n"+ e);
 			}
 		} catch (SQLException e) {
-			throw new DALException("Select All failed - ", e);
+			throw new DALException("Select All failed - \n"+ e);
 		}
 		return utilisateur;
 	}
@@ -186,12 +221,14 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
 			preparedStatement.executeUpdate();
 
 			try(ResultSet rs = preparedStatement.getGeneratedKeys()){
-				utilisateur.setNo_utilisateur(rs.getInt(1));
+				if(rs.next()) {
+					utilisateur.setNo_utilisateur(rs.getInt(1));
+				}
 			} catch (SQLException e) {
-				throw new DALException("Insert utilisateur return key failed - " + utilisateur + " - ", e);
+				throw new DALException("Insert utilisateur return key failed - " + utilisateur + " - \n" + e);
 			}
 		} catch (SQLException e) {
-			throw new DALException("Insert utilisateur failed - " + utilisateur + " - ", e);
+			throw new DALException("Insert utilisateur failed - " + utilisateur + " - \n" + e);
 		}
 	}
 
@@ -213,7 +250,7 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
 			preparedStatement.setBoolean(11, utilisateur.getAdministrateur());
 			preparedStatement.executeUpdate();
 		} catch (SQLException e) {
-			throw new DALException("Update utilisateur failed - " + utilisateur + " - ", e);
+			throw new DALException("Update utilisateur failed - " + utilisateur + " - \n" + e);
 		}
 	}
 
@@ -225,7 +262,7 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
 			preparedStatement.setInt(1, utilisateur.getNo_utilisateur());
 			preparedStatement.executeUpdate();
 		} catch (SQLException e) {
-			throw new DALException("Delete utilisateur failed - " + utilisateur + " - ", e);
+			throw new DALException("Delete utilisateur failed - " + utilisateur + " - \n" + e);
 		}
 	}
 }

@@ -31,6 +31,16 @@ public class UtilisateurManager {
 		}
 		return utilisateur;
 	}
+	
+	public Utilisateur getUtilisateur(String pseudo) throws UtilisateurManagerException {
+		Utilisateur utilisateur = null;
+		try {
+			utilisateur = this.utilisateurDAO.selectByPseudo(pseudo);
+		} catch (DALException e) {
+			throw new UtilisateurManagerException("getUtilisateur failed - \n" + e);
+		}
+		return utilisateur;
+	}
 
 	public Utilisateur getUtilisateurConnexion(String identifiant, String mdp) throws UtilisateurManagerException {
 		Utilisateur utilisateur = null;
@@ -57,7 +67,7 @@ public class UtilisateurManager {
 		try {
 			utilisateurs = this.utilisateurDAO.selectAll();
 		} catch (DALException e) {
-			throw new UtilisateurManagerException("getListeUtilisateur failed - ", e);
+			throw new UtilisateurManagerException("getListeUtilisateur failed - \n" + e);
 		}
 
 		return utilisateurs;
@@ -67,7 +77,7 @@ public class UtilisateurManager {
 		try {
 			this.utilisateurDAO.insert(utilisateur);
 		} catch (DALException e) {
-			throw new UtilisateurManagerException("addUtilisateur failed - ", e);
+			throw new UtilisateurManagerException("addUtilisateur failed - \n" + e);
 		}
 	}
 
@@ -75,7 +85,7 @@ public class UtilisateurManager {
 		try {
 			this.utilisateurDAO.update(utilisateur);
 		} catch (DALException e) {
-			throw new UtilisateurManagerException("update failed - ", e);
+			throw new UtilisateurManagerException("update failed - \n" + e);
 		}
 	}
 
@@ -83,7 +93,7 @@ public class UtilisateurManager {
 		try {
 			this.utilisateurDAO.remove(utilisateur);
 		} catch (DALException e) {
-			throw new UtilisateurManagerException("update failed - ", e);
+			throw new UtilisateurManagerException("update failed - \n" + e);
 		}
 	}
 }

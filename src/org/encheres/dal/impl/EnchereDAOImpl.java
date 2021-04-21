@@ -86,7 +86,7 @@ public class EnchereDAOImpl implements EnchereDAO {
 			statement.execute(SQLSELECT_UTILISATEUR);
 
 			try (ResultSet rs = statement.getResultSet();){
-				if(rs.next()){
+				while(rs.next()){
 					encheres.add(new Enchere(
 							rs.getInt("no_enchere"),
 							rs.getDate("date_enchere"),
@@ -141,7 +141,9 @@ public class EnchereDAOImpl implements EnchereDAO {
 			preparedStatement.executeUpdate();
 
 			try(ResultSet rs = preparedStatement.getGeneratedKeys()){
-				enchere.setNo_enchere(rs.getInt(1));
+				if(rs.next()) {
+					enchere.setNo_enchere(rs.getInt(1));
+				}
 			} catch (SQLException e) {
 				throw new DALException("Insert enchere return key failed - " + enchere + " - ", e);
 			}
