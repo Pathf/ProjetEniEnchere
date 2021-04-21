@@ -56,7 +56,7 @@ public class CategorieDAOImpl implements CategorieDAO {
 			statement.execute(SQLSELECT_ALL);
 
 			try (ResultSet rs = statement.getResultSet();){
-				if(rs.next()){
+				while(rs.next()){
 					categories.add(new Categorie(rs.getInt("no_categorie"), rs.getString("libelle")));
 				}
 			}catch (SQLException e) {

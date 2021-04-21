@@ -92,7 +92,8 @@ public class ArticleVenduDAOImpl implements ArticleVenduDAO {
 			statement.execute(SQLSELECT_ALL);
 
 			try (ResultSet rs = statement.getResultSet();){
-				if(rs.next()){
+				
+				while(rs.next()){
 
 					articles.add(new ArticleVendu(
 							rs.getInt("no_article"),
@@ -145,7 +146,7 @@ public class ArticleVenduDAOImpl implements ArticleVenduDAO {
 		} catch (Exception e) {
 			throw new DALException("Select BYID failed - close failed for rs -  ", e);
 		}
-
+	
 		return articles;
 	}
 
