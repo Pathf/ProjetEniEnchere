@@ -14,10 +14,14 @@ import org.encheres.bll.UtilisateurManager;
 import org.encheres.bll.UtilisateurManagerException;
 import org.encheres.bo.Utilisateur;
 
+/**
+ * Servlet implementation class ConnexionServlet
+ */
 @WebServlet("/connexion")
 public class ConnexionServlet extends HttpServlet {
-	private UtilisateurManager utilisateurManager = UtilisateurManager.getInstance();
 	private static final long serialVersionUID = 1L;
+
+	private UtilisateurManager utilisateurManager = UtilisateurManager.getInstance();
 
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
