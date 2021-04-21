@@ -19,4 +19,6 @@ public interface UtilisateurDAO {
 	Utilisateur selectByEmailEtMdp(String identifiant, String mdp) throws DALException;
 
 	Utilisateur selectByPseudoEtMdp(String identifiant, String mdp) throws DALException;
+
+	Utilisateur selectByPseudo(String pseudo) throws DALException;
 }
