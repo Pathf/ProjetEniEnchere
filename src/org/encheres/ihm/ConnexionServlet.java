@@ -14,9 +14,6 @@ import org.encheres.bll.UtilisateurManager;
 import org.encheres.bll.UtilisateurManagerException;
 import org.encheres.bo.Utilisateur;
 
-/**
- * Servlet implementation class ConnexionServlet
- */
 @WebServlet("/connexion")
 public class ConnexionServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -33,8 +30,6 @@ public class ConnexionServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String identifiant = request.getParameter("identifiant");
 		String mdp = request.getParameter("mdp");
-		// Gestion de la connexion
-		// 'utilisateur1', 'un@test.com', 'password'
 		Utilisateur utilisateur = null;
 		try {
 			utilisateur = this.utilisateurManager.getUtilisateurConnexion(identifiant, mdp);
@@ -46,9 +41,7 @@ public class ConnexionServlet extends HttpServlet {
 			rd.forward(request, response);
 			return ;
 		}
-		RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/jsp/accueil.jsp");
 		response.sendRedirect("encheres");
-//		rd.forward(request, response);
 	}
 
 }
