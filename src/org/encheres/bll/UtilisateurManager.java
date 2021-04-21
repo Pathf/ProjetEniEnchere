@@ -31,6 +31,16 @@ public class UtilisateurManager {
 		}
 		return utilisateur;
 	}
+	
+	public Utilisateur getUtilisateur(String pseudo) throws UtilisateurManagerException {
+		Utilisateur utilisateur = null;
+		try {
+			utilisateur = this.utilisateurDAO.selectByPseudo(pseudo);
+		} catch (DALException e) {
+			throw new UtilisateurManagerException("getUtilisateur failed - \n" + e);
+		}
+		return utilisateur;
+	}
 
 	public Utilisateur getUtilisateurConnexion(String identifiant, String mdp) throws UtilisateurManagerException {
 		Utilisateur utilisateur = null;
