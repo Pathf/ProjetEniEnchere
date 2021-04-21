@@ -161,7 +161,7 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
 				throw new DALException("Select ALL failed - close failed for rs -  \n"+ e);
 			}
 		} catch (SQLException e) {
-			throw new DALException("Select All failed - ", e);
+			throw new DALException("Select All failed - \n"+ e);
 		}
 		return utilisateur;
 	}
