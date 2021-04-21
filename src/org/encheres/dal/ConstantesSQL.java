@@ -57,8 +57,13 @@ public class ConstantesSQL {
 			sb.append(" WHERE ");
 			for(String champWhere : champWheres) {
 				sb.append(champWhere);
-				sb.append("=?,");
+				sb.append("=?");
+				sb.append(" AND ");
 			}
+			sb.deleteCharAt(sb.length()-1);
+			sb.deleteCharAt(sb.length()-1);
+			sb.deleteCharAt(sb.length()-1);
+			sb.deleteCharAt(sb.length()-1);
 			sb.deleteCharAt(sb.length()-1);
 		}
 
