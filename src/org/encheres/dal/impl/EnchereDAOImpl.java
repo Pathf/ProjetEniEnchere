@@ -74,7 +74,7 @@ public class EnchereDAOImpl implements EnchereDAO {
 		return enchere;
 	}
 
-	// TODO : a voir pour les -1 et pour l'opti
+	// TODO : a voir pour les -1 (si un plante on faite quoi) et pour l'opti
 	@Override
 	public List<Enchere> selectUtilisateur(Integer id_utilisateur) throws DALException {
 		List<Enchere> encheres = new ArrayList<>();
