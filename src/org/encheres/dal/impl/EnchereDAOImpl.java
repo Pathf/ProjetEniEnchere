@@ -26,7 +26,7 @@ public class EnchereDAOImpl implements EnchereDAO {
 	//"SELECT * FROM ENCHERES as e INNER JOIN ARTICLES_VENDUS as a ON e.no_article = a.no_article INNER JOIN UTILISATEURS as u ON e.no_utilisateur = u.no_utilisateur WHERE no_utilisateur=?"
 	private static final String SQLSELECT_UTILISATEUR = ConstantesSQL.requeteSelect(TABLE, null, new String[]{"no_utilisateur"});
 	private static final String SQLINSERT = ConstantesSQL.requeteInsert(TABLE, CHAMPS);
-	private static final String SQLUPDATE = ConstantesSQL.requeteUpdate(TABLE, CHAMPS);
+	private static final String SQLUPDATE = ConstantesSQL.requeteUpdate(TABLE, CHAMPS, IDS);
 
 	//TODO : Opti eventuelle
 	@Override
