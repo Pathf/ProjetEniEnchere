@@ -9,16 +9,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.encheres.bo.Retrait;
+import org.encheres.dal.ConstantesSQL;
 import org.encheres.dal.DALException;
 import org.encheres.dal.DAOTools;
 import org.encheres.dal.dao.RetraitDAO;
 
 public class RetraitDAOImpl implements RetraitDAO {
 
-	private static String SQLSELECT_ID = "Select * from RETRAITS WHERE no_retrait=?";
-	private static String SQLSELECT_ALL = "Select * from RETRAITS";
-	private static String SQLINSERT = "INSERT INTO RETRAITS (rue, code_postal, ville) VALUES (?, ?, ?)";
-	private static String SQLUPDATE = "UPDATE RETRAITS SET rue=?, code_postal=?, ville=?";
+	private static final String TABLE = "RETRAITS";
+	private static final String[] IDS = new String[]{"no_retrait"};
+	private static final String[] CHAMPS = new String[]{"rue","code_postal","ville"};
+
+	private static final String SQLSELECT_ID = ConstantesSQL.requeteSelect(TABLE, null, IDS);
+	private static final String SQLSELECT_ALL = ConstantesSQL.requeteSelect(TABLE);
+	private static final String SQLINSERT = ConstantesSQL.requeteInsert(TABLE, CHAMPS);
+	private static final String SQLUPDATE = ConstantesSQL.requeteUpdate(TABLE, CHAMPS);
 
 	@Override
 	public Retrait selectById(Integer id) throws DALException {
@@ -57,7 +62,7 @@ public class RetraitDAOImpl implements RetraitDAO {
 			try (ResultSet rs = statement.getResultSet();){
 				if(rs.next()){
 					retrait.add(new Retrait(
-							rs.getInt("id"),
+							rs.getInt("no_retrait"),
 							rs.getString("rue"),
 							rs.getString("code_postal"),
 							rs.getString("ville")

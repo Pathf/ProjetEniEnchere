@@ -9,17 +9,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.encheres.bo.ArticleVendu;
+import org.encheres.dal.ConstantesSQL;
 import org.encheres.dal.DALException;
 import org.encheres.dal.DAOTools;
 import org.encheres.dal.dao.ArticleVenduDAO;
 
 public class ArticleVenduDAOImpl implements ArticleVenduDAO {
 
-	private static String SQLSELECT_ID = "Select * from ARTICLES_VENDUS WHERE no_article=?";
-	private static String SQLSELECT_ALL = "Select * from ARTICLES_VENDUS";
-	private static String SQLINSERT = "INSERT INTO ARTICLES_VENDUS (nom_article, description, date_debut_encheres, date_fin_encheres, prix_initial, prix_vente, no_utilisateur, no_categorie, no_retrait) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-	private static String SQLUPDATE = "UPDATE ARTICLES_VENDUS SET nom_article=?, description=?, date_debut_encheres=?, date_fin_encheres=?, prix_initial=?, prix_vente=?, no_utilisateur=?, no_categorie=?, no_retrait=?";
+	private static final String TABLE = "ARTICLES_VENDUS";
+	private static final String[] IDS = new String[]{"no_article"};
+	private static final String[] CHAMPS = new String[]{"nom_article","description","date_debut_encheres","date_fin_encheres","prix_initial","prix_vente","no_utilisateur","no_categorie","no_retrait"};
 
+	private static final String SQLSELECT_ID = ConstantesSQL.requeteSelect(TABLE, null, IDS);
+	private static final String SQLSELECT_ALL = ConstantesSQL.requeteSelect(TABLE);
+	private static final String SQLINSERT = ConstantesSQL.requeteInsert(TABLE, CHAMPS);
+	private static final String SQLUPDATE = ConstantesSQL.requeteUpdate(TABLE, CHAMPS);
 	// TODO : A voir
 	@Override
 	public ArticleVendu selectById(Integer id) throws DALException {
@@ -91,7 +95,7 @@ public class ArticleVenduDAOImpl implements ArticleVenduDAO {
 				if(rs.next()){
 
 					articles.add(new ArticleVendu(
-							rs.getInt("id"),
+							rs.getInt("no_article"),
 							rs.getString("nom_article").trim(),
 							rs.getString("description"),
 							rs.getDate("date_debut_encheres"),

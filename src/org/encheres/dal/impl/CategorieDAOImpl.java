@@ -9,17 +9,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.encheres.bo.Categorie;
+import org.encheres.dal.ConstantesSQL;
 import org.encheres.dal.DALException;
 import org.encheres.dal.DAOTools;
 import org.encheres.dal.dao.CategorieDAO;
 
 public class CategorieDAOImpl implements CategorieDAO {
 
-	private static String SQLSELECT_ID = "Select * from CATEGORIES WHERE no_categorie=?";
-	private static String SQLSELECT_ALL = "Select * from CATEGORIES";
-	private static String SQLINSERT = "INSERT INTO CATEGORIES (libelle) VALUES (?)";
-	private static String SQLUPDATE = "UPDATE CATEGORIES SET libelle=?";
-	private static String SQLREMOVE = "DELETE FROM CATEGORIES WHERE no_categorie=?";
+	private static final String TABLE = "CATEGORIES";
+	private static final String[] IDS = new String[]{"no_categorie"};
+	private static final String[] CHAMPS = new String[]{"libelle"};
+
+	private static final String SQLSELECT_ID = ConstantesSQL.requeteSelect(TABLE, null, IDS);
+	private static final String SQLSELECT_ALL = ConstantesSQL.requeteSelect(TABLE);
+	private static final String SQLINSERT = ConstantesSQL.requeteInsert(TABLE, CHAMPS);
+	private static final String SQLUPDATE = ConstantesSQL.requeteUpdate(TABLE, CHAMPS);
+	private static final String SQLREMOVE = ConstantesSQL.requeteDelete(TABLE, IDS);
 
 	@Override
 	public Categorie selectById(Integer id) throws DALException {
@@ -52,7 +57,7 @@ public class CategorieDAOImpl implements CategorieDAO {
 
 			try (ResultSet rs = statement.getResultSet();){
 				if(rs.next()){
-					categories.add(new Categorie(rs.getInt("id"), rs.getString("libelle")));
+					categories.add(new Categorie(rs.getInt("no_categorie"), rs.getString("libelle")));
 				}
 			}catch (SQLException e) {
 				throw new DALException("Select ALL failed - close failed for rs -  ", e);

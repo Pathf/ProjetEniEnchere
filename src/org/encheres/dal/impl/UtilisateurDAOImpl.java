@@ -9,17 +9,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.encheres.bo.Utilisateur;
+import org.encheres.dal.ConstantesSQL;
 import org.encheres.dal.DALException;
 import org.encheres.dal.DAOTools;
 import org.encheres.dal.dao.UtilisateurDAO;
 
 public class UtilisateurDAOImpl implements UtilisateurDAO {
 
-	private static String SQLSELECT_ID = "Select * from UTILISATEURS WHERE no_utilisateur=?";
-	private static String SQLSELECT_ALL = "Select * from UTILISATEURS";
-	private static String SQLINSERT = "INSERT INTO UTILISATEURS (pseudo, nom, prenom, email, telephone, rue, code_postal, ville, mot_de_passe, credit, administrateur) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-	private static String SQLUPDATE = "UPDATE UTILISATEURS SET pseudo=?, nom=?, prenom=?, email=?, telephone=?, rue=?, code_postal=?, ville=?, mot_de_passe=?, credit=?, administrateur=?";
-	private static String SQLREMOVE = "DELETE FROM UTILISATEURS WHERE no_utilisateur=?";
+	private static final String TABLE = "UTILISATEURS";
+	private static final String[] IDS = new String[]{"no_utilisateur"};
+	private static final String[] CHAMPS = new String[]{"pseudo","nom","prenom","email","telephone","rue","code_postal","ville","mot_de_passe","credit","administrateur"};
+
+	private static final String SQLSELECT_ID = ConstantesSQL.requeteSelect(TABLE, null, IDS);
+	private static final String SQLSELECT_ALL = ConstantesSQL.requeteSelect(TABLE);
+	private static final String SQLINSERT = ConstantesSQL.requeteInsert(TABLE, CHAMPS);
+	private static final String SQLUPDATE = ConstantesSQL.requeteUpdate(TABLE, CHAMPS);
+	private static final String SQLREMOVE = ConstantesSQL.requeteDelete(TABLE, IDS);
 
 	@Override
 	public Utilisateur selectById(Integer id) throws DALException {

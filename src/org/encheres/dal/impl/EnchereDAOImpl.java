@@ -9,16 +9,24 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.encheres.bo.Enchere;
+import org.encheres.dal.ConstantesSQL;
 import org.encheres.dal.DALException;
 import org.encheres.dal.DAOTools;
 import org.encheres.dal.dao.EnchereDAO;
 
 public class EnchereDAOImpl implements EnchereDAO {
-	// Join articleVendu et utilisateur
-	private static String SQLSELECT_ID = "SELECT e.date_enchere, e.montant_enchere, a.no_article, u.no_utilisateur FROM ENCHERES as e INNER JOIN ARTICLES_VENDUS as a ON e.no_article = a.no_article INNER JOIN UTILISATEURS as u ON e.no_utilisateur = u.no_utilisateur WHERE e.no_enchere=?";
-	private static String SQLSELECT_UTILISATEUR = "SELECT * FROM ENCHERES as e INNER JOIN ARTICLES_VENDUS as a ON e.no_article = a.no_article INNER JOIN UTILISATEURS as u ON e.no_utilisateur = u.no_utilisateur WHERE no_utilisateur=?";
-	private static String SQLINSERT = "INSERT INTO ENCHERES (date_enchere, montant_enchere, no_article, no_utilisateur) VALUES (?, ?, ?, ?)";
-	private static String SQLUPDATE = "UPDATE ENCHERES SET date_enchere=?, montant_enchere=?, no_article=?, no_utilisateur=?";
+
+	private static final String TABLE = "ENCHERES";
+	private static final String[] IDS = new String[]{"no_article"};
+	private static final String[] CHAMPS = new String[]{"date_enchere","montant_enchere","no_article","no_utilisateur"};
+
+	//TODO : GROSSE REQUETE POUR ALLER TOUT CHERCHER
+	//"SELECT e.date_enchere, e.montant_enchere, a.no_article, u.no_utilisateur FROM ENCHERES as e INNER JOIN ARTICLES_VENDUS as a ON e.no_article = a.no_article INNER JOIN UTILISATEURS as u ON e.no_utilisateur = u.no_utilisateur WHERE e.no_enchere=?"
+	private static String SQLSELECT_ID = ConstantesSQL.requeteSelect(TABLE, null, IDS);
+	//"SELECT * FROM ENCHERES as e INNER JOIN ARTICLES_VENDUS as a ON e.no_article = a.no_article INNER JOIN UTILISATEURS as u ON e.no_utilisateur = u.no_utilisateur WHERE no_utilisateur=?"
+	private static String SQLSELECT_UTILISATEUR = ConstantesSQL.requeteSelect(TABLE, null, new String[]{"no_utilisateur"});
+	private static String SQLINSERT = ConstantesSQL.requeteInsert(TABLE, CHAMPS);
+	private static String SQLUPDATE = ConstantesSQL.requeteUpdate(TABLE, CHAMPS);
 
 	//TODO : Opti eventuelle
 	@Override
