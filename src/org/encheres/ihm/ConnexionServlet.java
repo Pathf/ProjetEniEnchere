@@ -48,7 +48,6 @@ public class ConnexionServlet extends HttpServlet {
 		}
 		RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/jsp/accueil.jsp");
 		response.sendRedirect("encheres");
-//		rd.forward(request, response);
 	}
 
 }
