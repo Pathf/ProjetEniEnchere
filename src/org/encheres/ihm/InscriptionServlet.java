@@ -38,6 +38,7 @@ public class InscriptionServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String bouton = request.getParameter("bouton");
 		if("creer".equals(bouton)) {
+			String erreur = null;
 			String mot_de_passe = request.getParameter("mot_de_passe");
 			String confirmation = request.getParameter("confirmation");
 			String email = request.getParameter("email");
@@ -62,30 +63,33 @@ public class InscriptionServlet extends HttpServlet {
 							System.out.println(utilisateur);
 							try {
 								this.utilisateurManager.addUtilisateur(utilisateur);
+								response.sendRedirect(request.getContextPath());
+								return ;
 							} catch (UtilisateurManagerException e) {
 								if(e.toString().contains("Impossible d'insérer une clé en double dans l'objet")) {
-									System.out.println("L'utilisateur exista déjà !");
+									erreur = "L'utilisateur exista déjà !";
 								} else {
-									// autres erreurs
-									System.out.println("Une erreur est survenue :");
+									erreur = "Une erreur est survenue !";
 									System.out.println(e);
 								}
 							}
 						} else {
-							System.out.println("Vous avez oublié de remplir un champ !");
+							erreur = "Vous avez oublié de remplir un champ !";
 						}
 					} else {
-						System.out.println("pseudo incorrect");
+						erreur = "Le pseudo est incorrect !";
 					}
 				} else {
-					System.out.println("email incorrect");
+					erreur = "L'email est incorrect !";
 				}
 			} else {
-				System.out.println("mot de passe incorrect");
+				erreur = "Le mot de passe incorrect !";
 			}
+			request.setAttribute("erreur", erreur);
+			RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/jsp/inscription.jsp");
+			rd.forward(request, response);
 		} else {
 			response.sendRedirect(request.getContextPath());
 		}
 	}
-
 }

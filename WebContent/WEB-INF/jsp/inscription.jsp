@@ -1,6 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html>
+<% String erreur = (String)request.getAttribute("erreur"); %>
+
 <html>
 <jsp:include page="/WEB-INF/fragments/head.jsp"></jsp:include>
 <body>
@@ -30,8 +33,6 @@
       			<br />
       			<label for="confirmation" >Confirmation :</label> <input id="confirmation" type="text" name="confirmation">
     		</div>
-			
-		
 		</div>
 		<div class="row">
 			<div class="col-sm">
@@ -42,6 +43,9 @@
 			</div>
 		</div>
 		</form>
+		<c:if test="${ erreur != null }">
+			<p class="text-danger"><%=erreur%></p>
+		</c:if>
 	</div>
 </body>
 </html>
