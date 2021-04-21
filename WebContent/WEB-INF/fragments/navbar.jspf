@@ -5,23 +5,23 @@
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav col-md-right ml-auto">
       <c:choose>
-      <c:when test='<%="1".equals(isConnecte)%>'>
+      <c:when test='<%=isConnecte != null && !isConnecte.isEmpty()%>'>
         <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="#">Encheres</a>
+          <a class="nav-link active" aria-current="page" href="<%=request.getContextPath()%>/encheres">Encheres</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="#">Vendre un article</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">Mon profil</a>
+          <a class="nav-link" href="<%=request.getContextPath()%>/profil?pseudo=<%=request.getSession().getAttribute("pseudo")%>">Mon profil</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="<%=request.getContextPath()%>/deconnexion" >DÃ©connexion</a>
+          <a class="nav-link" href="<%=request.getContextPath()%>/deconnexion">Déconnexion</a>
         </li>
       </c:when>
       <c:otherwise>
         <li class="nav-item">
-          <a class="nav-link" href="#">S'inscrire - Se connecter</a>
+          <a class="nav-link" href="<%=request.getContextPath()%>/connexion">S'inscrire - Se connecter</a>
         </li>
       </c:otherwise>
       </c:choose>

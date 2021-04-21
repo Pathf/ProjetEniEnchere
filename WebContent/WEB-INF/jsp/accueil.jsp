@@ -8,6 +8,8 @@
 <html>
 <jsp:include page="/WEB-INF/fragments/head.jsp"></jsp:include>
 <body>
+<% String isConnecte = (String)request.getSession().getAttribute("pseudo"); %>
+<%@ include file="/WEB-INF/fragments/navbar.jspf" %>
 	<h1>Liste des enchères</h1>
 	<Form>
 	<label for="filtres">Filtres</label>

@@ -14,10 +14,9 @@ public class DeconnexionServlet extends HttpServlet {
 
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		request.getSession().removeAttribute("pseudo");
 		request.getSession().invalidate();
-		System.out.println(request.getSession());
-		request.getRequestDispatcher("/WEB-INF/jsp/accueil.jsp").forward(request, response);
-		//response.sendRedirect(request.getContextPath()+"/connexion");
+		response.sendRedirect(request.getContextPath());
 	}
 
 }
