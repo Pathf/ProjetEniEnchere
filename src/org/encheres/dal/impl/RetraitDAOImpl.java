@@ -60,7 +60,7 @@ public class RetraitDAOImpl implements RetraitDAO {
 			statement.execute(SQLSELECT_ALL);
 
 			try (ResultSet rs = statement.getResultSet();){
-				if(rs.next()){
+				while(rs.next()){
 					retrait.add(new Retrait(
 							rs.getInt("no_retrait"),
 							rs.getString("rue"),
@@ -88,7 +88,9 @@ public class RetraitDAOImpl implements RetraitDAO {
 			preparedStatement.executeUpdate();
 
 			try(ResultSet rs = preparedStatement.getGeneratedKeys()){
-				retrait.setNo_retrait(rs.getInt(1));
+				if(rs.next()) {
+					retrait.setNo_retrait(rs.getInt(1));
+				}
 			} catch (SQLException e) {
 				throw new DALException("Insert retrait return key failed - " + retrait + " - ", e);
 			}
