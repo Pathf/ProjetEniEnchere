@@ -88,6 +88,7 @@ public class ConstantesSQL {
 		return sb.toString();
 	}
 
+	
 	public static final String requeteUpdate(String table, String[] champs) {
 		StringBuffer sb = new StringBuffer();
 		sb.append("UPDATE ");
@@ -98,6 +99,32 @@ public class ConstantesSQL {
 			sb.append("=?,");
 		}
 		sb.deleteCharAt(sb.length()-1);
+		return sb.toString();
+	}
+	
+	public static final String requeteUpdate(String table, String[] champs, String[] champWheres) {
+		StringBuffer sb = new StringBuffer();
+		sb.append("UPDATE ");
+		sb.append(table);
+		sb.append(" SET ");
+		for(String champ : champs) {
+			sb.append(champ);
+			sb.append("=?,");
+		}
+		sb.deleteCharAt(sb.length()-1);
+		if(champWheres != null) {
+			sb.append(" WHERE ");
+			for(String champWhere : champWheres) {
+				sb.append(champWhere);
+				sb.append("=?");
+				sb.append(" AND ");
+			}
+			sb.deleteCharAt(sb.length()-1);
+			sb.deleteCharAt(sb.length()-1);
+			sb.deleteCharAt(sb.length()-1);
+			sb.deleteCharAt(sb.length()-1);
+			sb.deleteCharAt(sb.length()-1);
+		}
 		return sb.toString();
 	}
 
