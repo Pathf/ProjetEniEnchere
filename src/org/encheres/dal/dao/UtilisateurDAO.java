@@ -10,9 +10,13 @@ public interface UtilisateurDAO {
 
 	List<Utilisateur> selectAll() throws DALException;
 
-	void insert(Utilisateur object) throws DALException;
+	void insert(Utilisateur utilisateur) throws DALException;
 
-	void update(Utilisateur object) throws DALException;
+	void update(Utilisateur utilisateur) throws DALException;
 
-	void remove(Utilisateur article) throws DALException;
+	void remove(Utilisateur utilisateur) throws DALException;
+
+	Utilisateur selectByEmailEtMdp(String identifiant, String mdp) throws DALException;
+
+	Utilisateur selectByPseudoEtMdp(String identifiant, String mdp) throws DALException;
 }

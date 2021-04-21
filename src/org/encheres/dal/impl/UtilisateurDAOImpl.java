@@ -21,6 +21,8 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
 	private static final String[] CHAMPS = new String[]{"pseudo","nom","prenom","email","telephone","rue","code_postal","ville","mot_de_passe","credit","administrateur"};
 
 	private static final String SQLSELECT_ID = ConstantesSQL.requeteSelect(TABLE, null, IDS);
+	private static final String SQLSELECT_PSEUDO = ConstantesSQL.requeteSelect(TABLE, null, new String[] {"pseudo","mot_de_passe"});
+	private static final String SQLSELECT_EMAIL = ConstantesSQL.requeteSelect(TABLE, null, new String[] {"email","mot_de_passe"});
 	private static final String SQLSELECT_ALL = ConstantesSQL.requeteSelect(TABLE);
 	private static final String SQLINSERT = ConstantesSQL.requeteInsert(TABLE, CHAMPS);
 	private static final String SQLUPDATE = ConstantesSQL.requeteUpdate(TABLE, CHAMPS);
@@ -56,6 +58,76 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
 			}
 		} catch (SQLException e) {
 			throw new DALException("Select BYID failed - ", e);
+		}
+		return utilisateur;
+	}
+
+	@Override
+	public Utilisateur selectByEmailEtMdp(String identifiant, String mdp) throws DALException {
+		Utilisateur utilisateur = null;
+		try (	Connection connection = DAOTools.getConnection();
+				PreparedStatement preparedStatement = connection.prepareStatement(SQLSELECT_EMAIL);
+				) {
+			preparedStatement.setString(1, identifiant);
+			preparedStatement.setString(2, mdp);
+
+			try (ResultSet rs = preparedStatement.executeQuery();){
+				if(rs.next()){
+					utilisateur = new Utilisateur(
+							rs.getInt("no_utilisateur"),
+							rs.getString("pseudo"),
+							rs.getString("nom"),
+							rs.getString("prenom"),
+							rs.getString("email"),
+							rs.getString("telephone"),
+							rs.getString("rue"),
+							rs.getString("code_postal"),
+							rs.getString("ville"),
+							rs.getString("mot_de_passe"),
+							rs.getInt("credit"),
+							rs.getBoolean("administrateur")
+							);
+				}
+			}catch (SQLException e) {
+				throw new DALException("Select BYEMAIL failed - close failed for rs -  ", e);
+			}
+		} catch (SQLException e) {
+			throw new DALException("Select BYEMAIL failed - ", e);
+		}
+		return utilisateur;
+	}
+
+	@Override
+	public Utilisateur selectByPseudoEtMdp(String identifiant, String mdp) throws DALException {
+		Utilisateur utilisateur = null;
+		try (	Connection connection = DAOTools.getConnection();
+				PreparedStatement preparedStatement = connection.prepareStatement(SQLSELECT_PSEUDO);
+				) {
+			preparedStatement.setString(1, identifiant);
+			preparedStatement.setString(2, mdp);
+
+			try (ResultSet rs = preparedStatement.executeQuery();){
+				if(rs.next()){
+					utilisateur = new Utilisateur(
+							rs.getInt("no_utilisateur"),
+							rs.getString("pseudo"),
+							rs.getString("nom"),
+							rs.getString("prenom"),
+							rs.getString("email"),
+							rs.getString("telephone"),
+							rs.getString("rue"),
+							rs.getString("code_postal"),
+							rs.getString("ville"),
+							rs.getString("mot_de_passe"),
+							rs.getInt("credit"),
+							rs.getBoolean("administrateur")
+							);
+				}
+			}catch (SQLException e) {
+				throw new DALException("Select BYPSEUDO failed - close failed for rs -  \n"+ e);
+			}
+		} catch (SQLException e) {
+			throw new DALException("Select BYPSEUDO failed - \n"+ e);
 		}
 		return utilisateur;
 	}
@@ -156,5 +228,4 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
 			throw new DALException("Delete utilisateur failed - " + utilisateur + " - ", e);
 		}
 	}
-
 }

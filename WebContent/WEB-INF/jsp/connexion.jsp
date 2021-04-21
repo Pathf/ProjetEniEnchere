@@ -6,7 +6,6 @@
 </head>
 <body>
 
-
 <div class="container text-center text-black">
 		<h1>Connexion</h1>
 </div>
