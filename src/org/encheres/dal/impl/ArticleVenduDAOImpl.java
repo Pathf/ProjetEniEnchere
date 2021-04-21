@@ -20,8 +20,37 @@ public class ArticleVenduDAOImpl implements ArticleVenduDAO {
 	private static final String[] IDS = new String[]{"no_article"};
 	private static final String[] CHAMPS = new String[]{"nom_article","description","date_debut_encheres","date_fin_encheres","prix_initial","prix_vente","no_utilisateur","no_categorie","no_retrait"};
 
+	private static final String[] TABLES = new String[]{"ARTICLES_VENDUS", "UTILISATEURS no_utilisateur", "RETRAITS no_retrait","CATEGORIES no_categorie"};
+	private static final String[] CHAMPALLTABLES = new String[] {
+			"no_article nom_article description date_debut_encheres date_fin_encheres prix_initial prix_vente no_utilisateur no_categorie no_retrait",
+			"pseudo nom prenom email telephone rue code_postal ville mot_de_passe credit administrateur",
+			"rue code_postal code_postal",
+			"libelle"
+	};
+	/* Select ALL :
+	SELECT 	a.no_article, a.nom_article, a.description, a.date_debut_encheres, a.date_fin_encheres, a.prix_initial, a.prix_vente, a.no_utilisateur, a.no_categorie, a.no_retrait,
+			u.pseudo, u.nom, u.prenom, u.email, u.telephone, u.rue, u.code_postal, u.ville, u.mot_de_passe, u.credit, u.administrateur,
+			r.rue, r.code_postal, r.code_postal,
+			c.libelle
+	FROM ARTICLES_VENDUS AS a	LEFT JOIN UTILISATEURS AS u ON a.no_utilisateur = u.no_utilisateur
+								LEFT JOIN RETRAITS AS r ON a.no_retrait = r.no_retrait
+								LEFT JOIN CATEGORIES AS c ON a.no_categorie = c.no_categorie;
+	 */
+
+	/* Select ID :
+	 SELECT 	a.no_article, a.nom_article, a.description, a.date_debut_encheres, a.date_fin_encheres, a.prix_initial, a.prix_vente, a.no_utilisateur, a.no_categorie, a.no_retrait,
+			u.pseudo, u.nom, u.prenom, u.email, u.telephone, u.rue, u.code_postal, u.ville, u.mot_de_passe, u.credit, u.administrateur,
+			r.rue, r.code_postal, r.code_postal,
+			c.libelle
+	FROM ARTICLES_VENDUS AS a	LEFT JOIN UTILISATEURS AS u ON a.no_utilisateur = u.no_utilisateur
+								LEFT JOIN RETRAITS AS r ON a.no_retrait = r.no_retrait
+								LEFT JOIN CATEGORIES AS c ON a.no_categorie = c.no_categorie
+	WHERE a.no_article=?;
+	 */
 	private static final String SQLSELECT_ID = ConstantesSQL.requeteSelect(TABLE, null, IDS);
+	private static final String SQLSELECT_ID2 = ConstantesSQL.requeteSelectLeftJoin(TABLES, CHAMPALLTABLES, null);
 	private static final String SQLSELECT_ALL = ConstantesSQL.requeteSelect(TABLE);
+	private static final String SQLSELECT_ALL2 = ConstantesSQL.requeteSelectLeftJoin(TABLES, CHAMPALLTABLES, IDS);
 	private static final String SQLINSERT = ConstantesSQL.requeteInsert(TABLE, CHAMPS);
 	private static final String SQLUPDATE = ConstantesSQL.requeteUpdate(TABLE, CHAMPS, IDS);
 	// TODO : A voir
