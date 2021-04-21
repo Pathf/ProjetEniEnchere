@@ -22,11 +22,11 @@ public class EnchereDAOImpl implements EnchereDAO {
 
 	//TODO : GROSSE REQUETE POUR ALLER TOUT CHERCHER
 	//"SELECT e.date_enchere, e.montant_enchere, a.no_article, u.no_utilisateur FROM ENCHERES as e INNER JOIN ARTICLES_VENDUS as a ON e.no_article = a.no_article INNER JOIN UTILISATEURS as u ON e.no_utilisateur = u.no_utilisateur WHERE e.no_enchere=?"
-	private static String SQLSELECT_ID = ConstantesSQL.requeteSelect(TABLE, null, IDS);
+	private static final String SQLSELECT_ID = ConstantesSQL.requeteSelect(TABLE, null, IDS);
 	//"SELECT * FROM ENCHERES as e INNER JOIN ARTICLES_VENDUS as a ON e.no_article = a.no_article INNER JOIN UTILISATEURS as u ON e.no_utilisateur = u.no_utilisateur WHERE no_utilisateur=?"
-	private static String SQLSELECT_UTILISATEUR = ConstantesSQL.requeteSelect(TABLE, null, new String[]{"no_utilisateur"});
-	private static String SQLINSERT = ConstantesSQL.requeteInsert(TABLE, CHAMPS);
-	private static String SQLUPDATE = ConstantesSQL.requeteUpdate(TABLE, CHAMPS);
+	private static final String SQLSELECT_UTILISATEUR = ConstantesSQL.requeteSelect(TABLE, null, new String[]{"no_utilisateur"});
+	private static final String SQLINSERT = ConstantesSQL.requeteInsert(TABLE, CHAMPS);
+	private static final String SQLUPDATE = ConstantesSQL.requeteUpdate(TABLE, CHAMPS);
 
 	//TODO : Opti eventuelle
 	@Override
