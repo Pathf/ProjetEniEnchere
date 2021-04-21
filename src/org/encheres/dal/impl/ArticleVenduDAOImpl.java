@@ -92,8 +92,7 @@ public class ArticleVenduDAOImpl implements ArticleVenduDAO {
 			statement.execute(SQLSELECT_ALL);
 
 			try (ResultSet rs = statement.getResultSet();){
-				if(rs.next()){
-
+				while(rs.next()){
 					articles.add(new ArticleVendu(
 							rs.getInt("no_article"),
 							rs.getString("nom_article").trim(),
@@ -167,7 +166,9 @@ public class ArticleVenduDAOImpl implements ArticleVenduDAO {
 			preparedStatement.executeUpdate();
 
 			try(ResultSet rs = preparedStatement.getGeneratedKeys()){
-				articleVendu.setNo_article(rs.getInt(1));
+				if(rs.next()) {
+					articleVendu.setNo_article(rs.getInt(1));
+				}
 			} catch (SQLException e) {
 				throw new DALException("Insert articleVendu return key failed - " + articleVendu + " - ", e);
 			}
