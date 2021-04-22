@@ -5,7 +5,7 @@
 <% String erreur = (String)request.getAttribute("erreur"); %>
 <html>
 <jsp:include page="/WEB-INF/fragments/head.jsp">
-	<jsp:param value="/css/monProfil.css" name="style"/>
+	<jsp:param value="./css/monProfil.css" name="style"/>
 </jsp:include>
 <body>
 	<nav class="navbar navbar-expand-lg navbar-light bg-light">
