@@ -99,10 +99,10 @@ public class ArticleVenduDAOImpl implements ArticleVenduDAO {
 							);
 				}
 			}catch (SQLException e) {
-				throw new DALException("Select BYID failed - close failed for rs -  ", e);
+				throw new DALException("Select BYID failed - close failed for rs\n" + e);
 			}
 		} catch (SQLException e) {
-			throw new DALException("Select BYID failed - ", e);
+			throw new DALException("Select BYID failed\n" + e);
 		}
 
 		return article;
@@ -150,10 +150,10 @@ public class ArticleVenduDAOImpl implements ArticleVenduDAO {
 							));
 				}
 			}catch (SQLException e) {
-				throw new DALException("Select ALL failed - close failed for rs -  ", e);
+				throw new DALException("Select ALL failed - close failed for rs\n" + e);
 			}
 		} catch (SQLException e) {
-			throw new DALException("Select All failed - ", e);
+			throw new DALException("Select All failed\n" + e);
 		}
 
 		return articles;
@@ -200,10 +200,10 @@ public class ArticleVenduDAOImpl implements ArticleVenduDAO {
 							));
 				}
 			}catch (SQLException e) {
-				throw new DALException("Select UTILISATEUR failed - close failed for rs -  ", e);
+				throw new DALException("Select UTILISATEUR failed - close failed for rs\n" + e);
 			}
 		} catch (SQLException e) {
-			throw new DALException("Select UTILISATEUR failed - ", e);
+			throw new DALException("Select UTILISATEUR failed\n" + e);
 		}
 
 		return articles;
@@ -231,10 +231,10 @@ public class ArticleVenduDAOImpl implements ArticleVenduDAO {
 					articleVendu.setNo_article(rs.getInt(1));
 				}
 			} catch (SQLException e) {
-				throw new DALException("Insert articleVendu return key failed - " + articleVendu + " - ", e);
+				throw new DALException("Insert articleVendu return key failed - " + articleVendu + "\n" + e);
 			}
 		} catch (SQLException e) {
-			throw new DALException("Insert articleVendu failed - " + articleVendu + " - ", e);
+			throw new DALException("Insert articleVendu failed - " + articleVendu + "\n" + e);
 		}
 	}
 
@@ -256,7 +256,7 @@ public class ArticleVenduDAOImpl implements ArticleVenduDAO {
 
 			preparedStatement.executeUpdate();
 		} catch (SQLException e) {
-			throw new DALException("Update articleVendu failed - " + articleVendu + " - ", e);
+			throw new DALException("Update articleVendu failed - " + articleVendu + "\n" + e);
 		}
 	}
 }
