@@ -22,6 +22,16 @@ public class CategoriesManager {
 		return categorieManager;
 	}
 
+	public Categorie getCategorie(Integer id) throws CategorieManagerException {
+		Categorie categorie = null;
+		try {
+			categorie = this.categorieDAO.selectById(id);
+		} catch (DALException e) {
+			throw new CategorieManagerException("getCategorie failed - \n" + e);
+		}
+		return categorie;
+	}
+	
 	public List<Categorie> getListeCategorie() throws CategorieManagerException {
 		List<Categorie> categories = null;
 		try {

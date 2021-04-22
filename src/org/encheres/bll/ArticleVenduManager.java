@@ -52,8 +52,8 @@ public class ArticleVenduManager {
 
 	public void addArticleVendu(ArticleVendu articleVendu) throws ArticleVenduManagerException {
 		try {
-			this.articleVenduDAO.insert(articleVendu);
 			this.retraitDAO.insert(articleVendu.getRetrait());
+			this.articleVenduDAO.insert(articleVendu);
 		} catch (DALException e) {
 			throw new ArticleVenduManagerException("addArticleVendu failed - ", e);
 		}

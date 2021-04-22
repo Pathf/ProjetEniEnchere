@@ -187,7 +187,7 @@ public class ArticleVenduDAOImpl implements ArticleVenduDAO {
 			preparedStatement.setDate(3, articleVendu.getDate_debut_encheres());
 			preparedStatement.setDate(4, articleVendu.getDate_fin_encheres());
 			preparedStatement.setInt(5, articleVendu.getPrix_initial());
-			preparedStatement.setInt(6, articleVendu.getPrix_vente());
+			preparedStatement.setNull(6, java.sql.Types.INTEGER);
 			preparedStatement.setInt(7, articleVendu.getUtilisateur().getNo_utilisateur());
 			preparedStatement.setInt(8, articleVendu.getCategorie().getNo_categorie());
 			preparedStatement.setInt(9, articleVendu.getRetrait().getNo_retrait());
