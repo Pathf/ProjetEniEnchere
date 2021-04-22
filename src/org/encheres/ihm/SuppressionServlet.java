@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.sql.Date;
 import java.util.List;
 
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -30,8 +29,8 @@ public class SuppressionServlet extends HttpServlet {
 	private ArticleVenduManager articleVenduManager = ArticleVenduManager.getInstance();
 
 	@Override
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String erreur = "Erreur : Une erreur est survenue";
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		String erreur = "Une erreur est survenue !";
 		// suppression du compte utilisateur :
 		HttpSession session = request.getSession();
 		String pseudo = (String)session.getAttribute("pseudo");
@@ -39,16 +38,33 @@ public class SuppressionServlet extends HttpServlet {
 			// suppression que si pas d'encheres en cours
 			try {
 				Utilisateur utilisateur = this.utilisateurManager.getUtilisateur(pseudo);
+				// acheteur (pas postulé sur une enchère actuelle)
 				List<Enchere> encheres = this.enchereManager.getListeEnchere(utilisateur.getNo_utilisateur());
 				boolean enchereEnCour = false;
 				for(Enchere enchere : encheres) {
 					Date dateNow = new Date(System.currentTimeMillis());
 					Date dateFinEnchere = enchere.getArticle().getDate_fin_encheres();
-					if(dateNow.before(dateFinEnchere)) {
+					System.out.println(dateNow.toString());
+					System.out.println(dateFinEnchere.toString());
+					if(dateNow.before(dateFinEnchere) || dateNow.toString().equals(dateFinEnchere.toString())) {
 						enchereEnCour = true;
 						break;
 					}
 				}
+
+				//vendeur(article ou la date de fin de l'enchere n'est ps inferieur à now)
+				List<ArticleVendu> utilisateurArticleVendus = this.articleVenduManager.getListeArticleVenduByUtilisateur(utilisateur.getNo_utilisateur());
+				for(ArticleVendu articleVendu : utilisateurArticleVendus) {
+					Date dateNow = new Date(System.currentTimeMillis());
+					Date dateFinEnchere = articleVendu.getDate_fin_encheres();
+					System.out.println(dateNow.toString());
+					System.out.println(dateFinEnchere.toString());
+					if(dateNow.before(dateFinEnchere) || dateNow.toString().equals(dateFinEnchere.toString())) {
+						enchereEnCour = true;
+						break;
+					}
+				}
+
 				if(!enchereEnCour) {
 					// Déconnexion
 					request.getSession().removeAttribute("pseudo");
@@ -70,14 +86,13 @@ public class SuppressionServlet extends HttpServlet {
 					response.sendRedirect(request.getContextPath());
 					return;
 				} else {
-					erreur = "Erreur : il reste des encheres en cours";
+					erreur = "Il reste des encheres en cours";
 				}
 			} catch (UtilisateurManagerException | EnchereManagerException | ArticleVenduManagerException e) {
 				System.out.println(e);
 			}
 		}
 		request.setAttribute("erreur", erreur);
-		RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/jsp/modifierProfil.jsp");
-		rd.forward(request, response);
+		request.getRequestDispatcher("monProfil").forward(request, response);
 	}
 }
