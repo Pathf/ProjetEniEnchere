@@ -58,7 +58,7 @@ public class ModifierProfilServlet extends HttpServlet {
 		HttpSession session = request.getSession();
 		if (session.getAttribute("pseudo") != null) {
 			Utilisateur utilisateur = null;
-			Boolean isModifie = false;
+			String erreur = null;
 			String pseudo = request.getParameter("pseudo");
 			String email = request.getParameter("email");
 			String nom = request.getParameter("nom");
@@ -81,9 +81,13 @@ public class ModifierProfilServlet extends HttpServlet {
 			
 			if(pseudo.matches("[a-zA-Z0-9]+")) {
 				utilisateur.setPseudo(pseudo);
+			} else {
+				erreur = "Le pseudo est incorrect !";
 			}
 			if(email.contains("@") && email.contains(".")) {
 				utilisateur.setEmail(email);
+			} else {
+				erreur = "L'email est incorrect !";
 			}
 			if(		prenom != null && !prenom.isEmpty() &&
 					telephone != null && !telephone.isEmpty() &&
@@ -102,22 +106,32 @@ public class ModifierProfilServlet extends HttpServlet {
 			if(motDePasse != null && !motDePasse.isEmpty()) {
 				if (motDePasse.equals(confirmation)) {
 					utilisateur.setMot_de_passe(request.getParameter("mot_de_passe"));
-				}			
+				} else {
+					erreur = "Le nouveau mot de passe et la confirmation du nouveau mot de passe sont différents !";
+				}
 			}
 			
 			try {
 				utilisateurManager.updateUtilisateur(utilisateur);
-				isModifie = true;
 			} catch (UtilisateurManagerException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				
+				if(e.toString().contains("Impossible d'insérer une clé en double dans l'objet")) {
+					erreur = "L'utilisateur ou l'email sont déjà utilisés !";
+					System.out.println(erreur);
+				} else {
+					erreur = "Une erreur est survenue !";
+					System.out.println(e);
+				}
 			}
-			request.setAttribute("isModifie", isModifie);
-			doGet(request, response);
+			
+			if (erreur != null) {
+				request.setAttribute("erreur", erreur);
+				doGet(request, response);
+			} else {
+				response.sendRedirect(request.getContextPath() + "/profil?pseudo=" + utilisateur.getPseudo());
+			}
 		} else {
 			response.sendRedirect(request.getContextPath());
-		}
-		
+		}		
 	}
-
 }
