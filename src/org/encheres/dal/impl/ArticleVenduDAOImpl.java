@@ -438,6 +438,7 @@ public class ArticleVenduDAOImpl implements ArticleVenduDAO {
 			preparedStatement.setInt(7, articleVendu.getUtilisateur().getNo_utilisateur());
 			preparedStatement.setInt(8, articleVendu.getCategorie().getNo_categorie());
 			preparedStatement.setInt(9, articleVendu.getRetrait().getNo_retrait());
+			preparedStatement.setInt(10, articleVendu.getNo_article());
 
 			preparedStatement.executeUpdate();
 		} catch (SQLException e) {

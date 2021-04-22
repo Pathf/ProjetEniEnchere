@@ -37,6 +37,7 @@
 			</select>
 			<button>Rechercher</button>
 	</Form>
+<<<<<<< HEAD
 	
       <c:choose>
 		 <c:when test="${pseudo == null}">
@@ -75,6 +76,35 @@
 			 
 		       
        
+=======
+      
+		<c:choose>
+    		<c:when test="${articlesVendus.size()>0}">
+		        <ul class="list-group col-12">
+		         <div class="card-deck cardFlex flex-column">
+		         
+		        	<c:forEach var="c" items="${articlesVendus}">
+			            	         
+				  <div class="card border border-dark flex-sm-row">
+				   <img class="card-img-top" src="https://via.placeholder.com/150
+				C/O https://placeholder.com/" alt="Card image cap"> 
+				    <div class="card-body">
+				      <h5 class="card-title">${c.nom_article}</h5>
+				     <p class="card-text">Prix :${c.prix_initial}</p>
+				      <p class="card-text">Fin de l'enchère :${c.date_fin_encheres}</p>
+				      <p class="card-text"><small class="text-muted">Vendeur : <a href="${pageContext.request.contextPath}/profil?pseudo=${c.utilisateur.pseudo}" class="btn btn-primary">Vendeur :${c.utilisateur.pseudo}</a></small></p>
+				    </div>
+				  </div>
+				  
+			      	</c:forEach>
+	      		</div>
+		        </ul>
+	       </c:when>
+	        <c:otherwise>
+	      	  	<p>Pas de liste actuellement.<p>
+	        </c:otherwise>
+        </c:choose>
+>>>>>>> refs/remotes/origin/dev
 
 		<c:choose>
 		 <c:when test="${pseudo != null}">

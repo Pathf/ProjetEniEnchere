@@ -2,19 +2,25 @@
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html>
+<% String erreur = (String)request.getAttribute("erreur"); %>
 <html>
 <jsp:include page="/WEB-INF/fragments/head.jsp">
 	<jsp:param value="/css/monProfil.css" name="style"/>
 </jsp:include>
 <body>
+	<nav class="navbar navbar-expand-lg navbar-light bg-light">
+	  <div class="container-fluid">
+	    <a class="navbar-brand" href="<%=request.getContextPath()%>">DUH - Encheres</a>
+	  </div>
+	</nav>
 	<div class="container">
 		<div class="mx-auto text-center">
 			<h1>Mon profil</h1>
 		</div>
 		
-		<c:if test="${ isModifie }">
-			<div class="alert alert-success alert-dismissible fade show col-md-10 offset-md-1 mt-3"" role="alert">
-			  Votre profil est modifié.
+		<c:if test="${ erreur != null }">
+			<div class="alert alert-danger alert-dismissible fade show mx-auto col-md-10 offset-md-1 mt-3" role="alert">
+			  <strong>Erreur !</strong> <%=erreur%>
 			  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
 			    <span aria-hidden="true">&times;</span>
 			  </button>
@@ -32,7 +38,7 @@
 	   			<label for="prenom" class="col-md-2 mb-3 offset-md-1">Prénom :</label> 
 	   			<input id="prenom" class="col-md-3 mb-3" type="text" name="prenom" value="${ utilisateur.getPrenom() }">
 	   			<label for="email" class="col-md-2 mb-3 ml-3">Email :</label> 
-	   			<input id="email" class="col-md-3 mb-3" type="text" name="email" value="${ utilisateur.getEmail() }">
+	   			<input id="email" class="col-md-3 mb-3" type="email" name="email" value="${ utilisateur.getEmail() }">
 	   		</div>
 	   		<div class="row">
 	   			<label for="telephone" class="col-md-2 mb-3 offset-md-1">Téléphone :</label> 

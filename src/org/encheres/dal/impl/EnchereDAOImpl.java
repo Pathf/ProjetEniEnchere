@@ -161,6 +161,7 @@ public class EnchereDAOImpl implements EnchereDAO {
 			preparedStatement.setInt(2, enchere.getMontant_enchere());
 			preparedStatement.setInt(3, enchere.getArticle().getNo_article());
 			preparedStatement.setInt(4, enchere.getUtilisateur().getNo_utilisateur());
+			preparedStatement.setInt(5, enchere.getNo_enchere());
 
 			preparedStatement.executeUpdate();
 		} catch (SQLException e) {

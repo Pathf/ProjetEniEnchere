@@ -7,6 +7,11 @@
 <jsp:include page="/WEB-INF/fragments/head.jsp"></jsp:include>
 </head>
 <body>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="<%=request.getContextPath()%>">DUH - Encheres</a>
+  </div>
+</nav>
 <table class="table text-center mt-5">
     <tbody>
         <tr class="row pt-5">

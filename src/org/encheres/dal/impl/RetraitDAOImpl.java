@@ -107,6 +107,7 @@ public class RetraitDAOImpl implements RetraitDAO {
 			preparedStatement.setString(1, retrait.getRue());
 			preparedStatement.setString(2, retrait.getCode_postal());
 			preparedStatement.setString(3, retrait.getVille());
+			preparedStatement.setInt(4, retrait.getNo_retrait());
 			preparedStatement.executeUpdate();
 		} catch (SQLException e) {
 			throw new DALException("Update retrait failed - " + retrait + " - ", e);
