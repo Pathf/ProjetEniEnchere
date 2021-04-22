@@ -41,6 +41,7 @@ public class accueilServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		List<ArticleVendu> articlesVendus = null;
+		
 		String filtres = request.getParameter("filtres");
 		String categorie = request.getParameter("categorie");
 		Integer categorieInt = 0;
@@ -51,18 +52,9 @@ public class accueilServlet extends HttpServlet {
 		
 		request.setAttribute("defaultCategorie", categorieInt);
 		request.setAttribute("defaultFiltresPlaceHolder", filtres);
-		
-		// on liste tous les articles si aucun filtre
-		if (categorieInt == 0 & "".equals(filtres)) {
-			try {
-				articlesVendus = this.articleVenduManager.getListeArticleVendu() ;
-				request.setAttribute("articlesVendus", articlesVendus);			
-			} catch (ArticleVenduManagerException e) {
-				System.out.println(e);
-			}
-		}
+				
 		//si uniquement filtres sur nom
-		else if (categorieInt == 0 & !"".equals(filtres)){
+		if (categorieInt == 0 & !"".equals(filtres) & filtres != null){
 			try {
 				articlesVendus = this.articleVenduManager.selectBydNom(filtres) ;
 				request.setAttribute("articlesVendus", articlesVendus);			
@@ -71,7 +63,7 @@ public class accueilServlet extends HttpServlet {
 			}
 		}
 		//si on filtre avec categorie
-		else {
+		else if (categorieInt != 0 ) {
 			try {
 				articlesVendus = this.articleVenduManager.selectByCategorieAndNom(categorieInt, filtres) ;
 				request.setAttribute("articlesVendus", articlesVendus);			
@@ -79,16 +71,19 @@ public class accueilServlet extends HttpServlet {
 				System.out.println(e);
 			}
 		}
-
-		//on liste l'ensemble des catégories pour générer l'input	
-		List<Categorie> categories = null;
-		try {
-			categories = this.categorieManager.getListeCategorie() ;
-			request.setAttribute("categories", categories);			
-		} catch (CategorieManagerException e) {
-			System.out.println(e);
-		}
+		// par default on renvois tous les articlevendus
+		else {
+				try {
+					articlesVendus = this.articleVenduManager.getListeArticleVendu() ;
+					request.setAttribute("articlesVendus", articlesVendus);			
+				} catch (ArticleVenduManagerException e) {
+					System.out.println(e);
+				}
+			}
 		
+		//on liste l'ensemble des catégories pour générer le select correspondant
+		request.setAttribute("categories", this.listCategorie());	
+
 		RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/jsp/accueil.jsp");
 		rd.forward(request, response);
 //		
@@ -100,6 +95,17 @@ public class accueilServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		doGet(request, response);
+	}
+	
+	private List<Categorie> listCategorie(){
+		List<Categorie> categories = null;
+		try {
+			categories = this.categorieManager.getListeCategorie() ;
+				
+		} catch (CategorieManagerException e) {
+			System.out.println(e);
+		}
+		return categories;
 	}
 
 //	
