@@ -28,7 +28,7 @@ public class EnchereManager {
 		try {
 			enchere = this.enchereDAO.selectById(id);
 		} catch (DALException e) {
-			throw new EnchereManagerException("getEnchere failed - ", e);
+			throw new EnchereManagerException("getEnchere failed\n" + e);
 		}
 		return enchere;
 	}
@@ -38,7 +38,7 @@ public class EnchereManager {
 		try {
 			encheres = this.enchereDAO.selectUtilisateur(id_utilisateur);
 		} catch (DALException e) {
-			throw new EnchereManagerException("getListeEnchere failed - ", e);
+			throw new EnchereManagerException("getListeEnchere failed\n" + e);
 		}
 		return encheres;
 	}
@@ -47,7 +47,7 @@ public class EnchereManager {
 		try {
 			this.enchereDAO.insert(enchere);
 		} catch (DALException e) {
-			throw new EnchereManagerException("addEnchere failed - ", e);
+			throw new EnchereManagerException("addEnchere failed\n" + e);
 		}
 	}
 
@@ -72,9 +72,9 @@ public class EnchereManager {
 				this.enchereDAO.insert(nouvelleEnchere);
 			}
 		} catch (DALException e) {
-			throw new EnchereManagerException("updateEncher failed - ", e);
+			throw new EnchereManagerException("updateEncher failed\n" + e);
 		} catch (UtilisateurManagerException e) {
-			throw new EnchereManagerException("updateEncher failed - updateUtilisateur failed - ", e);
+			throw new EnchereManagerException("updateEncher failed - updateUtilisateur failed\n" + e);
 		}
 	}
 }

@@ -28,34 +28,77 @@ public class ArticleVenduManager {
 
 	public ArticleVendu getArticleVendu(Integer id) throws ArticleVenduManagerException {
 		ArticleVendu articleVendu = null;
-
 		try {
 			articleVendu = this.articleVenduDAO.selectById(id);
 		} catch (DALException e) {
-			throw new ArticleVenduManagerException("getArticleVendu failed - ", e);
+			throw new ArticleVenduManagerException("getArticleVendu failed \n"+ e);
 		}
-
 		return articleVendu;
 	}
 
 	public List<ArticleVendu> getListeArticleVendu() throws ArticleVenduManagerException {
 		List<ArticleVendu> articleVendus = null;
-
 		try {
 			articleVendus = this.articleVenduDAO.selectAll();
 		} catch (DALException e) {
-			throw new ArticleVenduManagerException("getListeArticleVendu failed - ", e);
+			throw new ArticleVenduManagerException("getListeArticleVendu failed \n"+ e);
+		}
+		return articleVendus;
+	}
+
+	public List<ArticleVendu> getListeArticleVenduByUtilisateur(Integer no_utilisateur) throws ArticleVenduManagerException {
+		List<ArticleVendu> articleVendus = null;
+		try {
+			articleVendus = this.articleVenduDAO.selectByUtilisateur(no_utilisateur);
+		} catch (DALException e) {
+			throw new ArticleVenduManagerException("getListeArticleVenduByUtilisateur failed \n"+ e);
+		}
+		return articleVendus;
+	}
+	
+	public List<ArticleVendu> getListeArticleVenduByCategorie(Integer no_categorie) throws ArticleVenduManagerException {
+		List<ArticleVendu> articleVendus = null;
+
+		try {
+			articleVendus = this.articleVenduDAO.selectByCategorie(no_categorie);
+		} catch (DALException e) {
+			throw new ArticleVenduManagerException("getListeArticleVenduByCategorie failed - ", e);
 		}
 
 		return articleVendus;
 	}
+	
+	
+	public List<ArticleVendu> selectByCategorieAndNom(Integer no_categorie, String nom) throws ArticleVenduManagerException {
+		List<ArticleVendu> articleVendus = null;
 
+		try {
+			articleVendus = this.articleVenduDAO.selectByCategorieAndNom(no_categorie, nom);
+		} catch (DALException e) {
+			throw new ArticleVenduManagerException("selectByCategorieAndNom failed - ", e);
+		}
+
+		return articleVendus;
+	}
+	
+	public List<ArticleVendu> selectBydNom(String nom) throws ArticleVenduManagerException {
+		List<ArticleVendu> articleVendus = null;
+
+		try {
+			articleVendus = this.articleVenduDAO.selectBydNom(nom);
+		} catch (DALException e) {
+			throw new ArticleVenduManagerException("selectBydNom failed - ", e);
+		}
+
+		return articleVendus;
+	}
+	
 	public void addArticleVendu(ArticleVendu articleVendu) throws ArticleVenduManagerException {
 		try {
 			this.retraitDAO.insert(articleVendu.getRetrait());
 			this.articleVenduDAO.insert(articleVendu);
 		} catch (DALException e) {
-			throw new ArticleVenduManagerException("addArticleVendu failed - ", e);
+			throw new ArticleVenduManagerException("addArticleVendu failed \n"+ e);
 		}
 	}
 
@@ -64,7 +107,7 @@ public class ArticleVenduManager {
 			this.articleVenduDAO.update(articleVendu);
 			this.retraitDAO.update(articleVendu.getRetrait());
 		} catch (DALException e) {
-			throw new ArticleVenduManagerException("updateArticleVendu failed - ", e);
+			throw new ArticleVenduManagerException("updateArticleVendu failed \n"+ e);
 		}
 	}
 }

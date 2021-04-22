@@ -63,7 +63,7 @@
 	   		</div>	
 			<div class="row justify-content-center">
 					<button type="submit" class="btn btn-primary mr-1">Enregistrer</button>
-					<a href="${pageContext.request.contextPath}/monProfil" class="btn btn-danger ml-1" role="button">Supprimer mon compte</a>
+					<a href="${pageContext.request.contextPath}/suppression" class="btn btn-danger ml-1" role="button">Supprimer mon compte</a>
 			</div>
 		</form>
 	</div>
