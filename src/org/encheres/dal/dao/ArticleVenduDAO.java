@@ -13,4 +13,6 @@ public interface ArticleVenduDAO {
 	void insert(ArticleVendu object) throws DALException;
 
 	void update(ArticleVendu object) throws DALException;
+
+	List<ArticleVendu> selectByUtilisateur(Integer no_utilisateur) throws DALException;
 }

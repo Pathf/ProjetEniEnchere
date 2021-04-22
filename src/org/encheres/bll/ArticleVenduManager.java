@@ -50,6 +50,18 @@ public class ArticleVenduManager {
 		return articleVendus;
 	}
 
+	public List<ArticleVendu> getListeArticleVenduByUtilisateur(Integer no_utilisateur) throws ArticleVenduManagerException {
+		List<ArticleVendu> articleVendus = null;
+
+		try {
+			articleVendus = this.articleVenduDAO.selectByUtilisateur(no_utilisateur);
+		} catch (DALException e) {
+			throw new ArticleVenduManagerException("getListeArticleVenduByUtilisateur failed - ", e);
+		}
+
+		return articleVendus;
+	}
+
 	public void addArticleVendu(ArticleVendu articleVendu) throws ArticleVenduManagerException {
 		try {
 			this.articleVenduDAO.insert(articleVendu);
