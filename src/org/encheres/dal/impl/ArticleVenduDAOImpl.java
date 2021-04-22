@@ -116,7 +116,6 @@ public class ArticleVenduDAOImpl implements ArticleVenduDAO {
 			try (ResultSet rs = preparedStatement.executeQuery();){
 
 				while(rs.next()){
-					System.out.println("ca passe  ????????????");
 					articles.add(new ArticleVendu(
 							rs.getInt("no_article"),
 							rs.getString("nom_article").trim(),
@@ -260,7 +259,6 @@ public class ArticleVenduDAOImpl implements ArticleVenduDAO {
 			try (ResultSet rs = preparedStatement.executeQuery();){
 
 				while(rs.next()){
-					System.out.println("ca passe  ????????????");
 					articles.add(new ArticleVendu(
 							rs.getInt("no_article"),
 							rs.getString("nom_article").trim(),
