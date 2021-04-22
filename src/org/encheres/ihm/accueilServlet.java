@@ -40,19 +40,55 @@ public class accueilServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
-
 		List<ArticleVendu> articlesVendus = null;
-
-		try {
-			articlesVendus = this.articleVenduManager.getListeArticleVendu() ;
-			request.setAttribute("articlesVendus", articlesVendus);			
-		} catch (ArticleVenduManagerException e) {
-			System.out.println(e);
-		}
-//	
-		List<Categorie> categories = null;
+		String categorie = request.getParameter("categorie");
+		Integer categorieInt = 0;
 		
+		if(categorie != null) {
+		categorieInt = Integer.parseInt(categorie);
+		System.out.println("categorie");
+		System.out.println(categorieInt);
+		}
+		
+//		System.out.println("0.equals(categorie));
+		String filtres = request.getParameter("filtres");
+		System.out.println("".equals(filtres));
+			
+		
+		// on liste tous les articles si aucun filtre
+		if (categorieInt == 0 & "".equals(filtres)) {
+			try {
+				System.out.println("pas de filtre");
+				articlesVendus = this.articleVenduManager.getListeArticleVendu() ;
+				request.setAttribute("articlesVendus", articlesVendus);			
+			} catch (ArticleVenduManagerException e) {
+				System.out.println(e);
+			}
+		}
+		else if (categorieInt == 0 & !"".equals(filtres)){
+			System.out.println("filtres seul");
+		try {
+			
+			articlesVendus = this.articleVenduManager.selectBydNom(filtres) ;
+//			articlesVendus = this.articleVenduManager.getListeArticleVenduByCategorie(categorieInt) ;
+			request.setAttribute("articlesVendus", articlesVendus);			
+			} catch (ArticleVenduManagerException e) {
+				System.out.println(e);
+			}
+		}else {
+			System.out.println("filtres et catégorie ou catégorie seule");
+			try {
+				
+				articlesVendus = this.articleVenduManager.selectByCategorieAndNom(categorieInt, filtres) ;
+//				articlesVendus = this.articleVenduManager.getListeArticleVenduByCategorie(categorieInt) ;
+				request.setAttribute("articlesVendus", articlesVendus);			
+				} catch (ArticleVenduManagerException e) {
+					System.out.println(e);
+				}
+		}
+
+		//on liste l'ensemble des catégories pour générer l'input	
+		List<Categorie> categories = null;
 		try {
 			categories = this.categorieManager.getListeCategorie() ;
 			request.setAttribute("categories", categories);			
