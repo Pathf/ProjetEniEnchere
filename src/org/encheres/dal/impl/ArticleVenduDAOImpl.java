@@ -40,7 +40,7 @@ public class ArticleVenduDAOImpl implements ArticleVenduDAO {
 	 */
 	private static final String SQLSELECT_LIKE = "SELECT * FROM ARTICLES_VENDUS WHERE NOM_ARTICLE LIKE ? ";
 	private static final String SQLSELECT_WHERE_LIKE = "SELECT * FROM ARTICLES_VENDUS WHERE NO_CATEGORIE = ? AND NOM_ARTICLE LIKE ? ";
-	private static final String SQLSELECT_WHERE = ConstantesSQL.requeteSelect(TABLE, null, CAT);
+	private static final String SQLSELECT_WHERE = SQLRequete.select(null, BDD.ARTICLESVENDUS_TABLENOM, CAT);
 	//SQLRequete.selectLeftJoin(TABLES, CHAMPALLTABLES, BDD.ARTICLESVENDUS_IDS);
 	private static final String SQLSELECT_ID = "SELECT a.no_article, a.nom_article, a.description, a.date_debut_encheres, a.date_fin_encheres, a.prix_initial, a.prix_vente, a.no_utilisateur, a.no_categorie, a.no_retrait, u.pseudo, u.nom, u.prenom, u.email, u.telephone, u.rue as rueUTILISATEURS, u.code_postal as code_postalUTILISATEURS, u.ville as villeUTILISATEURS, u.mot_de_passe, u.credit, u.administrateur, r.rue as rueRETRAITS, r.code_postal as code_postalRETRAITS, r.ville as villeRETRAITS, c.libelle FROM ARTICLES_VENDUS AS a LEFT JOIN UTILISATEURS AS u ON a.no_utilisateur = u.no_utilisateur LEFT JOIN RETRAITS AS r ON a.no_retrait = r.no_retrait LEFT JOIN CATEGORIES AS c ON a.no_categorie = c.no_categorie WHERE a.no_article=?";
 	//SQLRequete.selectLeftJoin(TABLES, CHAMPALLTABLES, BDD.UTILISATEURS_IDS);
@@ -101,19 +101,20 @@ public class ArticleVenduDAOImpl implements ArticleVenduDAO {
 	}
 
 
+	@Override
 	public List<ArticleVendu> selectByCategorie(Integer no_categorie) throws DALException {
 		List<ArticleVendu> articles = new ArrayList<>();
 		List<Integer> no_utilisateurs = new ArrayList<>();
 		List<Integer> no_categories = new ArrayList<>();
 		List<Integer> no_retraits = new ArrayList<>();
-		
+
 		try (	Connection connection = DAOTools.getConnection();
 				PreparedStatement preparedStatement = connection.prepareStatement(SQLSELECT_WHERE);
 				) {
 			preparedStatement.setInt(1, no_categorie);
-	
+
 			try (ResultSet rs = preparedStatement.executeQuery();){
-				
+
 				while(rs.next()){
 					System.out.println("ca passe  ????????????");
 					articles.add(new ArticleVendu(
@@ -170,23 +171,24 @@ public class ArticleVenduDAOImpl implements ArticleVenduDAO {
 
 		return articles;
 	}
-	
+
+	@Override
 	public List<ArticleVendu> selectByCategorieAndNom(Integer no_categorie, String nom) throws DALException {
 		List<ArticleVendu> articles = new ArrayList<>();
 		List<Integer> no_utilisateurs = new ArrayList<>();
 		List<Integer> no_categories = new ArrayList<>();
 		List<Integer> no_retraits = new ArrayList<>();
-		
+
 		try (	Connection connection = DAOTools.getConnection();
 				PreparedStatement preparedStatement = connection.prepareStatement(SQLSELECT_WHERE_LIKE);
 				) {
 			preparedStatement.setInt(1, no_categorie);
 			preparedStatement.setString(2,"%"+ nom + "%");
-			
+
 			try (ResultSet rs = preparedStatement.executeQuery();){
-				
+
 				while(rs.next()){
-					
+
 					articles.add(new ArticleVendu(
 							rs.getInt("no_article"),
 							rs.getString("nom_article").trim(),
@@ -241,21 +243,22 @@ public class ArticleVenduDAOImpl implements ArticleVenduDAO {
 
 		return articles;
 	}
-	
+
+	@Override
 	public List<ArticleVendu> selectBydNom(String nom) throws DALException {
 		List<ArticleVendu> articles = new ArrayList<>();
 		List<Integer> no_utilisateurs = new ArrayList<>();
 		List<Integer> no_categories = new ArrayList<>();
 		List<Integer> no_retraits = new ArrayList<>();
-		
+
 		try (	Connection connection = DAOTools.getConnection();
 				PreparedStatement preparedStatement = connection.prepareStatement(SQLSELECT_LIKE);
 				) {
-			
+
 			preparedStatement.setString(1,"%"+ nom + "%");
-			
+
 			try (ResultSet rs = preparedStatement.executeQuery();){
-				
+
 				while(rs.next()){
 					System.out.println("ca passe  ????????????");
 					articles.add(new ArticleVendu(
@@ -312,8 +315,8 @@ public class ArticleVenduDAOImpl implements ArticleVenduDAO {
 
 		return articles;
 	}
-	
-	
+
+
 	// TODO: A optimiser
 	@Override
 	public List<ArticleVendu> selectAll() throws DALException {
