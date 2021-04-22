@@ -26,7 +26,7 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
 	private static final String SQLSELECT_EMAIL_MDP = ConstantesSQL.requeteSelect(TABLE, null, new String[] {"email","mot_de_passe"});
 	private static final String SQLSELECT_ALL = ConstantesSQL.requeteSelect(TABLE);
 	private static final String SQLINSERT = ConstantesSQL.requeteInsert(TABLE, CHAMPS);
-	private static final String SQLUPDATE = ConstantesSQL.requeteUpdate(TABLE, CHAMPS);
+	private static final String SQLUPDATE = ConstantesSQL.requeteUpdate(TABLE, CHAMPS, IDS);
 	private static final String SQLREMOVE = ConstantesSQL.requeteDelete(TABLE, IDS);
 
 	@Override
@@ -62,7 +62,7 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
 		}
 		return utilisateur;
 	}
-	
+
 	@Override
 	public Utilisateur selectByPseudo(String pseudo) throws DALException {
 		Utilisateur utilisateur = null;
@@ -248,6 +248,7 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
 			preparedStatement.setString(9, utilisateur.getMot_de_passe());
 			preparedStatement.setInt(10, utilisateur.getCredit());
 			preparedStatement.setBoolean(11, utilisateur.getAdministrateur());
+			preparedStatement.setInt(12, utilisateur.getNo_utilisateur());
 			preparedStatement.executeUpdate();
 		} catch (SQLException e) {
 			throw new DALException("Update utilisateur failed - " + utilisateur + " - \n" + e);
