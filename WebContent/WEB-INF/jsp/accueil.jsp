@@ -51,7 +51,7 @@
 				      <h5 class="card-title">${c.nom_article}</h5>
 				     <p class="card-text">Prix :${c.prix_initial}</p>
 				      <p class="card-text">Fin de l'enchère :${c.date_fin_encheres}</p>
-				      <p class="card-text"><small class="text-muted">Vendeur : <a href="#" class="btn btn-primary">Vendeur :${c.utilisateur.pseudo}</a></small></p>
+				      <p class="card-text"><small class="text-muted">Vendeur : <a href="${pageContext.request.contextPath}/profil?pseudo=${c.utilisateur.pseudo}" class="btn btn-primary">Vendeur :${c.utilisateur.pseudo}</a></small></p>
 				    </div>
 				  </div>
 				  
