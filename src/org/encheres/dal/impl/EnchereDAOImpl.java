@@ -8,10 +8,14 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.encheres.bo.ArticleVendu;
+import org.encheres.bo.Categorie;
 import org.encheres.bo.Enchere;
-import org.encheres.dal.ConstantesSQL;
+import org.encheres.bo.Retrait;
+import org.encheres.bo.Utilisateur;
 import org.encheres.dal.DALException;
 import org.encheres.dal.DAOTools;
+import org.encheres.dal.SQLRequete;
 import org.encheres.dal.dao.EnchereDAO;
 
 public class EnchereDAOImpl implements EnchereDAO {
@@ -22,11 +26,11 @@ public class EnchereDAOImpl implements EnchereDAO {
 
 	//TODO : GROSSE REQUETE POUR ALLER TOUT CHERCHER
 	//"SELECT e.date_enchere, e.montant_enchere, a.no_article, u.no_utilisateur FROM ENCHERES as e INNER JOIN ARTICLES_VENDUS as a ON e.no_article = a.no_article INNER JOIN UTILISATEURS as u ON e.no_utilisateur = u.no_utilisateur WHERE e.no_enchere=?"
-	private static final String SQLSELECT_ID = ConstantesSQL.requeteSelect(TABLE, null, IDS);
-	//"SELECT * FROM ENCHERES as e INNER JOIN ARTICLES_VENDUS as a ON e.no_article = a.no_article INNER JOIN UTILISATEURS as u ON e.no_utilisateur = u.no_utilisateur WHERE no_utilisateur=?"
-	private static final String SQLSELECT_UTILISATEUR = ConstantesSQL.requeteSelect(TABLE, null, new String[]{"no_utilisateur"});
-	private static final String SQLINSERT = ConstantesSQL.requeteInsert(TABLE, CHAMPS);
-	private static final String SQLUPDATE = ConstantesSQL.requeteUpdate(TABLE, CHAMPS, IDS);
+	private static final String SQLSELECT_ID = SQLRequete.select(null, TABLE, IDS);
+	//private static final String SQLSELECT_UTILISATEUR = SQLRequete.select(null, TABLE, new String[]{"no_utilisateur"});
+	private static final String SQLSELECT_UTILISATEUR = "SELECT * FROM ENCHERES as e INNER JOIN ARTICLES_VENDUS as a ON e.no_article = a.no_article INNER JOIN UTILISATEURS as u ON e.no_utilisateur = u.no_utilisateur WHERE a.no_utilisateur=?";
+	private static final String SQLINSERT = SQLRequete.insert(TABLE, CHAMPS);
+	private static final String SQLUPDATE = SQLRequete.update(TABLE, CHAMPS, IDS);
 
 	//TODO : Opti eventuelle
 	@Override
@@ -52,10 +56,10 @@ public class EnchereDAOImpl implements EnchereDAO {
 					no_utilisateur = rs.getInt("no_utilisateur");
 				}
 			}catch (SQLException e) {
-				throw new DALException("Select BYID failed - close failed for rs -  ", e);
+				throw new DALException("Select BYID failed - close failed for rs\n" + e);
 			}
 		} catch (SQLException e) {
-			throw new DALException("Select BYID failed - ", e);
+			throw new DALException("Select BYID failed\n" + e);
 		}
 
 		try {
@@ -68,7 +72,7 @@ public class EnchereDAOImpl implements EnchereDAO {
 				throw new DALException("Select BYID failed - le no_article ou le no_utilisateur n'est pas référencé");
 			}
 		} catch (Exception e) {
-			throw new DALException("Select BYID failed - close failed for rs -  ", e);
+			throw new DALException("Select BYID failed - close failed for rs\n" + e);
 		}
 
 		return enchere;
@@ -81,27 +85,37 @@ public class EnchereDAOImpl implements EnchereDAO {
 		List<Integer> no_articles = new ArrayList<>();
 		List<Integer> no_utilisateurs = new ArrayList<>();
 		try (	Connection connection = DAOTools.getConnection();
-				Statement statement = connection.createStatement();
+				PreparedStatement preparedStatement = connection.prepareStatement(SQLSELECT_UTILISATEUR);
 				) {
-			statement.execute(SQLSELECT_UTILISATEUR);
-
-			try (ResultSet rs = statement.getResultSet();){
+			preparedStatement.setInt(1, id_utilisateur);
+			try (ResultSet rs = preparedStatement.executeQuery();){
 				while(rs.next()){
 					encheres.add(new Enchere(
 							rs.getInt("no_enchere"),
 							rs.getDate("date_enchere"),
 							rs.getInt("montant_enchere"),
-							null,
+							new ArticleVendu(
+									rs.getInt("no_article"),
+									rs.getString(BDD.ARTICLESVENDUS_CHAMPS[0]).trim(),
+									rs.getString(BDD.ARTICLESVENDUS_CHAMPS[1]),
+									rs.getDate(BDD.ARTICLESVENDUS_CHAMPS[2]),
+									rs.getDate(BDD.ARTICLESVENDUS_CHAMPS[3]),
+									rs.getInt(BDD.ARTICLESVENDUS_CHAMPS[4]),
+									rs.getInt(BDD.ARTICLESVENDUS_CHAMPS[5]),
+									new Utilisateur(rs.getInt(BDD.ARTICLESVENDUS_CHAMPS[6]), null, null, null, null, null, null, null, null, null, null, false),
+									new Categorie(rs.getInt(BDD.ARTICLESVENDUS_CHAMPS[7]), null),
+									new Retrait(rs.getInt(BDD.ARTICLESVENDUS_CHAMPS[8]), null, null, null)
+									),
 							null
 							));
 					no_articles.add((rs.getInt("no_article") != 0) ? rs.getInt("no_article") : -1);
 					no_utilisateurs.add((rs.getInt("no_utilisateur") != 0) ? rs.getInt("no_utilisateur") : -1);
 				}
 			}catch (SQLException e) {
-				throw new DALException("Select utilisateur failed - close failed for rs -  ", e);
+				throw new DALException("Select utilisateur failed - close failed for rs\n" + e);
 			}
 		} catch (SQLException e) {
-			throw new DALException("Select utilisateur failed - ", e);
+			throw new DALException("Select utilisateur failed\n" + e);
 		}
 
 		try {
@@ -122,7 +136,7 @@ public class EnchereDAOImpl implements EnchereDAO {
 				}
 			}
 		} catch (Exception e) {
-			throw new DALException("Select BYID failed - close failed for rs -  ", e);
+			throw new DALException("Select BYID failed - close failed for rs\n" + e);
 		}
 
 		return encheres;
@@ -145,10 +159,10 @@ public class EnchereDAOImpl implements EnchereDAO {
 					enchere.setNo_enchere(rs.getInt(1));
 				}
 			} catch (SQLException e) {
-				throw new DALException("Insert enchere return key failed - " + enchere + " - ", e);
+				throw new DALException("Insert enchere return key failed - " + enchere + "\n" + e);
 			}
 		} catch (SQLException e) {
-			throw new DALException("Insert enchere failed - " + enchere + " - ", e);
+			throw new DALException("Insert enchere failed - " + enchere + "\n" + e);
 		}
 	}
 
@@ -165,7 +179,7 @@ public class EnchereDAOImpl implements EnchereDAO {
 
 			preparedStatement.executeUpdate();
 		} catch (SQLException e) {
-			throw new DALException("Update enchere failed - " + enchere + " - ", e);
+			throw new DALException("Update enchere failed - " + enchere + "\n" + e);
 		}
 	}
 }
