@@ -1,6 +1,7 @@
 package org.encheres.ihm;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.servlet.RequestDispatcher;
@@ -41,7 +42,12 @@ public class accueilServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		List<ArticleVendu> articlesVendus = null;
+		System.out.println(request.getParameter("exampleRadios"));
 		
+		String[] checkboxVente = request.getParameterValues("checkboxVente");
+		System.out.println(Arrays.toString(checkboxVente));
+		String[] checkboxAchat = request.getParameterValues("checkboxAchat");
+		System.out.println(Arrays.toString(checkboxAchat));
 		String filtres = request.getParameter("filtres");
 		String categorie = request.getParameter("categorie");
 		Integer categorieInt = 0;

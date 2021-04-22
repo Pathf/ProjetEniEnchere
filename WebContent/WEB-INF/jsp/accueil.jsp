@@ -44,20 +44,20 @@
 					<div class="d-flex justify-content-around">
 						<div class="form-check">
 							<input class="form-check-input" type="radio" name="exampleRadios"
-								id="exampleRadios1" value="option1" checked> <label
+								id="exampleRadios1" value="achat" > <label
 								class="form-check-label" for="exampleRadios1"> Achat </label>
 							<div class="form-check">
-								<input class="form-check-input" type="checkbox" value=""
+								<input class="form-check-input" name="checkboxAchat" type="checkbox" value="ouverte"
 									id="defaultCheck1"> <label class="form-check-label"
 									for="defaultCheck1"> enchères ouvertes </label>
 							</div>
 							<div class="form-check">
-								<input class="form-check-input" type="checkbox" value=""
+								<input class="form-check-input"  name="checkboxAchat" type="checkbox" value="all"
 									id="defaultCheck2"> <label class="form-check-label"
 									for="defaultCheck2"> mes enchères </label>
 							</div>
 							<div class="form-check">
-								<input class="form-check-input" type="checkbox" value=""
+								<input class="form-check-input" name="checkboxAchat" type="checkbox" value="remporte"
 									id="defaultCheck3"> <label class="form-check-label"
 									for="defaultCheck3"> mes enchères remportées </label>
 							</div>
@@ -65,20 +65,20 @@
 
 						<div class="form-check">
 							<input class="form-check-input" type="radio" name="exampleRadios"
-								id="exampleRadios2" value="option2"> <label
+								id="exampleRadios2" value="vente"> <label
 								class="form-check-label" for="exampleRadios2"> Vente </label>
 							<div class="form-check">
-								<input class="form-check-input" type="checkbox" value=""
+								<input class="form-check-input" name="checkboxVente" type="checkbox" value="enCour"
 									id="defaultCheck4"> <label class="form-check-label"
 									for="defaultCheck4"> mes ventes en cours </label>
 							</div>
 							<div class="form-check">
-								<input class="form-check-input" type="checkbox" value=""
+								<input class="form-check-input" name="checkboxVente" type="checkbox" value="debutees"
 									id="defaultCheck5"> <label class="form-check-label"
 									for="defaultCheck5"> ventes non débutées </label>
 							</div>
 							<div class="form-check">
-								<input class="form-check-input" type="checkbox" value=""
+								<input class="form-check-input" name="checkboxVente" type="checkbox" value="terminees"
 									id="defaultCheck6"> <label class="form-check-label"
 									for="defaultCheck6"> ventes terminées </label>
 							</div>
@@ -86,7 +86,7 @@
 					</div>
 				</c:when>
 				<c:otherwise>
-					<p>nada</p>p>
+					<p>fonctionnalité supplémentaire non accessible</p>
 				        </c:otherwise>
 			</c:choose>
 
@@ -94,8 +94,8 @@
 		</Form>
 
 
-		<c:choose>
-			<c:when test="${pseudo == null}">
+		<%-- <c:choose>
+			<c:when test="${pseudo == null}"> --%>
 
 				<c:choose>
 					<c:when test="${articlesVendus.size()>0}">
@@ -131,11 +131,11 @@
 						<p>
 					</c:otherwise>
 				</c:choose>
-			</c:when>
+			<%-- </c:when>
 			<c:otherwise>
 				<p>Un utilisateur est connecté afficher liste plus complète</p>
 			</c:otherwise>
-		</c:choose>
+		</c:choose> --%>
 
 
 
