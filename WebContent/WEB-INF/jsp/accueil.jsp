@@ -4,16 +4,13 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-
 <!DOCTYPE html>
 <html>
 <jsp:include page="/WEB-INF/fragments/head.jsp"></jsp:include>
-<head>
-<meta charset="UTF-8">
-<title>Accueil</title>
-</head>
 <body>
-	<div class="container text-center text-black">
+<% String isConnecte = (String)request.getSession().getAttribute("pseudo"); %>
+<%@ include file="/WEB-INF/fragments/navbar.jspf" %>
+<div class="container text-center text-black">
 	<h1>Liste des enchères</h1>
 	<Form>
 		<label for="filtres">Filtres</label>
@@ -43,11 +40,11 @@
 		<c:choose>
     		<c:when test="${articlesVendus.size()>0}">
 		        <ul class="list-group col-12">
-		         <div class="card-deck cardFlex flex-column ">
+		         <div class="card-deck cardFlex flex-column">
 		         
 		        	<c:forEach var="c" items="${articlesVendus}">
 			            	         
-				  <div class="card border border-dark  flex-sm-row ">
+				  <div class="card border border-dark flex-sm-row">
 				   <img class="card-img-top" src="https://via.placeholder.com/150
 				C/O https://placeholder.com/" alt="Card image cap"> 
 				    <div class="card-body">
