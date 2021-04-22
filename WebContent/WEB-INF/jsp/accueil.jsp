@@ -10,6 +10,7 @@
 <body>
 <% String isConnecte = (String)request.getSession().getAttribute("pseudo"); %>
 <%@ include file="/WEB-INF/fragments/navbar.jspf" %>
+<div class="container text-center text-black">
 	<h1>Liste des enchères</h1>
 	<Form>
 	<label for="filtres">Filtres</label>
@@ -39,11 +40,11 @@
 		<c:choose>
     		<c:when test="${articlesVendus.size()>0}">
 		        <ul class="list-group col-12">
-		         <div class="card-deck">
+		         <div class="card-deck cardFlex flex-column">
 		         
 		        	<c:forEach var="c" items="${articlesVendus}">
 			            	         
-				  <div class="card border border-dark">
+				  <div class="card border border-dark flex-sm-row">
 				   <img class="card-img-top" src="https://via.placeholder.com/150
 				C/O https://placeholder.com/" alt="Card image cap"> 
 				    <div class="card-body">
@@ -75,6 +76,7 @@
 				      	 
 <%-- <% String pseudo = (String)session.getAttribute("pseudo"); %>
 	<%=pseudo%> --%>
+	</div>
 </body>
 <%@ include file="/WEB-INF/fragments/footer.html" %>
 </html>

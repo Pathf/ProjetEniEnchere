@@ -8,9 +8,8 @@
 
     <!-- Bootstrap core CSS -->
     <link href="${pageContext.request.contextPath}/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- Custom styles for this template -->
-    <link href="${pageContext.request.contextPath}/css/4-col-portfolio.css" rel="stylesheet">
-
+	<!-- CSS -->
+	<link rel="stylesheet" href="${ param.style }">
+	
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>

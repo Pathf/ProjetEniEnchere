@@ -45,7 +45,7 @@
 </table>
 <c:if test="${ isMonProfil }">
 	<div class="row">
-	    <a href="${pageContext.request.contextPath}/modifierProfil" class="btn btn-primary mx-auto" role="button">Modifier</a>
+	    <a href="${pageContext.request.contextPath}/monProfil" class="btn btn-primary mx-auto" role="button">Modifier</a>
     </div>
 </c:if>
 </body>

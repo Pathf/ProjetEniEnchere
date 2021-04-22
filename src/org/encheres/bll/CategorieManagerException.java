@@ -1,8 +1,8 @@
 package org.encheres.bll;
 
 public class CategorieManagerException extends Exception{
+	private static final long serialVersionUID = 4246040591601785188L;
 
-	
 	public CategorieManagerException() {
 		super();
 	}
