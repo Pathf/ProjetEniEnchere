@@ -62,7 +62,7 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
 		}
 		return utilisateur;
 	}
-	
+
 	@Override
 	public Utilisateur selectByPseudo(String pseudo) throws DALException {
 		Utilisateur utilisateur = null;

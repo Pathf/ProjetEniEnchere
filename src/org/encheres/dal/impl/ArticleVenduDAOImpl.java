@@ -23,7 +23,7 @@ public class ArticleVenduDAOImpl implements ArticleVenduDAO {
 	private static final String SQLSELECT_ID = ConstantesSQL.requeteSelect(TABLE, null, IDS);
 	private static final String SQLSELECT_ALL = ConstantesSQL.requeteSelect(TABLE);
 	private static final String SQLINSERT = ConstantesSQL.requeteInsert(TABLE, CHAMPS);
-	private static final String SQLUPDATE = ConstantesSQL.requeteUpdate(TABLE, CHAMPS);
+	private static final String SQLUPDATE = ConstantesSQL.requeteUpdate(TABLE, CHAMPS, IDS);
 	// TODO : A voir
 	@Override
 	public ArticleVendu selectById(Integer id) throws DALException {
