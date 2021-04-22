@@ -94,6 +94,7 @@ public class CategorieDAOImpl implements CategorieDAO {
 				PreparedStatement preparedStatement = connection.prepareStatement(SQLUPDATE);
 				){
 			preparedStatement.setString(1, categorie.getLibelle());
+			preparedStatement.setInt(2, categorie.getNo_categorie());
 			preparedStatement.executeUpdate();
 		} catch (SQLException e) {
 			throw new DALException("Update categorie failed - " + categorie + " - ", e);
