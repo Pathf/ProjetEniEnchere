@@ -13,7 +13,7 @@
 <div class="container text-center text-black">
 	<h1>Liste des enchères</h1>
 	
-	<Form method="post" action="encheres">
+	<Form method="get" action="encheres">
 		<label for="filtres">Filtres</label>
 		  <input name="filtres" type="search" class="form-control rounded mb-3" placeholder="${defaultFiltresPlaceHolder!= null ? defaultFiltresPlaceHolder:"le nom de l'article contient" }" aria-label="Search"
 	    aria-describedby="search-addon" />
