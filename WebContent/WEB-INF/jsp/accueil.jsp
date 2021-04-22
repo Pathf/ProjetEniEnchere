@@ -15,19 +15,19 @@
 	
 	<Form method="post" action="encheres">
 		<label for="filtres">Filtres</label>
-		  <input name="filtres" type="search" class="form-control rounded mb-3" placeholder="le nom de l'article contient" aria-label="Search"
+		  <input name="filtres" type="search" class="form-control rounded mb-3" placeholder="${defaultFiltresPlaceHolder!= null ? defaultFiltresPlaceHolder:"le nom de l'article contient" }" aria-label="Search"
 	    aria-describedby="search-addon" />
 	  <span class="input-group-text border-0" id="search-addon">
 	    <i class="fas fa-search"></i>
 	  </span>
 		<label for="categorie" >Catégorie	</label>
-			<select name="categorie" class="custom-select custom-select-lg mb-3">
-				<option selected value="0">Toutes</option>
+			<select name="categorie" class="custom-select custom-select-lg mb-3" >
+				<option value="0">Toutes</option>
 					
 					<c:choose>
 			    		<c:when test="${categories.size()>0}">
 			 				<c:forEach var="cat" items="${categories}">
-		 						<option value="${cat.no_categorie}">${cat.libelle}</option>
+		 						<option ${defaultCategorie == cat.no_categorie?"selected":""} value="${cat.no_categorie}">${cat.libelle}</option>
 				   	</c:forEach>
 	   	 				</c:when>
 				   <c:otherwise>

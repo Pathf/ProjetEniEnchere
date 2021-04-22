@@ -195,8 +195,6 @@ public class ArticleVenduDAOImpl implements ArticleVenduDAO {
 			preparedStatement.setInt(1, no_categorie);
 			preparedStatement.setString(2,"%"+ nom + "%");
 			
-			System.out.println(SQLSELECT_WHERE_LIKE);
-			System.out.println(preparedStatement);
 			try (ResultSet rs = preparedStatement.executeQuery();){
 				
 				while(rs.next()){
@@ -268,8 +266,6 @@ public class ArticleVenduDAOImpl implements ArticleVenduDAO {
 			
 			preparedStatement.setString(1,"%"+ nom + "%");
 			
-			System.out.println(SQLSELECT_WHERE_LIKE);
-			System.out.println(preparedStatement);
 			try (ResultSet rs = preparedStatement.executeQuery();){
 				
 				while(rs.next()){
