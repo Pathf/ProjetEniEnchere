@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.sql.Date;
 import java.util.List;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -30,15 +31,14 @@ public class SuppressionServlet extends HttpServlet {
 
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		String erreur = "Erreur : Une erreur est survenue";
 		// suppression du compte utilisateur :
 		HttpSession session = request.getSession();
 		String pseudo = (String)session.getAttribute("pseudo");
 		if(pseudo != null && !pseudo.isEmpty()) {
 			// suppression que si pas d'encheres en cours
-			Utilisateur utilisateur;
 			try {
-				utilisateur = this.utilisateurManager.getUtilisateur(pseudo);
-
+				Utilisateur utilisateur = this.utilisateurManager.getUtilisateur(pseudo);
 				List<Enchere> encheres = this.enchereManager.getListeEnchere(utilisateur.getNo_utilisateur());
 				boolean enchereEnCour = false;
 				for(Enchere enchere : encheres) {
@@ -50,6 +50,9 @@ public class SuppressionServlet extends HttpServlet {
 					}
 				}
 				if(!enchereEnCour) {
+					// Déconnexion
+					request.getSession().removeAttribute("pseudo");
+					request.getSession().invalidate();
 					// modifier tous les article possedant le no_utilisateur correspondant à l'utilisateur
 					Utilisateur utilisateurInconnu = this.utilisateurManager.getUtilisateur("inconnu");
 					List<ArticleVendu> articleVendus = this.articleVenduManager.getListeArticleVenduByUtilisateur(utilisateur.getNo_utilisateur());
@@ -64,17 +67,17 @@ public class SuppressionServlet extends HttpServlet {
 					}
 					// suppression utilisateur
 					this.utilisateurManager.delete(utilisateur);
+					response.sendRedirect(request.getContextPath());
+					return;
 				} else {
-					System.out.println("Erreur : il reste des encheres en cours");
+					erreur = "Erreur : il reste des encheres en cours";
 				}
 			} catch (UtilisateurManagerException | EnchereManagerException | ArticleVenduManagerException e) {
 				System.out.println(e);
 			}
-
-
-
-
 		}
+		request.setAttribute("erreur", erreur);
+		RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/jsp/modifierProfil.jsp");
+		rd.forward(request, response);
 	}
-
 }

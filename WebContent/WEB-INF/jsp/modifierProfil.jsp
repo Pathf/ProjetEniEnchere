@@ -1,6 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%
+	String erreur = (String) request.getAttribute("erreur");
+%>
+
 <!DOCTYPE html>
 <html>
 <jsp:include page="/WEB-INF/fragments/head.jsp">
@@ -11,7 +15,9 @@
 		<div class="mx-auto text-center">
 			<h1>Mon profil</h1>
 		</div>
+		<c:if test="<%= erreur != null %>">
 		
+		</c:if>
 		<c:if test="${ isModifie }">
 			<div class="alert alert-success alert-dismissible fade show col-md-10 offset-md-1 mt-3"" role="alert">
 			  Votre profil est modifié.
