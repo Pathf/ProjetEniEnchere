@@ -98,9 +98,7 @@ public class VendreUnArticleServlet extends HttpServlet {
 			String miseAPrixString = request.getParameter("miseAPrix");
 			
 			if (miseAPrixString != null && !miseAPrixString.isEmpty()) {
-				System.out.println(miseAPrixString);
 				Integer miseAPrix = Integer.parseInt(request.getParameter("miseAPrix"));
-				System.out.println(miseAPrix);
 			
 				if(		article != null && !article.isEmpty() &&
 						description != null && !description.isEmpty() &&
