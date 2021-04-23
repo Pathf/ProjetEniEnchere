@@ -10,9 +10,6 @@ import javax.sql.DataSource;
 
 public class DAOTools {
 	private static DataSource dataSource;
-	private static String urldb;
-	private static String userdb;
-	//private static String passworddb;
 
 	static {
 		try {
@@ -21,28 +18,12 @@ public class DAOTools {
 		} catch (NamingException e) {
 			e.printStackTrace();
 		}
-		/*try {
-			Class.forName(Settings.getProperties("driverdb"));
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}*/
-		urldb = Settings.getProperties("urldb");
-		userdb = Settings.getProperties("userdb");
-		//passworddb = Settings.getProperties("passworddb");
-
 		System.out.println("--------------------------");
 		System.out.println("Connexion à la base de donnée TROCENCHERES");
-		System.out.println("----");
-		System.out.println("Url : " + urldb);
-		System.out.println("Identifiant utilisé : " + userdb);
 		System.out.println("--------------------------");
 	}
 
 	public static Connection getConnection() throws SQLException {
 		return dataSource.getConnection();
 	}
-
-	/*public static Connection getConnection() throws SQLException {
-		return  DriverManager.getConnection(urldb,userdb,passworddb);
-	}*/
 }
