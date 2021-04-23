@@ -1,7 +1,8 @@
 package org.encheres.bll;
 
+import java.util.ArrayList;
 import java.util.List;
-
+import java.sql.Date;
 import org.encheres.bo.ArticleVendu;
 import org.encheres.dal.DALException;
 import org.encheres.dal.FactoryDAO;
@@ -69,6 +70,17 @@ public class ArticleVenduManager {
 	}
 	
 	
+	public List<ArticleVendu> selectByFiltre(Integer no_categorie , String nom, Date date,Integer no_utilisateur) throws ArticleVenduManagerException {
+		List<ArticleVendu> articleVendus = null;
+
+		try {
+			articleVendus = this.articleVenduDAO.selectByFiltre(no_categorie,nom, date,no_utilisateur);
+		} catch (DALException e) {
+			throw new ArticleVenduManagerException("selectByFiltre failed \n " + e);
+		}
+
+		return articleVendus;
+	}
 	public List<ArticleVendu> selectByCategorieAndNom(Integer no_categorie, String nom) throws ArticleVenduManagerException {
 		List<ArticleVendu> articleVendus = null;
 

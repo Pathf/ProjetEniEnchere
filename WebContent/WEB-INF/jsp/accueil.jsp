@@ -13,7 +13,7 @@
 	<div class="container text-center text-black">
 		<h1>Liste des enchères</h1>
 
-		<Form method="post" action="encheres">
+		<Form method="get" action="encheres">
 			<label for="filtres">Filtres</label> <input name="filtres"
 				type="search" class="form-control rounded mb-3"
 				placeholder="${defaultFiltresPlaceHolder!= null ? defaultFiltresPlaceHolder:"
@@ -41,42 +41,42 @@
 				<c:when test="${pseudo != null}">
 					<div class="d-flex justify-content-around">
 						<div class="form-check">
-							<input class="form-check-input" type="radio" name="exampleRadios"
+							<input class="form-check-input" type="radio" name="radioAchatVente"
 								id="exampleRadios1" value="achat" > <label
 								class="form-check-label" for="exampleRadios1"> Achat </label>
 							<div class="form-check">
-								<input class="form-check-input" name="checkboxAchat" type="checkbox" value="ouverte"
+								<input class="form-check-input" name="checkboxAchat" type="checkbox" value="open"
 									id="defaultCheck1"> <label class="form-check-label"
 									for="defaultCheck1"> enchères ouvertes </label>
 							</div>
 							<div class="form-check">
-								<input class="form-check-input"  name="checkboxAchat" type="checkbox" value="all"
+								<input class="form-check-input"  name="checkboxAchat" type="checkbox" value="mine"
 									id="defaultCheck2"> <label class="form-check-label"
 									for="defaultCheck2"> mes enchères </label>
 							</div>
 							<div class="form-check">
-								<input class="form-check-input" name="checkboxAchat" type="checkbox" value="remporte"
+								<input class="form-check-input" name="checkboxAchat" type="checkbox" value="win"
 									id="defaultCheck3"> <label class="form-check-label"
 									for="defaultCheck3"> mes enchères remportées </label>
 							</div>
 						</div>
 
 						<div class="form-check">
-							<input class="form-check-input" type="radio" name="exampleRadios"
+							<input class="form-check-input" type="radio" name="radioAchatVente"
 								id="exampleRadios2" value="vente"> <label
 								class="form-check-label" for="exampleRadios2"> Vente </label>
 							<div class="form-check">
-								<input class="form-check-input" name="checkboxVente" type="checkbox" value="enCour"
+								<input class="form-check-input" name="checkboxVente" type="checkbox" value="process"
 									id="defaultCheck4"> <label class="form-check-label"
 									for="defaultCheck4"> mes ventes en cours </label>
 							</div>
 							<div class="form-check">
-								<input class="form-check-input" name="checkboxVente" type="checkbox" value="debutees"
+								<input class="form-check-input" name="checkboxVente" type="checkbox" value="start"
 									id="defaultCheck5"> <label class="form-check-label"
 									for="defaultCheck5"> ventes non débutées </label>
 							</div>
 							<div class="form-check">
-								<input class="form-check-input" name="checkboxVente" type="checkbox" value="terminees"
+								<input class="form-check-input" name="checkboxVente" type="checkbox" value="finish"
 									id="defaultCheck6"> <label class="form-check-label"
 									for="defaultCheck6"> ventes terminées </label>
 							</div>
