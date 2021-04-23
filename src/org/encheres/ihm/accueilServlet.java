@@ -21,25 +21,13 @@ import org.encheres.bo.ArticleVendu;
 import org.encheres.bo.Categorie;
 import org.encheres.bo.Utilisateur;
 
-/**
- * Servlet implementation class accueilServlet
- */
 @WebServlet("/encheres")
 public class accueilServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private ArticleVenduManager articleVenduManager = ArticleVenduManager.getInstance();
 	private CategoriesManager categorieManager = CategoriesManager.getInstance();
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
-    public accueilServlet() {
-        super();
-        // TODO Auto-generated constructor stub
-    }
 
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
+	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		List<ArticleVendu> articlesVendus = null;
 		System.out.println(request.getParameter("exampleRadios"));
@@ -92,31 +80,16 @@ public class accueilServlet extends HttpServlet {
 
 		RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/jsp/accueil.jsp");
 		rd.forward(request, response);
-//		
 	}
 
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		doGet(request, response);
-	}
-	
 	private List<Categorie> listCategorie(){
 		List<Categorie> categories = null;
 		try {
 			categories = this.categorieManager.getListeCategorie() ;
-				
+
 		} catch (CategorieManagerException e) {
 			System.out.println(e);
 		}
 		return categories;
 	}
-
-//	
 }
-
-	
-	
-

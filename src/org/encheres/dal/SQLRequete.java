@@ -1,24 +1,24 @@
 package org.encheres.dal;
 
-public class ConstantesSQL {
+public class SQLRequete {
 
-	public static final String requeteSelect(String table) {
-		return requeteSelect(table, null);
+	public static final String select(String table) {
+		return select(null, table);
 	}
 
-	public static final String requeteSelect(String table, String[] champs) {
-		return requeteSelect(table, champs, null);
+	public static final String select(String[] champs, String table) {
+		return select(champs, table, null);
 	}
 
-	public static final String requeteSelect(String table, String[] champs, String[] champWheres) {
-		return requeteSelectLeftJoin(new String[] {table}, champs, champWheres);
+	public static final String select(String[] champs, String table,  String[] champWheres) {
+		return selectLeftJoin(champs, new String[] {table}, champWheres);
 	}
 
 	// Ne marche que si les id sont identique a la table 1
 	// String[] tables = new String[]{"table1", "table2 no_retrait", "table3 no_utilisateur"};
 	// String[] champs = new String[]{"no_table1 att1 att2 att3","no_table2 attribut1 attribut2","no_table3 champ1 champ2"};
 	// String[] champWheres = new String[]{"no_table1"};
-	public static final String requeteSelectLeftJoin(String[] tables, String[] champs, String[] champWheres) {
+	public static final String selectLeftJoin(String[] champs, String[] tables, String[] champWheres) {
 		StringBuffer sb = new StringBuffer();
 		sb.append("SELECT ");
 		if(champs != null) {
@@ -83,7 +83,7 @@ public class ConstantesSQL {
 		return sb.toString();
 	}
 
-	public static final String requeteInsert(String table, String[] champs) {
+	public static final String insert(String table, String[] champs) {
 		StringBuffer sb = new StringBuffer();
 		sb.append("INSERT INTO ");
 		sb.append(table);
@@ -101,7 +101,7 @@ public class ConstantesSQL {
 		return sb.toString();
 	}
 
-	public static final String requeteUpdate(String table, String[] champs, String[] champWheres) {
+	public static final String update(String table, String[] champs, String[] champWheres) {
 		StringBuffer sb = new StringBuffer();
 		sb.append("UPDATE ");
 		sb.append(table);
@@ -127,11 +127,11 @@ public class ConstantesSQL {
 		return sb.toString();
 	}
 
-	public static final String requeteDelete(String table) {
-		return requeteDelete(table, null);
+	public static final String delete(String table) {
+		return delete(table, null);
 	}
 
-	public static final String requeteDelete(String table, String[] champs) {
+	public static final String delete(String table, String[] champs) {
 		StringBuffer sb = new StringBuffer();
 		sb.append("DELETE FROM ");
 		sb.append(table);

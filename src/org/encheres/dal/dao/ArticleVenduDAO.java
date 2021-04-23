@@ -14,7 +14,9 @@ public interface ArticleVenduDAO {
 
 	void update(ArticleVendu object) throws DALException;
 
-	List<ArticleVendu> selectByCategorie(Integer no_categorie) throws DALException;
+	List<ArticleVendu> selectByUtilisateur(Integer no_utilisateur) throws DALException;
+	
+List<ArticleVendu> selectByCategorie(Integer no_categorie) throws DALException;
 	
 	List<ArticleVendu> selectByCategorieAndNom(Integer no_categorie, String nom) throws DALException;
 	

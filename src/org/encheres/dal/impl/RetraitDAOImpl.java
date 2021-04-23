@@ -9,9 +9,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.encheres.bo.Retrait;
-import org.encheres.dal.ConstantesSQL;
 import org.encheres.dal.DALException;
 import org.encheres.dal.DAOTools;
+import org.encheres.dal.SQLRequete;
 import org.encheres.dal.dao.RetraitDAO;
 
 public class RetraitDAOImpl implements RetraitDAO {
@@ -20,10 +20,10 @@ public class RetraitDAOImpl implements RetraitDAO {
 	private static final String[] IDS = new String[]{"no_retrait"};
 	private static final String[] CHAMPS = new String[]{"rue","code_postal","ville"};
 
-	private static final String SQLSELECT_ID = ConstantesSQL.requeteSelect(TABLE, null, IDS);
-	private static final String SQLSELECT_ALL = ConstantesSQL.requeteSelect(TABLE);
-	private static final String SQLINSERT = ConstantesSQL.requeteInsert(TABLE, CHAMPS);
-	private static final String SQLUPDATE = ConstantesSQL.requeteUpdate(TABLE, CHAMPS, IDS);
+	private static final String SQLSELECT_ID = SQLRequete.select(null, TABLE, IDS);
+	private static final String SQLSELECT_ALL = SQLRequete.select(TABLE);
+	private static final String SQLINSERT = SQLRequete.insert(TABLE, CHAMPS);
+	private static final String SQLUPDATE = SQLRequete.update(TABLE, CHAMPS, IDS);
 
 	@Override
 	public Retrait selectById(Integer id) throws DALException {

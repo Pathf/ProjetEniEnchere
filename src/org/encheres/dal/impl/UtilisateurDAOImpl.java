@@ -9,9 +9,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.encheres.bo.Utilisateur;
-import org.encheres.dal.ConstantesSQL;
 import org.encheres.dal.DALException;
 import org.encheres.dal.DAOTools;
+import org.encheres.dal.SQLRequete;
 import org.encheres.dal.dao.UtilisateurDAO;
 
 public class UtilisateurDAOImpl implements UtilisateurDAO {
@@ -20,14 +20,14 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
 	private static final String[] IDS = new String[]{"no_utilisateur"};
 	private static final String[] CHAMPS = new String[]{"pseudo","nom","prenom","email","telephone","rue","code_postal","ville","mot_de_passe","credit","administrateur"};
 
-	private static final String SQLSELECT_ID = ConstantesSQL.requeteSelect(TABLE, null, IDS);
-	private static final String SQLSELECT_PSEUDO = ConstantesSQL.requeteSelect(TABLE, null, new String[] {"pseudo"} );
-	private static final String SQLSELECT_PSEUDO_MDP = ConstantesSQL.requeteSelect(TABLE, null, new String[] {"pseudo","mot_de_passe"});
-	private static final String SQLSELECT_EMAIL_MDP = ConstantesSQL.requeteSelect(TABLE, null, new String[] {"email","mot_de_passe"});
-	private static final String SQLSELECT_ALL = ConstantesSQL.requeteSelect(TABLE);
-	private static final String SQLINSERT = ConstantesSQL.requeteInsert(TABLE, CHAMPS);
-	private static final String SQLUPDATE = ConstantesSQL.requeteUpdate(TABLE, CHAMPS, IDS);
-	private static final String SQLREMOVE = ConstantesSQL.requeteDelete(TABLE, IDS);
+	private static final String SQLSELECT_ID = SQLRequete.select(null, TABLE, IDS);
+	private static final String SQLSELECT_PSEUDO = SQLRequete.select(null, TABLE, new String[] {"pseudo"} );
+	private static final String SQLSELECT_PSEUDO_MDP = SQLRequete.select(null, TABLE, new String[] {"pseudo","mot_de_passe"});
+	private static final String SQLSELECT_EMAIL_MDP = SQLRequete.select(null, TABLE, new String[] {"email","mot_de_passe"});
+	private static final String SQLSELECT_ALL = SQLRequete.select(TABLE);
+	private static final String SQLINSERT = SQLRequete.insert(TABLE, CHAMPS);
+	private static final String SQLUPDATE = SQLRequete.update(TABLE, CHAMPS, IDS);
+	private static final String SQLREMOVE = SQLRequete.delete(TABLE, IDS);
 
 	@Override
 	public Utilisateur selectById(Integer id) throws DALException {

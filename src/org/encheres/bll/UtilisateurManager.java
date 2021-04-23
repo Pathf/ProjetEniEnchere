@@ -31,7 +31,7 @@ public class UtilisateurManager {
 		}
 		return utilisateur;
 	}
-	
+
 	public Utilisateur getUtilisateur(String pseudo) throws UtilisateurManagerException {
 		Utilisateur utilisateur = null;
 		try {
@@ -48,7 +48,11 @@ public class UtilisateurManager {
 			if(identifiant.contains("@") && identifiant.contains(".")) {
 				utilisateur = this.utilisateurDAO.selectByEmailEtMdp(identifiant, mdp);
 			} else {
-				utilisateur = this.utilisateurDAO.selectByPseudoEtMdp(identifiant, mdp);
+				if(!"Inconnu".equals(identifiant) && !"inconnu".equals(identifiant)) {
+					utilisateur = this.utilisateurDAO.selectByPseudoEtMdp(identifiant, mdp);
+				} else {
+					throw new UtilisateurManagerException("getUtilisateurConnexion failed : pseudo \"Inconnu\" interdit");
+				}
 			}
 		} catch (DALException e) {
 			throw new UtilisateurManagerException("getUtilisateurConnexion failed - \n" + e);
