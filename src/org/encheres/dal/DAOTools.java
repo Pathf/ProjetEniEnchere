@@ -20,11 +20,12 @@ public class DAOTools {
 			System.out.println("Ok !");
 			System.out.println("-------------");
 			System.out.println("Connexion à la base de donnée TROCENCHERES");
-			System.out.println("--------------------------");
+			
 		} catch (NamingException e) {
 			System.out.println("Erreur !");
 			e.printStackTrace();
 		}
+		System.out.println("--------------------------");
 	}
 
 	public static Connection getConnection() throws SQLException {
