@@ -1,9 +1,9 @@
 package org.encheres.ihm;
 
 import java.io.IOException;
+import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.sql.Date;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -34,6 +34,7 @@ public class VendreUnArticleServlet extends HttpServlet {
 	private CategoriesManager categoriesManager = CategoriesManager.getInstance();
 	private static final long serialVersionUID = 1L;
 
+	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		HttpSession session = request.getSession();
@@ -54,7 +55,7 @@ public class VendreUnArticleServlet extends HttpServlet {
 			} catch (CategorieManagerException e) {
 				System.out.println(e);
 			}
-			
+
 			request.getRequestDispatcher("/WEB-INF/jsp/vendreUnArticle.jsp").forward(request, response);
 		} else {
 			response.sendRedirect(request.getContextPath());
@@ -66,6 +67,7 @@ public class VendreUnArticleServlet extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
 	 *      response)
 	 */
+	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		HttpSession session = request.getSession();
@@ -76,17 +78,17 @@ public class VendreUnArticleServlet extends HttpServlet {
 			String erreur = null;
 			Date debutEnchere = null;
 			Date finEnchere = null;
-			
+
 			String article = request.getParameter("article");
 			String description = request.getParameter("description");
 			Integer categorieId = Integer.parseInt(request.getParameter("categorie"));
-			String photoArticle = request.getParameter("photoArticle");
+			//String photoArticle = request.getParameter("photoArticle");
 			try {
-				
+
 				debutEnchere = new java.sql.Date(new SimpleDateFormat("yyyy-MM-dd").parse(request.getParameter("debutEnchere")).getTime());
 			} catch (ParseException e2) {
 				e2.printStackTrace();
-			}	
+			}
 			try {
 				finEnchere = new java.sql.Date(new SimpleDateFormat("yyyy-MM-dd").parse(request.getParameter("finEnchere")).getTime());
 			} catch (ParseException e1) {
@@ -96,10 +98,10 @@ public class VendreUnArticleServlet extends HttpServlet {
 			String codePostal = request.getParameter("codePostal");
 			String ville = request.getParameter("ville");
 			String miseAPrixString = request.getParameter("miseAPrix");
-			
+
 			if (miseAPrixString != null && !miseAPrixString.isEmpty()) {
 				Integer miseAPrix = Integer.parseInt(request.getParameter("miseAPrix"));
-			
+
 				if(		article != null && !article.isEmpty() &&
 						description != null && !description.isEmpty() &&
 						categorieId != null &&
@@ -108,11 +110,11 @@ public class VendreUnArticleServlet extends HttpServlet {
 						codePostal != null && !codePostal.isEmpty() &&
 						ville != null && !ville.isEmpty()
 						) {
-					
+
 					if(finEnchere != null) {
-						
-						if (finEnchere.after(debutEnchere)) {					
-							
+
+						if (finEnchere.after(debutEnchere)) {
+
 							try {
 								utilisateur = this.utilisateurManager.getUtilisateur(pseudo);
 							} catch (UtilisateurManagerException e) {
@@ -135,7 +137,7 @@ public class VendreUnArticleServlet extends HttpServlet {
 							erreur = "La date de fin de l'enchère ne peut être inferieur à la date de début !";
 						}
 					} else {
-						 erreur = "La date de fin de l'enchère est obligatoire !";
+						erreur = "La date de fin de l'enchère est obligatoire !";
 					}
 				} else {
 					erreur = "Vous avez oublié de remplir un champ !";
@@ -144,7 +146,7 @@ public class VendreUnArticleServlet extends HttpServlet {
 				erreur = "La mise à prix est obligatoire !";
 			}
 			request.setAttribute("erreur", erreur);
-			doGet(request, response);
+			this.doGet(request, response);
 		} else {
 			response.sendRedirect(request.getContextPath());
 		}
