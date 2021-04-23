@@ -9,18 +9,14 @@
 	<jsp:param value="./css/vendreUnArticle.css" name="style"/>
 </jsp:include>
 <body>
-	<nav class="navbar navbar-expand-lg navbar-light bg-light">
-	  <div class="container-fluid">
-	    <a class="navbar-brand" href="<%=request.getContextPath()%>">DUH - Encheres</a>
-	  </div>
-	</nav>
+	<%@ include file="/WEB-INF/fragments/navbar.jspf" %>
 	<div class="container">
 		<div class="mx-auto text-center">
 			<h1>Nouvelle vente</h1>
 		</div>
 		<c:if test="${ erreur != null }">
 			<div class="alert alert-danger alert-dismissible fade show mx-auto col-md-10 offset-md-1 mt-3" role="alert">
-			  <strong>Erreur !</strong> <%=erreur%>
+			  <strong>Erreur !</strong> ${erreur}
 			  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
 			    <span aria-hidden="true">&times;</span>
 			  </button>
@@ -109,5 +105,5 @@
 
 	</div>
 </body>
-<%@ include file="/WEB-INF/fragments/footer.html" %>
+<%@ include file="/WEB-INF/fragments/script.html" %>
 </html>

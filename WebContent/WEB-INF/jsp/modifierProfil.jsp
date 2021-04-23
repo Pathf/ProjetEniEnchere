@@ -8,11 +8,7 @@
 	<jsp:param value="./css/monProfil.css" name="style"/>
 </jsp:include>
 <body>
-	<nav class="navbar navbar-expand-lg navbar-light bg-light">
-	  <div class="container-fluid">
-	    <a class="navbar-brand" href="<%=request.getContextPath()%>">DUH - Encheres</a>
-	  </div>
-	</nav>
+	<%@ include file="/WEB-INF/fragments/navbar.jspf" %>
 	<div class="container">
 		<div class="mx-auto text-center">
 			<h1>Mon profil</h1>
@@ -68,5 +64,5 @@
 		</form>
 	</div>
 </body>
-<%@ include file="/WEB-INF/fragments/footer.html" %>
+<%@ include file="/WEB-INF/fragments/script.html" %>
 </html>

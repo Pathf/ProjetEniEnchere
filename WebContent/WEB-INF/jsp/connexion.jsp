@@ -1,24 +1,55 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html>
 <html>
 <jsp:include page="/WEB-INF/fragments/head.jsp"></jsp:include>
 <body>
-	<div class="container text-center text-black">
-		<h1>Connexion</h1>
+<%@ include file="/WEB-INF/fragments/navbar.jspf" %>
+	<div class="container">
+		<div class="mx-auto text-center">
+			<h1>Connexion</h1>
+		</div>
+		
+		<c:if test="${ erreur != null }">
+			<div class="alert alert-danger alert-dismissible fade show mx-auto col-md-10 offset-md-1 mt-3" role="alert">
+			  <strong>Erreur !</strong> ${erreur}
+			  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+			    <span aria-hidden="true">&times;</span>
+			  </button>
+			</div>
+		</c:if>
+		
 		<form action="connexion" method="post">
-			<label for="identifiant" >Identifiant :</label> <input id="identifiant" type="text" name="identifiant">
-			<br />
-			<label for="mdp" >Mot de passe :</label> <input id="mdp" type="text" name="mdp">
-			<br />
-			<button>Connexion</button>
-			<input type="checkbox" name="souvenir" id="souvenir"> <label for="souvenir">Se souvenir de moi</label>
-			<a href="">Mot de passe oublié</a> 
+			<div class="row mt-5">
+				<label for="identifiant" class="col-md-2 offset-md-3">Identifiant :</label>
+				<input id="identifiant" class="col-md-4" type="text" name="identifiant" placeholder=" Pseudo ou Email" required>
+			</div>
+			<div class="row mt-2">
+				<label for="mot_de_passe" class="col-md-2 offset-md-3">Mot de passe :</label>
+				<input id="mot_de_passe" class="col-md-4" type="password" name="mot_de_passe" placeholder=" **********" required>
+			</div>
+			<div class="row mt-2">
+				<div class="col-md-2 offset-md-4">
+					<button class="btn btn-lg btn-primary justify-content-md-end">Connexion</button>
+				</div>
+				<div class="col-md-3">
+					<div class="row"> 
+						<input class="mr-1" type="checkbox" name="souvenir" id="souvenir">
+						<label class="mr-1" for="souvenir"> Se souvenir de moi</label>
+					</div>
+					<div class="row">
+						<a href="">Mot de passe oublié</a>
+					</div>
+				</div>
+			</div> 
 		</form>
 		<form action="creercompte" method="get">
-			<button>Créer un compte</button>
+			<div class="row justify-content-center">
+				<button class="btn btn-lg btn-secondary">Créer un compte</button>
+			</div>
 		</form>
 	</div>
 </body>
-<%@ include file="/WEB-INF/fragments/footer.html" %>
+<%@ include file="/WEB-INF/fragments/script.html" %>
 </html>
