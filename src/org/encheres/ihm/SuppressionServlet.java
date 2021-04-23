@@ -44,8 +44,6 @@ public class SuppressionServlet extends HttpServlet {
 				for(Enchere enchere : encheres) {
 					Date dateNow = new Date(System.currentTimeMillis());
 					Date dateFinEnchere = enchere.getArticle().getDate_fin_encheres();
-					System.out.println(dateNow.toString());
-					System.out.println(dateFinEnchere.toString());
 					if(dateNow.before(dateFinEnchere) || dateNow.toString().equals(dateFinEnchere.toString())) {
 						enchereEnCour = true;
 						break;
@@ -57,8 +55,6 @@ public class SuppressionServlet extends HttpServlet {
 				for(ArticleVendu articleVendu : utilisateurArticleVendus) {
 					Date dateNow = new Date(System.currentTimeMillis());
 					Date dateFinEnchere = articleVendu.getDate_fin_encheres();
-					System.out.println(dateNow.toString());
-					System.out.println(dateFinEnchere.toString());
 					if(dateNow.before(dateFinEnchere) || dateNow.toString().equals(dateFinEnchere.toString())) {
 						enchereEnCour = true;
 						break;
@@ -89,7 +85,7 @@ public class SuppressionServlet extends HttpServlet {
 					erreur = "Il reste des encheres en cours";
 				}
 			} catch (UtilisateurManagerException | EnchereManagerException | ArticleVenduManagerException e) {
-				System.out.println(e);
+				System.out.println(e); //TODO : Log
 			}
 		}
 		request.setAttribute("erreur", erreur);
