@@ -57,17 +57,17 @@ public class ArticleVenduManager {
 		return articleVendus;
 	}
 	
-	public List<ArticleVendu> getListeArticleVenduByCategorie(Integer no_categorie) throws ArticleVenduManagerException {
-		List<ArticleVendu> articleVendus = null;
-
-		try {
-			articleVendus = this.articleVenduDAO.selectByCategorie(no_categorie);
-		} catch (DALException e) {
-			throw new ArticleVenduManagerException("getListeArticleVenduByCategorie failed - ", e);
-		}
-
-		return articleVendus;
-	}
+//	public List<ArticleVendu> getListeArticleVenduByCategorie(Integer no_categorie) throws ArticleVenduManagerException {
+//		List<ArticleVendu> articleVendus = null;
+//
+//		try {
+//			articleVendus = this.articleVenduDAO.selectByCategorie(no_categorie);
+//		} catch (DALException e) {
+//			throw new ArticleVenduManagerException("getListeArticleVenduByCategorie failed - ", e);
+//		}
+//
+//		return articleVendus;
+//	}
 	
 	
 	public List<ArticleVendu> selectByFiltre(Integer no_categorie , String nom, Boolean date,String no_utilisateur, Boolean process, Boolean start, Boolean finish) throws ArticleVenduManagerException {
@@ -95,17 +95,17 @@ public class ArticleVenduManager {
 		}
 	
 	
-	public List<ArticleVendu> selectByCategorieAndNom(Integer no_categorie, String nom) throws ArticleVenduManagerException {
-		List<ArticleVendu> articleVendus = null;
-
-		try {
-			articleVendus = this.articleVenduDAO.selectByCategorieAndNom(no_categorie, nom);
-		} catch (DALException e) {
-			throw new ArticleVenduManagerException("selectByCategorieAndNom failed - ", e);
-		}
-
-		return articleVendus;
-	}
+//	public List<ArticleVendu> selectByCategorieAndNom(Integer no_categorie, String nom) throws ArticleVenduManagerException {
+//		List<ArticleVendu> articleVendus = null;
+//
+//		try {
+//			articleVendus = this.articleVenduDAO.selectByCategorieAndNom(no_categorie, nom);
+//		} catch (DALException e) {
+//			throw new ArticleVenduManagerException("selectByCategorieAndNom failed - ", e);
+//		}
+//
+//		return articleVendus;
+//	}
 	
 	public List<ArticleVendu> selectBydNom(String nom) throws ArticleVenduManagerException {
 		List<ArticleVendu> articleVendus = null;

@@ -42,9 +42,9 @@ public class accueilServlet extends HttpServlet {
 		String categorie = request.getParameter("categorie");
 		Integer categorieInt = null;
 		String radioAchat = request.getParameter("radioAchatVente");
-		String[] where;
+//		String[] where;
 		Boolean filtreByDateDebut = false;
-		String mine = null;
+//		String mine = null;
 		String noUtilisateur = request.getParameter("pseudo");
 		Boolean winBid = false;
 		Boolean process = false;
@@ -52,37 +52,48 @@ public class accueilServlet extends HttpServlet {
 		Boolean finish = false;
 
 		if ("achat".equals(radioAchat)) {
-			String[] checkboxAchat = request.getParameterValues("checkboxAchat");
+			String[] checkboxAchat =null;
+			if (request.getParameterValues("checkboxAchat") != null) {
+				checkboxAchat = request.getParameterValues("checkboxAchat");
+			
 //			System.out.println(Arrays.toString(checkboxAchat));
-//			System.out.println(checkboxAchat[0]);
 			if (Arrays.stream(checkboxAchat).anyMatch("open"::equals)) {
 				filtreByDateDebut = true;
 			}
 			if (Arrays.stream(checkboxAchat).anyMatch("mine"::equals)) {
 				if (session.getAttribute("pseudo") != null) {
 					noUtilisateur = (String) session.getAttribute("pseudo");
-				};
+				}
+				;
 			}
 			if (Arrays.stream(checkboxAchat).anyMatch("win"::equals)) {
 				winBid = true;
 				if (session.getAttribute("pseudo") != null) {
 					noUtilisateur = (String) session.getAttribute("pseudo");
-				};
+				}
+				;
+			}
 			}
 		}
 		if ("vente".equals(radioAchat)) {
-			String[] checkboxVente = request.getParameterValues("checkboxVente");
-			System.out.println(Arrays.toString(checkboxVente));
-			if (Arrays.stream(checkboxVente).anyMatch("process"::equals)) {
-			process = true;
-			if (session.getAttribute("pseudo") != null) {
-				noUtilisateur = (String) session.getAttribute("pseudo");
-			};
-		}if (Arrays.stream(checkboxVente).anyMatch("start"::equals)) {
-			start = true;
-		}if (Arrays.stream(checkboxVente).anyMatch("finish"::equals)) {
-			finish = true;
-		}
+			String[] checkboxVente = null;
+			if (request.getParameterValues("checkboxVente") != null) {
+				checkboxVente = request.getParameterValues("checkboxVente");
+//					System.out.println(Arrays.toString(checkboxVente));
+				if (Arrays.stream(checkboxVente).anyMatch("process"::equals)) {
+					process = true;
+					if (session.getAttribute("pseudo") != null) {
+						noUtilisateur = (String) session.getAttribute("pseudo");
+					}
+					;
+				}
+				if (Arrays.stream(checkboxVente).anyMatch("start"::equals)) {
+					start = true;
+				}
+				if (Arrays.stream(checkboxVente).anyMatch("finish"::equals)) {
+					finish = true;
+				}
+			}
 		}
 
 		// on verifie la catégorie choisie sinon si 0 on laisse à null
@@ -93,9 +104,8 @@ public class accueilServlet extends HttpServlet {
 		request.setAttribute("defaultCategorie", categorieInt);
 		request.setAttribute("defaultFiltresPlaceHolder", filtres);
 
-		// TEST NOUVEAU FILTRE//
+		// TEST LES FILTRES DEMANDE//
 		try {
-
 			articlesVendus = this.articleVenduManager.selectByFiltre(categorieInt, filtres, filtreByDateDebut,
 					noUtilisateur, process, start, finish);// System.out.println("liste articles " + articlesVendus);
 			request.setAttribute("articlesVendus", articlesVendus);
@@ -107,20 +117,16 @@ public class accueilServlet extends HttpServlet {
 		if (winBid == true) {
 			try {
 				List<ArticleVendu> articlesVendusGagné = null;
-
 				articlesVendusGagné = this.articleVenduManager.listByWinBid(noUtilisateur);
 
 				// ON COMPARE AVEC LA LISTE DE FILTRE PRECEDENTE
 				articlesVendus.retainAll(articlesVendusGagné);
-//				System.out.println(articlesVendusGagné);
-//				articlesVendus = articlesVendusGagné;
-
 				request.setAttribute("articlesVendus", articlesVendus);
 			} catch (ArticleVenduManagerException e) {
 				System.out.println(e);
 			}
 		}
-//		
+
 		// on liste l'ensemble des catégories pour générer le select correspondant
 		request.setAttribute("categories", this.listCategorie());
 
