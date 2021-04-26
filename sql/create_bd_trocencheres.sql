@@ -136,3 +136,5 @@ INSERT INTO ENCHERES ( date_enchere, montant_enchere, no_article, no_utilisateur
 INSERT INTO ENCHERES ( date_enchere, montant_enchere, no_article, no_utilisateur ) VALUES ( GETDATE(), 12, 1, 3 );
 INSERT INTO ENCHERES ( date_enchere, montant_enchere, no_article, no_utilisateur ) VALUES ( GETDATE(), 13, 1, 5 );
 
+INSERT INTO ENCHERES ( date_enchere, montant_enchere, no_article, no_utilisateur ) VALUES (GETDATE(), 150, 2, 3);
+INSERT INTO ENCHERES ( date_enchere, montant_enchere, no_article, no_utilisateur ) VALUES (GETDATE()+1, 20, 3, 4);
