@@ -44,8 +44,8 @@
 					</div>
 				</c:if>
 				<c:if test="${ isTerminee && !isGagnant }">
-					<div class="form-group mb-2 col-8 pl-0">
-						<p><strong>${enchere.getUtilisateur().getPseudo() }</strong> a remporté l'enchère.</p>	 
+					<div class="mb-2 col-12 mt-5 text-center">
+						<h3><strong>${enchere.getUtilisateur().getPseudo() }</strong> a remporté l'enchère.</h3>	 
 					</div>
 				</c:if>
 				<div class="row mt-5">
