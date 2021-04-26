@@ -32,6 +32,16 @@ public class EnchereManager {
 		}
 		return enchere;
 	}
+	
+	public Enchere getMeilleurEnchereByArticle(Integer id_article) throws EnchereManagerException {
+		Enchere enchere = null;
+		try {
+			enchere = this.enchereDAO.selectMeilleurByArticle(id_article);
+		} catch (DALException e) {
+			throw new EnchereManagerException("getEnchere failed\n" + e);
+		}
+		return enchere;
+	}
 
 	public List<Enchere> getListeEnchere(Integer id_utilisateur) throws EnchereManagerException {
 		List<Enchere> encheres = null;

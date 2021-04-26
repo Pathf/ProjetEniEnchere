@@ -24,4 +24,9 @@ public class BDD {
 	public static final String[] CATEGORIES_IDS = new String[]{"no_categorie"};
 	public static final String[] CATEGORIES_CHAMPS = new String[] {"libelle"};
 	public static final String[][] CATEGORIES_TABLE = new String[][] {new String[] {CATEGORIES_TABLENOM}, CATEGORIES_IDS, CATEGORIES_CHAMPS};
+
+	public static final String ENCHERES_TABLENOM = "ENCHERES";
+	public static final String[] ENCHERES_IDS = new String[]{"no_enchere"};
+	public static final String[] ENCHERES_CHAMPS = new String[] {"date_enchere", "montant_enchere", "no_article", "no_utilisateur"};
+	public static final String[][] ENCHERES_TABLE = new String[][] {new String[] {ENCHERES_TABLENOM}, ENCHERES_IDS, ENCHERES_CHAMPS};
 }

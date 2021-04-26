@@ -8,9 +8,9 @@
 <html>
 <jsp:include page="/WEB-INF/fragments/head.jsp"></jsp:include>
 <body>
-	<%		String isConnecte = (String) request.getSession().getAttribute("pseudo");	%>
+	<%-- <%		String isConnecte = (String) request.getSession().getAttribute("pseudo");	%> --%>
 	<%@ include file="/WEB-INF/fragments/navbar.jspf"%>
-	<div class="container text-center text-black">
+	<div class="container text-center">
 		<h1>Liste des enchères</h1>
 
 		<Form method="get" action="encheres">
@@ -156,5 +156,5 @@
 	<%=pseudo%> --%>
 	</div>
 </body>
-<%@ include file="/WEB-INF/fragments/footer.html"%>
+<%@ include file="/WEB-INF/fragments/script.html" %>
 </html>

@@ -59,7 +59,7 @@ public class UtilisateurManager {
 		}
 
 		if(utilisateur == null) {
-			throw new UtilisateurManagerException("getUtilisateurConnexion failed: pas d'utilisateur - \n");
+			throw new UtilisateurManagerException("getUtilisateurConnexion failed: pas d'utilisateur\n");
 		}
 
 		return utilisateur;

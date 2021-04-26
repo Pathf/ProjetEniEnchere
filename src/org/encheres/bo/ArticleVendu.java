@@ -22,6 +22,10 @@ public class ArticleVendu {
 	// FK : Retrait
 	Retrait retrait;
 
+	public ArticleVendu(Integer no_article) {
+		this.no_article = no_article;
+	}
+	
 	public ArticleVendu(Integer no_article, String nom_article, String description, Date date_debut_encheres,
 			Date date_fin_encheres, Integer prix_initial, Integer prix_vente, Utilisateur utilisateur,
 			Categorie categorie, Retrait retrait) {

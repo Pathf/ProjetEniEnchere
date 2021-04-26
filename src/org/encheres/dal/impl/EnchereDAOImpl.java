@@ -29,6 +29,13 @@ public class EnchereDAOImpl implements EnchereDAO {
 	private static final String SQLSELECT_ID = SQLRequete.select(null, TABLE, IDS);
 	//private static final String SQLSELECT_UTILISATEUR = SQLRequete.select(null, TABLE, new String[]{"no_utilisateur"});
 	private static final String SQLSELECT_UTILISATEUR = "SELECT * FROM ENCHERES as e INNER JOIN ARTICLES_VENDUS as a ON e.no_article = a.no_article INNER JOIN UTILISATEURS as u ON e.no_utilisateur = u.no_utilisateur WHERE a.no_utilisateur=?";
+	private static final String SQLSELECT_MEILLEUR_ARTICLE = "SELECT e.no_enchere, e.date_enchere, MAX(e.montant_enchere) as montant_enchere, e.no_article, e.no_utilisateur, \r\n" + 
+															"u.no_utilisateur, u.pseudo, u.nom, u.prenom, u.email, u.telephone, u.rue, u.code_postal, u.ville, u.mot_de_passe, u.credit, u.administrateur\r\n" + 
+															"FROM ENCHERES as e\r\n" + 
+															"INNER JOIN UTILISATEURS as u ON e.no_utilisateur = u.no_utilisateur\r\n" + 
+															"WHERE e.no_article=? AND e.montant_enchere = (SELECT MAX(montant_enchere) FROM ENCHERES WHERE ENCHERES.no_article=?)\r\n" + 
+															"GROUP BY e.no_enchere, e.date_enchere, e.montant_enchere, e.no_article, e.no_utilisateur, \r\n" + 
+															"u.no_utilisateur , u.pseudo, u.nom, u.prenom, u.email, u.telephone, u.rue, u.code_postal, u.ville, u.mot_de_passe, u.credit, u.administrateur";
 	private static final String SQLINSERT = SQLRequete.insert(TABLE, CHAMPS);
 	private static final String SQLUPDATE = SQLRequete.update(TABLE, CHAMPS, IDS);
 
@@ -141,6 +148,48 @@ public class EnchereDAOImpl implements EnchereDAO {
 
 		return encheres;
 	}
+	
+	@Override
+	public Enchere selectMeilleurByArticle(Integer id_article) throws DALException {
+		Enchere enchere = null;
+		try (	Connection connection = DAOTools.getConnection();
+				PreparedStatement preparedStatement = connection.prepareStatement(SQLSELECT_MEILLEUR_ARTICLE);
+				) {
+			preparedStatement.setInt(1, id_article);
+			preparedStatement.setInt(2, id_article);
+			try (ResultSet rs = preparedStatement.executeQuery();){
+				if(rs.next()){
+					enchere = new Enchere(
+							rs.getInt(BDD.ENCHERES_IDS[0]),
+							rs.getDate(BDD.ENCHERES_CHAMPS[0]),
+							rs.getInt(BDD.ENCHERES_CHAMPS[1]),
+							new ArticleVendu(
+									rs.getInt(BDD.ENCHERES_CHAMPS[2])
+									),
+							new Utilisateur(
+									rs.getInt(BDD.ENCHERES_CHAMPS[3]),
+									rs.getString(BDD.UTILISATEURS_CHAMPS[0]),
+									rs.getString(BDD.UTILISATEURS_CHAMPS[1]),
+									rs.getString(BDD.UTILISATEURS_CHAMPS[2]),
+									rs.getString(BDD.UTILISATEURS_CHAMPS[3]),
+									rs.getString(BDD.UTILISATEURS_CHAMPS[4]),
+									rs.getString(BDD.UTILISATEURS_CHAMPS[5]),
+									rs.getString(BDD.UTILISATEURS_CHAMPS[6]),
+									rs.getString(BDD.UTILISATEURS_CHAMPS[7]),
+									rs.getString(BDD.UTILISATEURS_CHAMPS[8]),
+									rs.getInt(BDD.UTILISATEURS_CHAMPS[9]),
+									rs.getBoolean(BDD.UTILISATEURS_CHAMPS[10])
+									)
+							);
+				}
+			}catch (SQLException e) {
+				throw new DALException("Select BYID_ARTICLE failed - close failed for rs\n" + e);
+			}
+		} catch (SQLException e) {
+			throw new DALException("Select BYID_ARTICLE failed\n" + e);
+		}
+		return enchere;
+	}
 
 	@Override
 	public void insert(Enchere enchere) throws DALException {
@@ -182,4 +231,6 @@ public class EnchereDAOImpl implements EnchereDAO {
 			throw new DALException("Update enchere failed - " + enchere + "\n" + e);
 		}
 	}
+
+	
 }
