@@ -1,6 +1,9 @@
 package org.encheres.ihm;
 
 import java.io.IOException;
+import java.sql.Date;
+import java.util.Calendar;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -8,6 +11,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.encheres.bll.ArticleVenduManager;
+import org.encheres.bll.ArticleVenduManagerException;
+import org.encheres.bll.EnchereManager;
+import org.encheres.bll.EnchereManagerException;
+import org.encheres.bll.UtilisateurManager;
+import org.encheres.bll.UtilisateurManagerException;
+import org.encheres.bo.ArticleVendu;
+import org.encheres.bo.Enchere;
 import org.encheres.bo.Utilisateur;
 
 /**
@@ -15,22 +26,48 @@ import org.encheres.bo.Utilisateur;
  */
 @WebServlet("/detail-enchere")
 public class EncherirServlet extends HttpServlet {
+	private ArticleVenduManager articleVenduManager = ArticleVenduManager.getInstance();
+	private EnchereManager enchereManager = EnchereManager.getInstance();
+	private UtilisateurManager utilisateurManager = UtilisateurManager.getInstance();
 	private static final long serialVersionUID = 1L;
-       
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		HttpSession session = request.getSession();
-		String pseudo = (String) session.getAttribute("pseudo");
-		Utilisateur utilisateur = null;
+		Boolean isConnect = false;
+		Boolean articleValide = false;
+		Boolean meilleurEnchereNotNull = false;
+		ArticleVendu article = null;
+		Enchere meilleurEnchere = null;
+		Integer articleId = null;
+		if (request.getParameter("id") != null) {
+			articleId = Integer.parseInt(request.getParameter("id"));
 
-		if (session.getAttribute("pseudo") != null) {
+			isConnect = (session.getAttribute("pseudo") != null);
 			
-			
-			request.getRequestDispatcher("/WEB-INF/jsp/detailEnchere.jsp").forward(request, response);
-		} else {
-			response.sendRedirect(request.getContextPath());
-		}
-
+			try {
+				article = this.articleVenduManager.getArticleVendu(articleId);
+				if(article != null) {
+					articleValide = true;
+				}
+			} catch (ArticleVenduManagerException e) {
+				System.out.println(e);
+			} 
+			try {
+				meilleurEnchere = this.enchereManager.getMeilleurEnchereByArticle(articleId);
+				if(meilleurEnchere != null) {
+					meilleurEnchereNotNull = true;
+				}
+			} catch (EnchereManagerException e) {
+				System.out.println(e);
+			}
+		} 
+		request.setAttribute("meilleurEnchereNotNull", meilleurEnchereNotNull);
+		request.setAttribute("isConnect", isConnect);
+		request.setAttribute("articleValide", articleValide);
+		request.setAttribute("article", article);
+		request.setAttribute("enchere", meilleurEnchere);
+		request.getRequestDispatcher("/WEB-INF/jsp/detailEnchere.jsp").forward(request, response);
 	}
 
 	/**
@@ -41,11 +78,85 @@ public class EncherirServlet extends HttpServlet {
 			throws ServletException, IOException {
 		HttpSession session = request.getSession();
 		if (session.getAttribute("pseudo") != null) {
+			String pseudo = (String) session.getAttribute("pseudo");
+			Utilisateur utilisateur = null;
+			Boolean meilleurEnchereNotNull = false;
 			String erreur = null;
+			String propositionString = request.getParameter("proposition");
+			Integer articleId = Integer.parseInt(request.getParameter("id"));
+			if (propositionString != null && !propositionString.isEmpty()) {
+				Integer proposition = Integer.parseInt(propositionString);
+				Enchere meilleurEnchere = null;
+				ArticleVendu articleVendu = null;
+				
+				try {
+					meilleurEnchere = this.enchereManager.getMeilleurEnchereByArticle(articleId);
+					if(meilleurEnchere != null) {
+						meilleurEnchereNotNull = true;
+					}
+				} catch (EnchereManagerException e) {
+				}
+				
+				try {
+					articleVendu = this.articleVenduManager.getArticleVendu(articleId);
+				} catch (ArticleVenduManagerException e) {
+				}
+				
+				try {
+					utilisateur = this.utilisateurManager.getUtilisateur(pseudo);
+				} catch (UtilisateurManagerException e) {
+				}
+				if (meilleurEnchereNotNull) {
+					if (proposition > meilleurEnchere.getMontant_enchere()) {
+						if (isCreditable(proposition, utilisateur)) {
+							Calendar calendar = Calendar.getInstance();
+						    Date date = new Date(calendar.getTime().getTime());
+							Enchere nouvelleEnchere = new Enchere(null, date, proposition, articleVendu, utilisateur);
+							try {
+								this.enchereManager.addEnchere(nouvelleEnchere);
+								Utilisateur acheteurPrecedent = meilleurEnchere.getUtilisateur();
+								acheteurPrecedent.setCredit(acheteurPrecedent.getCredit() + meilleurEnchere.getMontant_enchere());
+								utilisateur.setCredit(utilisateur.getCredit() - proposition);
+							} catch (EnchereManagerException e) {
+								e.printStackTrace();
+							}
+						} else {
+							erreur = "Vous n'avez pas assez de points !";
+						}
+					} else {
+						erreur = "La proposition doit être supérieure à l'offre en cours !";
+					}
+				} else {
+					if (proposition > articleVendu.getPrix_initial()) {
+						if (isCreditable(proposition, utilisateur)) {
+							Calendar calendar = Calendar.getInstance();
+						    Date date = new Date(calendar.getTime().getTime());
+							Enchere nouvelleEnchere = new Enchere(null, date, proposition, articleVendu, utilisateur);
+							try {
+								this.enchereManager.addEnchere(nouvelleEnchere);
+								utilisateur.setCredit(utilisateur.getCredit() - proposition);
+							} catch (EnchereManagerException e) {
+								e.printStackTrace();
+							}
+						} else {
+							erreur = "Vous n'avez pas assez de points !";
+						}
+					} else {
+						erreur = "La proposition doit être supérieure à l'offre en cours !";
+					}
+				}
+			} else {
+				erreur = "La proposition est incorrect !";
+			}			
 			request.setAttribute("erreur", erreur);
 			doGet(request, response);
 		} else {
 			response.sendRedirect(request.getContextPath());
 		}
+	}
+	
+	private Boolean isCreditable(Integer proposition, Utilisateur utilisateur) {
+		Boolean isCreditable = proposition <= utilisateur.getCredit();
+		return isCreditable;	
 	}
 }
