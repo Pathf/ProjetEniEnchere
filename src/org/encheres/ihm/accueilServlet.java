@@ -1,6 +1,12 @@
 package org.encheres.ihm;
 
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.sql.Date;
 import java.util.List;
 
 import javax.servlet.RequestDispatcher;
@@ -9,6 +15,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.encheres.bll.ArticleVenduManager;
 import org.encheres.bll.ArticleVenduManagerException;
@@ -24,58 +31,113 @@ public class accueilServlet extends HttpServlet {
 	private CategoriesManager categorieManager = CategoriesManager.getInstance();
 
 	@Override
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		List<ArticleVendu> articlesVendus = null;
 
+		HttpSession session = request.getSession();
+
+		// recuperation des param de filtration
 		String filtres = request.getParameter("filtres");
 		String categorie = request.getParameter("categorie");
-		Integer categorieInt = 0;
+		Integer categorieInt = null;
+		String radioAchat = request.getParameter("radioAchatVente");
+//		String[] where;
+		Boolean filtreByDateDebut = false;
+//		String mine = null;
+		String noUtilisateur = request.getParameter("pseudo");
+		Boolean winBid = false;
+		Boolean process = false;
+		Boolean start = false;
+		Boolean finish = false;
 
-		if(categorie != null) {
+		if ("achat".equals(radioAchat)) {
+			String[] checkboxAchat =null;
+			if (request.getParameterValues("checkboxAchat") != null) {
+				checkboxAchat = request.getParameterValues("checkboxAchat");
+			
+//			System.out.println(Arrays.toString(checkboxAchat));
+			if (Arrays.stream(checkboxAchat).anyMatch("open"::equals)) {
+				filtreByDateDebut = true;
+			}
+			if (Arrays.stream(checkboxAchat).anyMatch("mine"::equals)) {
+				if (session.getAttribute("pseudo") != null) {
+					noUtilisateur = (String) session.getAttribute("pseudo");
+				}
+				;
+			}
+			if (Arrays.stream(checkboxAchat).anyMatch("win"::equals)) {
+				winBid = true;
+				if (session.getAttribute("pseudo") != null) {
+					noUtilisateur = (String) session.getAttribute("pseudo");
+				}
+				;
+			}
+			}
+		}
+		if ("vente".equals(radioAchat)) {
+			String[] checkboxVente = null;
+			if (request.getParameterValues("checkboxVente") != null) {
+				checkboxVente = request.getParameterValues("checkboxVente");
+//					System.out.println(Arrays.toString(checkboxVente));
+				if (Arrays.stream(checkboxVente).anyMatch("process"::equals)) {
+					process = true;
+					if (session.getAttribute("pseudo") != null) {
+						noUtilisateur = (String) session.getAttribute("pseudo");
+					}
+					;
+				}
+				if (Arrays.stream(checkboxVente).anyMatch("start"::equals)) {
+					start = true;
+				}
+				if (Arrays.stream(checkboxVente).anyMatch("finish"::equals)) {
+					finish = true;
+				}
+			}
+		}
+
+		// on verifie la catégorie choisie sinon si 0 on laisse à null
+		if (categorie != null && !"0".equals(categorie)) {
 			categorieInt = Integer.parseInt(categorie);
 		}
 
 		request.setAttribute("defaultCategorie", categorieInt);
 		request.setAttribute("defaultFiltresPlaceHolder", filtres);
 
-		//si uniquement filtres sur nom
-		if (categorieInt == 0 & !"".equals(filtres) & filtres != null){
+		// TEST LES FILTRES DEMANDE//
+		try {
+			articlesVendus = this.articleVenduManager.selectByFiltre(categorieInt, filtres, filtreByDateDebut,
+					noUtilisateur, process, start, finish);// System.out.println("liste articles " + articlesVendus);
+			request.setAttribute("articlesVendus", articlesVendus);
+		} catch (ArticleVenduManagerException e) {
+			System.out.println(e);
+		}
+
+		// FILTRE SUR ENCHERE REMPORTE UNIQUEMENT
+		if (winBid == true) {
 			try {
-				articlesVendus = this.articleVenduManager.selectBydNom(filtres) ;
+				List<ArticleVendu> articlesVendusGagné = null;
+				articlesVendusGagné = this.articleVenduManager.listByWinBid(noUtilisateur);
+
+				// ON COMPARE AVEC LA LISTE DE FILTRE PRECEDENTE
+				articlesVendus.retainAll(articlesVendusGagné);
 				request.setAttribute("articlesVendus", articlesVendus);
 			} catch (ArticleVenduManagerException e) {
 				System.out.println(e);
 			}
 		}
-		//si on filtre avec categorie
-		else if (categorieInt != 0 ) {
-			try {
-				articlesVendus = this.articleVenduManager.selectByCategorieAndNom(categorieInt, filtres) ;
-				request.setAttribute("articlesVendus", articlesVendus);
-			} catch (ArticleVenduManagerException e) {
-				System.out.println(e);
-			}
-		}
-		// par default on renvois tous les articlevendus
-		else {
-			try {
-				articlesVendus = this.articleVenduManager.getListeArticleVendu() ;
-				request.setAttribute("articlesVendus", articlesVendus);
-			} catch (ArticleVenduManagerException e) {
-				System.out.println(e);
-			}
-		}
-		//on liste l'ensemble des catégories pour générer le select correspondant
+
+		// on liste l'ensemble des catégories pour générer le select correspondant
 		request.setAttribute("categories", this.listCategorie());
 
 		RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/jsp/accueil.jsp");
 		rd.forward(request, response);
 	}
 
-	private List<Categorie> listCategorie(){
+	private List<Categorie> listCategorie() {
 		List<Categorie> categories = null;
 		try {
-			categories = this.categorieManager.getListeCategorie() ;
+			categories = this.categorieManager.getListeCategorie();
 
 		} catch (CategorieManagerException e) {
 			System.out.println(e);

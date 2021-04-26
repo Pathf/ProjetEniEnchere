@@ -1,7 +1,8 @@
 package org.encheres.bll;
 
+import java.util.ArrayList;
 import java.util.List;
-
+import java.sql.Date;
 import org.encheres.bo.ArticleVendu;
 import org.encheres.dal.DALException;
 import org.encheres.dal.FactoryDAO;
@@ -56,30 +57,55 @@ public class ArticleVenduManager {
 		return articleVendus;
 	}
 	
-	public List<ArticleVendu> getListeArticleVenduByCategorie(Integer no_categorie) throws ArticleVenduManagerException {
+//	public List<ArticleVendu> getListeArticleVenduByCategorie(Integer no_categorie) throws ArticleVenduManagerException {
+//		List<ArticleVendu> articleVendus = null;
+//
+//		try {
+//			articleVendus = this.articleVenduDAO.selectByCategorie(no_categorie);
+//		} catch (DALException e) {
+//			throw new ArticleVenduManagerException("getListeArticleVenduByCategorie failed - ", e);
+//		}
+//
+//		return articleVendus;
+//	}
+	
+	
+	public List<ArticleVendu> selectByFiltre(Integer no_categorie , String nom, Boolean date,String no_utilisateur, Boolean process, Boolean start, Boolean finish) throws ArticleVenduManagerException {
 		List<ArticleVendu> articleVendus = null;
 
 		try {
-			articleVendus = this.articleVenduDAO.selectByCategorie(no_categorie);
+			articleVendus = this.articleVenduDAO.selectByFiltre(no_categorie,nom, date,no_utilisateur, process, start, finish );
 		} catch (DALException e) {
-			throw new ArticleVenduManagerException("getListeArticleVenduByCategorie failed - ", e);
+			throw new ArticleVenduManagerException("selectByFiltre failed \n " + e);
 		}
 
 		return articleVendus;
 	}
 	
-	
-	public List<ArticleVendu> selectByCategorieAndNom(Integer no_categorie, String nom) throws ArticleVenduManagerException {
-		List<ArticleVendu> articleVendus = null;
+	public List<ArticleVendu> listByWinBid(String no_utilisateur) throws ArticleVenduManagerException{
+			List<ArticleVendu> articleVendus = null;
 
-		try {
-			articleVendus = this.articleVenduDAO.selectByCategorieAndNom(no_categorie, nom);
-		} catch (DALException e) {
-			throw new ArticleVenduManagerException("selectByCategorieAndNom failed - ", e);
+			try {
+				articleVendus = this.articleVenduDAO.listByWinBid(no_utilisateur);
+			} catch (DALException e) {
+				throw new ArticleVenduManagerException("listByWinBid failed - ", e);
+			}
+
+			return articleVendus;
 		}
-
-		return articleVendus;
-	}
+	
+	
+//	public List<ArticleVendu> selectByCategorieAndNom(Integer no_categorie, String nom) throws ArticleVenduManagerException {
+//		List<ArticleVendu> articleVendus = null;
+//
+//		try {
+//			articleVendus = this.articleVenduDAO.selectByCategorieAndNom(no_categorie, nom);
+//		} catch (DALException e) {
+//			throw new ArticleVenduManagerException("selectByCategorieAndNom failed - ", e);
+//		}
+//
+//		return articleVendus;
+//	}
 	
 	public List<ArticleVendu> selectBydNom(String nom) throws ArticleVenduManagerException {
 		List<ArticleVendu> articleVendus = null;

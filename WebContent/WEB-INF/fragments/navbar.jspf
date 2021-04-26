@@ -1,6 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <% 
-	String isConnecte = (String)request.getSession().getAttribute("pseudo");
+ 	String isConnecte = (String)request.getSession().getAttribute("pseudo"); 
 	String path = request.getContextPath();
 	String uri = request.getServletPath().toLowerCase();
 	String pseudo = (String)request.getSession().getAttribute("pseudo");
