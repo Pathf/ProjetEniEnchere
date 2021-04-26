@@ -35,6 +35,7 @@ public class ConnexionServlet extends HttpServlet {
 			utilisateur = this.utilisateurManager.getUtilisateurConnexion(identifiant, mdp);
 			HttpSession session = request.getSession();
 			session.setAttribute("pseudo", utilisateur.getPseudo());
+			session.setAttribute("id", utilisateur.getNo_utilisateur());
 		} catch (UtilisateurManagerException e) {
 			String erreur = (e.toString().contains("pas d'utilisateur")) ? "Identifiant ou mot de passe incorrect." : "Une erreur est survenue.";
 			request.setAttribute("erreur", erreur);
