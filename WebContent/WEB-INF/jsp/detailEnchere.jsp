@@ -11,12 +11,7 @@
 	<jsp:param value="#" name="style" />
 </jsp:include>
 <body>
-	<nav class="navbar navbar-expand-lg navbar-light bg-light">
-		<div class="container-fluid">
-			<a class="navbar-brand" href="<%=request.getContextPath()%>">DUH
-				- Encheres</a>
-		</div>
-	</nav>
+	<%@ include file="/WEB-INF/fragments/navbar.jspf" %>
 	<div class="container">
 		<c:choose>
 		    <c:when test="${!articleValide}">
@@ -119,5 +114,5 @@
 		</c:choose>
 	</div>
 </body>
-<%@ include file="/WEB-INF/fragments/footer.html"%>
+<%@ include file="/WEB-INF/fragments/script.html"%>
 </html>
