@@ -29,14 +29,15 @@ public class ConnexionServlet extends HttpServlet {
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String identifiant = request.getParameter("identifiant");
-		String mdp = request.getParameter("mdp");
+		String mdp = request.getParameter("mot_de_passe");
 		Utilisateur utilisateur = null;
 		try {
 			utilisateur = this.utilisateurManager.getUtilisateurConnexion(identifiant, mdp);
 			HttpSession session = request.getSession();
 			session.setAttribute("pseudo", utilisateur.getPseudo());
 		} catch (UtilisateurManagerException e) {
-			System.out.println(e);
+			String erreur = (e.toString().contains("pas d'utilisateur")) ? "Identifiant ou mot de passe incorrect." : "Une erreur est survenue.";
+			request.setAttribute("erreur", erreur);
 			RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/jsp/connexion.jsp");
 			rd.forward(request, response);
 			return ;

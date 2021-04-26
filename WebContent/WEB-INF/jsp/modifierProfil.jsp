@@ -8,11 +8,7 @@
 	<jsp:param value="./css/monProfil.css" name="style"/>
 </jsp:include>
 <body>
-	<nav class="navbar navbar-expand-lg navbar-light bg-light">
-	  <div class="container-fluid">
-	    <a class="navbar-brand" href="<%=request.getContextPath()%>">DUH - Encheres</a>
-	  </div>
-	</nav>
+	<%@ include file="/WEB-INF/fragments/navbar.jspf" %>
 	<div class="container">
 		<div class="mx-auto text-center">
 			<h1>Mon profil</h1>
@@ -63,10 +59,32 @@
 	   		</div>	
 			<div class="row justify-content-center">
 					<button type="submit" class="btn btn-primary mr-1">Enregistrer</button>
-					<a href="${pageContext.request.contextPath}/suppression" class="btn btn-danger ml-1" role="button">Supprimer mon compte</a>
+					<button type="button" class="btn btn-danger ml-1" data-toggle="modal" data-target="#suppression">Supprimer mon compte</button>
 			</div>
 		</form>
 	</div>
+	<div class="modal fade" id="suppression" tabindex="-1" role="dialog" aria-labelledby="suppressionLabel" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="suppressionLabel">Suppression du compte</h5>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+				</div>
+				<div class="modal-body">
+        			Êtes-vous sur de vouloir supprimer votre compte ?<br/>
+        			(Cette action est irreversible)
+      			</div>
+      			<div class="modal-footer">
+      				<button type="button" class="btn btn-primary" data-dismiss="modal">Anuller</button>
+      				<form action="suppression" method="get">
+      					<button type="submit" class="btn btn-danger">Supprimer</button>
+      				</form>
+      			</div>
+      		</div>
+      	</div>
+      </div>
 </body>
-<%@ include file="/WEB-INF/fragments/footer.html" %>
+<%@ include file="/WEB-INF/fragments/script.html" %>
 </html>
