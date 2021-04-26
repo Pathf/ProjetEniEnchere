@@ -70,17 +70,31 @@ public class ArticleVenduManager {
 	}
 	
 	
-	public List<ArticleVendu> selectByFiltre(Integer no_categorie , String nom, Date date,Integer no_utilisateur) throws ArticleVenduManagerException {
+	public List<ArticleVendu> selectByFiltre(Integer no_categorie , String nom, Boolean date,String no_utilisateur, Boolean process, Boolean start, Boolean finish) throws ArticleVenduManagerException {
 		List<ArticleVendu> articleVendus = null;
 
 		try {
-			articleVendus = this.articleVenduDAO.selectByFiltre(no_categorie,nom, date,no_utilisateur);
+			articleVendus = this.articleVenduDAO.selectByFiltre(no_categorie,nom, date,no_utilisateur, process, start, finish );
 		} catch (DALException e) {
 			throw new ArticleVenduManagerException("selectByFiltre failed \n " + e);
 		}
 
 		return articleVendus;
 	}
+	
+	public List<ArticleVendu> listByWinBid(String no_utilisateur) throws ArticleVenduManagerException{
+			List<ArticleVendu> articleVendus = null;
+
+			try {
+				articleVendus = this.articleVenduDAO.listByWinBid(no_utilisateur);
+			} catch (DALException e) {
+				throw new ArticleVenduManagerException("listByWinBid failed - ", e);
+			}
+
+			return articleVendus;
+		}
+	
+	
 	public List<ArticleVendu> selectByCategorieAndNom(Integer no_categorie, String nom) throws ArticleVenduManagerException {
 		List<ArticleVendu> articleVendus = null;
 

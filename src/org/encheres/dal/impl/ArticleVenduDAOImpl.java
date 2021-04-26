@@ -226,72 +226,76 @@ public class ArticleVenduDAOImpl implements ArticleVenduDAO {
 	}
 
 	@Override
-	public List<ArticleVendu> selectByFiltre(Integer no_categorie, String nom, Date date, Integer no_utilisateur)
+	public List<ArticleVendu> selectByFiltre(Integer no_categorie, String nom, Boolean date, String no_utilisateur, Boolean process, Boolean start, Boolean finish)
 			throws DALException {
 		List<ArticleVendu> articles = new ArrayList<>();
 		List<Integer> no_utilisateurs = new ArrayList<>();
 		List<Integer> no_categories = new ArrayList<>();
 		List<Integer> no_retraits = new ArrayList<>();
 
-		Integer no_categorieTest = 0;
-//		System.out.println("date " + date + " nom " + nom);
-
 		Integer position = 1;
 		Integer positionNom = null;
 		Integer positionCategorie = null;
-		Integer positionDate = null;
 		Integer positionNoUtilisateur = null;
+		Integer positionWinBid = null;
+		String nomByDefault = null;
 
-		String query = "SELECT * FROM ARTICLES_VENDUS WHERE nom_article LIKE ?";
-		
+		String query = "SELECT * FROM ARTICLES_VENDUS WHERE ";
+
+		if (nom == null) {
+			query += " nom_article LIKE ?";
+			nomByDefault = "%%";
 			positionNom = position;
 			position++;
-		
+		}
+		if (nom != null) {
+			query += " nom_article LIKE ?";
+			positionNom = position;
+			position++;
+		}
 		if (no_categorie != null) {
 			query += " AND no_categorie = ?";
 			positionCategorie = position;
 			position++;
 		}
-		if (date != null) {
-			query += " AND date_debut_encheres >= ?";
-			positionDate = position;
-			position++;
+		if (date == true) {
+			query += " AND date_debut_encheres <= getDate() AND date_fin_encheres > getdate()";
 		}
+		// TODO a revoir lorsque l'on aura l'id en session
 		if (no_utilisateur != null) {
-			query += " AND no_utilisateur = ?";
+//			query += " AND no_utilisateur = ?";// query += " AND no_utilisateur = (SELECTED no_utilisateur WHERE pseudo
+			query += " AND no_utilisateur = (SELECT no_utilisateur FROM UTILISATEURS WHERE pseudo = ?)";
 			positionNoUtilisateur = position;
 			position++;
 		}
-
+		if (process == true) {
+			query += " AND date_debut_encheres < getDate() AND date_fin_encheres > getdate() ";
+		}
+		if (start == true) {
+			query += " AND date_debut_encheres >= getDate()";
+		}
+		if (finish == true) {
+			query += " AND date_fin_encheres <= getDate()";
+		}
 		System.out.println(query);
-		System.out.println(nom + " " +positionNom);
-		System.out.println(no_categorie + " " +positionCategorie);
-		System.out.println(date + " " +positionDate);
-		System.out.println(no_utilisateur + " " +positionNoUtilisateur);
-		
+		System.out.println(no_utilisateur + " " + positionNoUtilisateur);
+
 		try (Connection connection = DAOTools.getConnection();
 				PreparedStatement preparedStatement = connection.prepareStatement(query);) {
 
-//			if (nom != null) {
+			if (nom != null) {
 				preparedStatement.setString(positionNom, "%" + nom + "%");
-//			}
+			} else {
+				preparedStatement.setString(positionNom, nomByDefault);
+			}
 			if (no_categorie != null) {
 				preparedStatement.setInt(positionCategorie, no_categorie);
 			}
-			if (date != null) {
-				preparedStatement.setDate(positionDate, date);
-			}
 			if (no_utilisateur != null) {
-				preparedStatement.setInt(positionNoUtilisateur, no_utilisateur);
+				preparedStatement.setString(positionNoUtilisateur, no_utilisateur);
 			}
-//			preparedStatement.setString(1, "%" + nom + "%");
-//			preparedStatement.setDate(2, date);
-
-//			System.out.println("query " + preparedStatement);
 
 			try (ResultSet rs = preparedStatement.executeQuery();) {
-
-//					System.out.println(preparedStatement.toString());
 
 				while (rs.next()) {
 
@@ -304,7 +308,7 @@ public class ArticleVenduDAOImpl implements ArticleVenduDAO {
 					no_retraits.add((rs.getInt("no_retrait") != 0) ? rs.getInt("no_retrait") : -1);
 				}
 			} catch (SQLException e) {
-				throw new DALException("SelectByFiltre failed - close failed for rs \n  "+ e);
+				throw new DALException("SelectByFiltre failed - close failed for rs \n  " + e);
 			}
 		} catch (SQLException e) {
 			throw new DALException("SelectByFiltre All failed \n " + e);
@@ -337,6 +341,77 @@ public class ArticleVenduDAOImpl implements ArticleVenduDAO {
 			}
 		} catch (Exception e) {
 			throw new DALException("Select BYID failed - close failed for rs -  ", e);
+		}
+
+		return articles;
+	}
+
+	public List<ArticleVendu> listByWinBid(String no_utilisateur) throws DALException {
+		List<ArticleVendu> articles = new ArrayList<>();
+		List<Integer> no_utilisateurs = new ArrayList<>();
+		List<Integer> no_categories = new ArrayList<>();
+		List<Integer> no_retraits = new ArrayList<>();
+
+		String query = "SELECT e2.no_article,a.nom_article, a.description, a.date_debut_encheres, a.date_fin_encheres,a.prix_initial,a.prix_vente, e2.no_utilisateur, a.no_categorie, a.no_retrait FROM ENCHERES AS e2 LEFT JOIN ARTICLES_VENDUS AS a ON e2.no_article = a.no_article\r\n"
+				+ "WHERE a.date_fin_encheres <= GETDATE()\r\n"
+				+ "and e2.no_utilisateur = (SELECT u.no_utilisateur FROM UTILISATEURS as u WHERE pseudo = ?)\r\n"
+				+ "AND e2.no_enchere IN (SELECT no_enchere\r\n"
+				+ "FROM ENCHERES AS e LEFT JOIN (SELECT no_article, max(montant_enchere)\r\n"
+				+ "AS montant FROM ENCHERES GROUP BY no_article) AS tmp ON e.no_article = tmp.no_article\r\n"
+				+ "WHERE tmp.montant = e.montant_enchere)";
+
+		try (Connection connection = DAOTools.getConnection();
+				PreparedStatement preparedStatement = connection.prepareStatement(query);) {
+
+			preparedStatement.setString(1, no_utilisateur);
+
+			try (ResultSet rs = preparedStatement.executeQuery();) {
+
+				while (rs.next()) {
+					articles.add(new ArticleVendu(rs.getInt("no_article"), rs.getString("nom_article").trim(),
+							rs.getString("description"), rs.getDate("date_debut_encheres"),
+							rs.getDate("date_fin_encheres"), rs.getInt("prix_initial"), rs.getInt("prix_vente"), null,
+							null, null));
+					no_utilisateurs.add((rs.getInt("no_utilisateur") != 0) ? rs.getInt("no_utilisateur") : -1);
+					no_categories.add((rs.getInt("no_categorie") != 0) ? rs.getInt("no_categorie") : -1);
+					no_retraits.add((rs.getInt("no_retrait") != 0) ? rs.getInt("no_retrait") : -1);
+				}
+			} catch (SQLException e) {
+				throw new DALException("listByWinBid failed - close failed for rs -  ", e);
+			}
+		} catch (
+
+		SQLException e) {
+			throw new DALException("listByWinBid All failed - ", e);
+		}
+
+		try {
+			UtilisateurDAOImpl utilisateurDAOImpl = new UtilisateurDAOImpl();
+			for (int i = 0; i < no_utilisateurs.size(); i++) {
+				if (no_utilisateurs.get(i) != -1) {
+					articles.get(i).setUtilisateur(utilisateurDAOImpl.selectById(no_utilisateurs.get(i)));
+				} else {
+					throw new DALException("listByWinBid failed - le no_utilisateur n'est pas référencé");
+				}
+			}
+			CategorieDAOImpl categorieDAOImpl = new CategorieDAOImpl();
+			for (int i = 0; i < no_categories.size(); i++) {
+				if (no_categories.get(i) != -1) {
+					articles.get(i).setCategorie(categorieDAOImpl.selectById(no_categories.get(i)));
+				} else {
+					throw new DALException("listByWinBid failed - le no_categorie n'est pas référencé");
+				}
+			}
+			RetraitDAOImpl retraitDAOImpl = new RetraitDAOImpl();
+			for (int i = 0; i < no_retraits.size(); i++) {
+				if (no_retraits.get(i) != -1) {
+					articles.get(i).setRetrait(retraitDAOImpl.selectById(no_retraits.get(i)));
+				} else {
+					throw new DALException("listByWinBid failed - le no_retrait n'est pas référencé");
+				}
+			}
+		} catch (Exception e) {
+			throw new DALException("listByWinBid failed - close failed for rs -  ", e);
 		}
 
 		return articles;
