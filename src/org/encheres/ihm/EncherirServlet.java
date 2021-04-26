@@ -37,18 +37,29 @@ public class EncherirServlet extends HttpServlet {
 		Boolean isConnect = false;
 		Boolean articleValide = false;
 		Boolean meilleurEnchereNotNull = false;
+		Boolean isMeilleurEncherisseur = false;
+		Boolean isEnCour = false;
+		String pseudo = (String) session.getAttribute("pseudo");
 		ArticleVendu article = null;
 		Enchere meilleurEnchere = null;
 		Integer articleId = null;
 		if (request.getParameter("id") != null) {
 			articleId = Integer.parseInt(request.getParameter("id"));
 
-			isConnect = (session.getAttribute("pseudo") != null);
+			isConnect = (pseudo != null);
 			
 			try {
 				article = this.articleVenduManager.getArticleVendu(articleId);
 				if(article != null) {
 					articleValide = true;
+					long debutEnchere = article.getDate_debut_encheres().getTime();
+					long finEnchere = article.getDate_fin_encheres().getTime();
+					Calendar calendar = Calendar.getInstance();
+				    Date date = new Date(calendar.getTime().getTime());
+				    if(date.getTime() >= debutEnchere && date.getTime() < finEnchere) {
+				    	isEnCour = true;
+				    }
+					
 				}
 			} catch (ArticleVenduManagerException e) {
 				System.out.println(e);
@@ -57,12 +68,18 @@ public class EncherirServlet extends HttpServlet {
 				meilleurEnchere = this.enchereManager.getMeilleurEnchereByArticle(articleId);
 				if(meilleurEnchere != null) {
 					meilleurEnchereNotNull = true;
+					isMeilleurEncherisseur = meilleurEnchere.getUtilisateur().equals(this.utilisateurManager.getUtilisateur(pseudo));
 				}
 			} catch (EnchereManagerException e) {
 				System.out.println(e);
+			} catch (UtilisateurManagerException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 		} 
+		request.setAttribute("isMeilleurEncherisseur", isMeilleurEncherisseur);
 		request.setAttribute("meilleurEnchereNotNull", meilleurEnchereNotNull);
+		request.setAttribute("isEnCour", isEnCour);
 		request.setAttribute("isConnect", isConnect);
 		request.setAttribute("articleValide", articleValide);
 		request.setAttribute("article", article);
@@ -117,7 +134,12 @@ public class EncherirServlet extends HttpServlet {
 								Utilisateur acheteurPrecedent = meilleurEnchere.getUtilisateur();
 								acheteurPrecedent.setCredit(acheteurPrecedent.getCredit() + meilleurEnchere.getMontant_enchere());
 								utilisateur.setCredit(utilisateur.getCredit() - proposition);
+								this.utilisateurManager.updateUtilisateur(utilisateur);
+								this.utilisateurManager.updateUtilisateur(acheteurPrecedent);
 							} catch (EnchereManagerException e) {
+								e.printStackTrace();
+							} catch (UtilisateurManagerException e) {
+								// TODO Auto-generated catch block
 								e.printStackTrace();
 							}
 						} else {
