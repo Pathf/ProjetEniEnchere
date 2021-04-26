@@ -14,7 +14,10 @@ public class DeconnexionServlet extends HttpServlet {
 
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		request.getSession().setAttribute("pseudo", "");
 		request.getSession().removeAttribute("pseudo");
+		request.getSession().setAttribute("id", "");
+		request.getSession().removeAttribute("id");
 		request.getSession().invalidate();
 		response.sendRedirect(request.getContextPath());
 	}
