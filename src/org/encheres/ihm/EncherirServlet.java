@@ -29,6 +29,7 @@ public class EncherirServlet extends HttpServlet {
 	private ArticleVenduManager articleVenduManager = ArticleVenduManager.getInstance();
 	private EnchereManager enchereManager = EnchereManager.getInstance();
 	private UtilisateurManager utilisateurManager = UtilisateurManager.getInstance();
+	private Calendar calendar = Calendar.getInstance();
 	private static final long serialVersionUID = 1L;
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -39,6 +40,9 @@ public class EncherirServlet extends HttpServlet {
 		Boolean meilleurEnchereNotNull = false;
 		Boolean isMeilleurEncherisseur = false;
 		Boolean isEnCour = false;
+		Boolean isGagnant = false;
+		Boolean isTerminee = false;
+		Boolean vendeur = false;
 		String pseudo = (String) session.getAttribute("pseudo");
 		ArticleVendu article = null;
 		Enchere meilleurEnchere = null;
@@ -54,11 +58,16 @@ public class EncherirServlet extends HttpServlet {
 					articleValide = true;
 					long debutEnchere = article.getDate_debut_encheres().getTime();
 					long finEnchere = article.getDate_fin_encheres().getTime();
-					Calendar calendar = Calendar.getInstance();
+					
 				    Date date = new Date(calendar.getTime().getTime());
 				    if(date.getTime() >= debutEnchere && date.getTime() < finEnchere) {
 				    	isEnCour = true;
 				    }
+				    try {
+						vendeur = this.utilisateurManager.getUtilisateur(pseudo).equals(article.getUtilisateur());
+					} catch (UtilisateurManagerException e) {
+						e.printStackTrace();
+					}
 					
 				}
 			} catch (ArticleVenduManagerException e) {
@@ -69,6 +78,8 @@ public class EncherirServlet extends HttpServlet {
 				if(meilleurEnchere != null) {
 					meilleurEnchereNotNull = true;
 					isMeilleurEncherisseur = meilleurEnchere.getUtilisateur().equals(this.utilisateurManager.getUtilisateur(pseudo));
+					isGagnant = isGagnant(this.utilisateurManager.getUtilisateur(pseudo), article, meilleurEnchere);
+					isTerminee = isTerminee(article);
 				}
 			} catch (EnchereManagerException e) {
 				System.out.println(e);
@@ -77,10 +88,14 @@ public class EncherirServlet extends HttpServlet {
 				e.printStackTrace();
 			}
 		} 
+		
 		request.setAttribute("isMeilleurEncherisseur", isMeilleurEncherisseur);
 		request.setAttribute("meilleurEnchereNotNull", meilleurEnchereNotNull);
+		request.setAttribute("isGagnant", isGagnant);
+		request.setAttribute("isTerminee", isTerminee);
 		request.setAttribute("isEnCour", isEnCour);
 		request.setAttribute("isConnect", isConnect);
+		request.setAttribute("vendeur", vendeur);
 		request.setAttribute("articleValide", articleValide);
 		request.setAttribute("article", article);
 		request.setAttribute("enchere", meilleurEnchere);
@@ -126,7 +141,6 @@ public class EncherirServlet extends HttpServlet {
 				if (meilleurEnchereNotNull) {
 					if (proposition > meilleurEnchere.getMontant_enchere()) {
 						if (isCreditable(proposition, utilisateur)) {
-							Calendar calendar = Calendar.getInstance();
 						    Date date = new Date(calendar.getTime().getTime());
 							Enchere nouvelleEnchere = new Enchere(null, date, proposition, articleVendu, utilisateur);
 							try {
@@ -151,7 +165,6 @@ public class EncherirServlet extends HttpServlet {
 				} else {
 					if (proposition > articleVendu.getPrix_initial()) {
 						if (isCreditable(proposition, utilisateur)) {
-							Calendar calendar = Calendar.getInstance();
 						    Date date = new Date(calendar.getTime().getTime());
 							Enchere nouvelleEnchere = new Enchere(null, date, proposition, articleVendu, utilisateur);
 							try {
@@ -181,4 +194,18 @@ public class EncherirServlet extends HttpServlet {
 		Boolean isCreditable = proposition <= utilisateur.getCredit();
 		return isCreditable;	
 	}
+	
+	private Boolean isGagnant(Utilisateur utilisateur, ArticleVendu articleVendu, Enchere enchere) {
+		Boolean isGagnant = false;
+		if (isTerminee(articleVendu)) {
+			isGagnant = enchere.getUtilisateur().equals(utilisateur);
+		}
+		return isGagnant;
+	}
+	
+	private Boolean isTerminee(ArticleVendu articleVendu) {
+		Date date = new Date(calendar.getTime().getTime());
+		return articleVendu.getDate_fin_encheres().getTime() <= date.getTime();	
+	}
+	
 }

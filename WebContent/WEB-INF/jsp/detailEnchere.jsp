@@ -33,6 +33,21 @@
 						</button>
 					</div>
 				</c:if>
+				<c:if test="${ isGagnant }">
+					<div
+						class="alert alert-success alert-dismissible fade show mx-auto col-md-10 offset-md-1 mt-3"
+						role="alert">
+						<strong>Bravo !</strong> Vous avez remporté la vente.
+						<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+				</c:if>
+				<c:if test="${ isTerminee && !isGagnant }">
+					<div class="form-group mb-2 col-8 pl-0">
+						<p><strong>${enchere.getUtilisateur().getPseudo() }</strong> a remporté l'enchère.</p>	 
+					</div>
+				</c:if>
 				<div class="row mt-5">
 					<div class="photo offset-md-1 col-md-4">
 						<img alt="photo de l'objet" src="https://via.placeholder.com/300">
@@ -89,12 +104,15 @@
 									<p><em>Vous devez être <a href="connexion" >connecté</a> pour pouvoir enchérir</em></p>	 
 								</div>
 							</c:when>
-							<c:when test="${isMeilleurEncherisseur}">
+							<c:when test="${isEnCour && isMeilleurEncherisseur }">
 		    					<div class="form-group mb-2 col-8 pl-0">
 									<p><em>Vous êtes actuellement le meilleur enchérisseur !</em></p>	 
 								</div>
 							</c:when>     
-		   					 <c:when test="${isEnCour && !isMeilleurEncherisseur }">
+							<c:when test="${vendeur && !isEnCour && !isTerminee}">
+				   				<a href="${pageContext.request.contextPath}/nouvelle-vente?id=${article.getNo_article() }" class="btn btn-secondary p-3 col-md-4" role="button">Modifier l'article</a>
+				   			</c:when>
+		   					 <c:when test="${isEnCour && !isMeilleurEncherisseur && !vendeur}">
 								<form action="detail-enchere?id=${article.getNo_article() }" method="post" class="form-inline">
 									<div class="form-group mb-2 col-7 pl-0">
 										 <label for="proposition" class="col-7 col-form-label pl-0 font-weight-bold justify-content-start">Ma proposition :</label>
@@ -109,9 +127,15 @@
 										</c:choose>
 									    </div>
 									</div>
-									<button type="submit" class="btn btn-primary mb-2">Enchérir</button>
+									<button type="submit" class="btn btn-secondary mb-2">Enchérir</button>
 								</form>
 				   			</c:when>
+				   			<c:when test="${isGagnant}">
+				   				<a href="${pageContext.request.contextPath}" class="btn btn-secondary p-3 col-md-4" role="button">Retour</a>
+				   			</c:when>
+				   			<c:otherwise>
+			 					
+			 				</c:otherwise>
 						</c:choose>
 					</div>
 				</div>   
