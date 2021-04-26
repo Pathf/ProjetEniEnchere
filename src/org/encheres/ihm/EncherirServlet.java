@@ -63,12 +63,14 @@ public class EncherirServlet extends HttpServlet {
 				    if(date.getTime() >= debutEnchere && date.getTime() < finEnchere) {
 				    	isEnCour = true;
 				    }
-				    try {
-						vendeur = this.utilisateurManager.getUtilisateur(pseudo).equals(article.getUtilisateur());
-					} catch (UtilisateurManagerException e) {
-						e.printStackTrace();
-					}
-					
+				    if (isConnect) {
+					    try {
+							vendeur = this.utilisateurManager.getUtilisateur(pseudo).equals(article.getUtilisateur());
+						} catch (UtilisateurManagerException e) {
+							System.out.println(e);
+							e.printStackTrace();
+						}
+				    }
 				}
 			} catch (ArticleVenduManagerException e) {
 				System.out.println(e);
