@@ -88,8 +88,13 @@
 		    					<div class="form-group mb-2 col-8 pl-0">
 									<p><em>Vous devez être <a href="connexion" >connecté</a> pour pouvoir enchérir</em></p>	 
 								</div>
-							</c:when>    
-		   					 <c:otherwise>
+							</c:when>
+							<c:when test="${isMeilleurEncherisseur}">
+		    					<div class="form-group mb-2 col-8 pl-0">
+									<p><em>Vous êtes actuellement le meilleur enchérisseur !</em></p>	 
+								</div>
+							</c:when>     
+		   					 <c:when test="${isEnCour && !isMeilleurEncherisseur }">
 								<form action="detail-enchere?id=${article.getNo_article() }" method="post" class="form-inline">
 									<div class="form-group mb-2 col-7 pl-0">
 										 <label for="proposition" class="col-7 col-form-label pl-0 font-weight-bold justify-content-start">Ma proposition :</label>
@@ -106,7 +111,7 @@
 									</div>
 									<button type="submit" class="btn btn-primary mb-2">Enchérir</button>
 								</form>
-				   			</c:otherwise>
+				   			</c:when>
 						</c:choose>
 					</div>
 				</div>   
