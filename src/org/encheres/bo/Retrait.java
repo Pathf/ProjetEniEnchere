@@ -49,17 +49,6 @@ public class Retrait {
 	}
 
 	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((this.code_postal == null) ? 0 : this.code_postal.hashCode());
-		result = prime * result + ((this.no_retrait == null) ? 0 : this.no_retrait.hashCode());
-		result = prime * result + ((this.rue == null) ? 0 : this.rue.hashCode());
-		result = prime * result + ((this.ville == null) ? 0 : this.ville.hashCode());
-		return result;
-	}
-
-	@Override
 	public boolean equals(Object obj) {
 		if (this == obj) {
 			return true;

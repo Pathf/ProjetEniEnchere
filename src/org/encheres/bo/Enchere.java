@@ -65,18 +65,6 @@ public class Enchere {
 	}
 
 	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((this.date_enchere == null) ? 0 : this.date_enchere.hashCode());
-		result = prime * result + ((this.montant_enchere == null) ? 0 : this.montant_enchere.hashCode());
-		result = prime * result + ((this.article == null) ? 0 : this.article.hashCode());
-		result = prime * result + ((this.no_enchere == null) ? 0 : this.no_enchere.hashCode());
-		result = prime * result + ((this.utilisateur == null) ? 0 : this.utilisateur.hashCode());
-		return result;
-	}
-
-	@Override
 	public boolean equals(Object obj) {
 		if (this == obj) {
 			return true;

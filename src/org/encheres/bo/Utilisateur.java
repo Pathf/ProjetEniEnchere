@@ -130,25 +130,6 @@ public class Utilisateur {
 	}
 
 	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + (this.administrateur ? 1231 : 1237);
-		result = prime * result + ((this.code_postal == null) ? 0 : this.code_postal.hashCode());
-		result = prime * result + ((this.credit == null) ? 0 : this.credit.hashCode());
-		result = prime * result + ((this.email == null) ? 0 : this.email.hashCode());
-		result = prime * result + ((this.mot_de_passe == null) ? 0 : this.mot_de_passe.hashCode());
-		result = prime * result + ((this.no_utilisateur == null) ? 0 : this.no_utilisateur.hashCode());
-		result = prime * result + ((this.nom == null) ? 0 : this.nom.hashCode());
-		result = prime * result + ((this.prenom == null) ? 0 : this.prenom.hashCode());
-		result = prime * result + ((this.pseudo == null) ? 0 : this.pseudo.hashCode());
-		result = prime * result + ((this.rue == null) ? 0 : this.rue.hashCode());
-		result = prime * result + ((this.telephone == null) ? 0 : this.telephone.hashCode());
-		result = prime * result + ((this.ville == null) ? 0 : this.ville.hashCode());
-		return result;
-	}
-
-	@Override
 	public boolean equals(Object obj) {
 		if (this == obj) {
 			return true;
