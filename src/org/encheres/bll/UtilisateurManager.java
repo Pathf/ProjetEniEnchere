@@ -27,7 +27,7 @@ public class UtilisateurManager {
 		try {
 			utilisateur = this.utilisateurDAO.selectById(id);
 		} catch (DALException e) {
-			throw new UtilisateurManagerException("getUtilisateur failed - \n" + e);
+			throw new UtilisateurManagerException("getUtilisateur failed\n" + e);
 		}
 		return utilisateur;
 	}
@@ -37,7 +37,7 @@ public class UtilisateurManager {
 		try {
 			utilisateur = this.utilisateurDAO.selectByPseudo(pseudo);
 		} catch (DALException e) {
-			throw new UtilisateurManagerException("getUtilisateur failed - \n" + e);
+			throw new UtilisateurManagerException("getUtilisateur failed\n" + e);
 		}
 		return utilisateur;
 	}
@@ -54,12 +54,12 @@ public class UtilisateurManager {
 					throw new UtilisateurManagerException("getUtilisateurConnexion failed : pseudo \"Inconnu\" interdit");
 				}
 			}
-		} catch (DALException e) {
-			throw new UtilisateurManagerException("getUtilisateurConnexion failed - \n" + e);
-		}
 
-		if(utilisateur == null) {
-			throw new UtilisateurManagerException("getUtilisateurConnexion failed: pas d'utilisateur\n");
+			if(utilisateur == null) {
+				throw new UtilisateurManagerException("getUtilisateurConnexion failed: pas d'utilisateur\n");
+			}
+		} catch (DALException e) {
+			throw new UtilisateurManagerException("getUtilisateurConnexion failed\n" + e);
 		}
 
 		return utilisateur;
@@ -71,7 +71,7 @@ public class UtilisateurManager {
 		try {
 			utilisateurs = this.utilisateurDAO.selectAll();
 		} catch (DALException e) {
-			throw new UtilisateurManagerException("getListeUtilisateur failed - \n" + e);
+			throw new UtilisateurManagerException("getListeUtilisateur failed\n" + e);
 		}
 
 		return utilisateurs;
@@ -81,7 +81,7 @@ public class UtilisateurManager {
 		try {
 			this.utilisateurDAO.insert(utilisateur);
 		} catch (DALException e) {
-			throw new UtilisateurManagerException("addUtilisateur failed - \n" + e);
+			throw new UtilisateurManagerException("addUtilisateur failed\n" + e);
 		}
 	}
 
@@ -89,7 +89,7 @@ public class UtilisateurManager {
 		try {
 			this.utilisateurDAO.update(utilisateur);
 		} catch (DALException e) {
-			throw new UtilisateurManagerException("update failed - \n" + e);
+			throw new UtilisateurManagerException("update failed\n" + e);
 		}
 	}
 
@@ -97,7 +97,7 @@ public class UtilisateurManager {
 		try {
 			this.utilisateurDAO.remove(utilisateur);
 		} catch (DALException e) {
-			throw new UtilisateurManagerException("update failed - \n" + e);
+			throw new UtilisateurManagerException("update failed\n" + e);
 		}
 	}
 }

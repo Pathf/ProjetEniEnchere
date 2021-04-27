@@ -27,17 +27,17 @@ public class CategoriesManager {
 		try {
 			categorie = this.categorieDAO.selectById(id);
 		} catch (DALException e) {
-			throw new CategorieManagerException("getCategorie failed - \n" + e);
+			throw new CategorieManagerException("getCategorie failed\n" + e);
 		}
 		return categorie;
 	}
-	
+
 	public List<Categorie> getListeCategorie() throws CategorieManagerException {
 		List<Categorie> categories = null;
 		try {
 			categories = this.categorieDAO.selectAll();
 		} catch (DALException e) {
-			throw new CategorieManagerException("getListeCategorie failed - ", e);
+			throw new CategorieManagerException("getListeCategorie failed\n" + e);
 		}
 		return categories;
 	}

@@ -11,10 +11,6 @@ public class EnchereManagerException extends Exception {
 		super(message);
 	}
 
-	public EnchereManagerException(String message, Throwable cause) {
-		super(message, cause);
-	}
-
 	@Override
 	public String getMessage() {
 		StringBuffer sb = new StringBuffer("Couche BLL EnchereManagerException - ");

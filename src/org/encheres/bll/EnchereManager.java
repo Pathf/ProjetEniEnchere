@@ -32,7 +32,7 @@ public class EnchereManager {
 		}
 		return enchere;
 	}
-	
+
 	public Enchere getMeilleurEnchereByArticle(Integer id_article) throws EnchereManagerException {
 		Enchere enchere = null;
 		try {
@@ -68,15 +68,16 @@ public class EnchereManager {
 			// verifie si l'enchere proposé est strictement supérieur a l'actuelle
 			if(nouvelleEnchere.getMontant_enchere() > encherePrecedente.getMontant_enchere() &&
 					nouvelleEnchere.getUtilisateur().getCredit() >= nouvelleEnchere.getMontant_enchere()) {
+				UtilisateurManager utilisateurManager = UtilisateurManager.getInstance();
 				// recredite l'ancien encherisseur
 				Utilisateur utilisateurPrecedenteEnchere = encherePrecedente.getUtilisateur();
 				utilisateurPrecedenteEnchere.setCredit(utilisateurPrecedenteEnchere.getCredit() + encherePrecedente.getMontant_enchere());
-				UtilisateurManager.getInstance().updateUtilisateur(utilisateurPrecedenteEnchere);
+				utilisateurManager.updateUtilisateur(utilisateurPrecedenteEnchere);
 
 				// decredite le nouveau encherisseur
 				Utilisateur utilisateurNouvelleEnchere = nouvelleEnchere.getUtilisateur();
 				utilisateurNouvelleEnchere.setCredit(utilisateurNouvelleEnchere.getCredit() - nouvelleEnchere.getMontant_enchere());
-				UtilisateurManager.getInstance().updateUtilisateur(utilisateurNouvelleEnchere);
+				utilisateurManager.updateUtilisateur(utilisateurNouvelleEnchere);
 
 				// update => insert d'une nouvelle enchere qui devient l'actuel
 				this.enchereDAO.insert(nouvelleEnchere);

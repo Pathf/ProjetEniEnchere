@@ -11,10 +11,6 @@ public class UtilisateurManagerException extends Exception {
 		super(message);
 	}
 
-	public UtilisateurManagerException(String message, Throwable cause) {
-		super(message, cause);
-	}
-
 	@Override
 	public String getMessage() {
 		StringBuffer sb = new StringBuffer("Couche BLL UtilisateurManagerException - ");
