@@ -11,7 +11,7 @@
 	<%@ include file="/WEB-INF/fragments/navbar.jspf" %>
 	<div class="container">
 		<div class="mx-auto text-center">
-			<h1>Mon profil</h1>
+			<h1 class="mb-5">Mon profil</h1>
 		</div>
 		
 		<c:if test="${ erreur != null }">
@@ -24,38 +24,65 @@
 		</c:if>
 		
   		<form action="monProfil" method="post">
-	   		<div class="row mt-5">
-				<label for="pseudo" class="col-md-2 mb-3 offset-md-1">Pseudo :</label>
-				<input id="pseudo" class="col-md-3 mb-3" type="text" name="pseudo" value="${ utilisateur.getPseudo() }">
-	   			<label for="nom" class="col-md-2 mb-3 ml-3">Nom :</label> 
-	   			<input id="nom" class="col-md-3 mb-3" type="text" name="nom" value="${ utilisateur.getNom() }">
+  			<div class="form-row justify-content-center">
+		   		<div class="form-group row col-md-6">
+					<label for="pseudo" class="col-5 col-md-4">Pseudo :</label>
+					<input id="pseudo" class="col-7 col-md-6" type="text" name="pseudo" value="${ utilisateur.getPseudo() }">
+		   		</div>
+		   		<div class="form-group row col-md-6">
+		   			<label for="nom" class="col-5 col-md-4">Nom :</label> 
+		   			<input id="nom" class="col-7 col-md-6" type="text" name="nom" value="${ utilisateur.getNom() }">
+		   		</div>
 	   		</div>
-	   		<div class="row">
-	   			<label for="prenom" class="col-md-2 mb-3 offset-md-1">Prénom :</label> 
-	   			<input id="prenom" class="col-md-3 mb-3" type="text" name="prenom" value="${ utilisateur.getPrenom() }">
-	   			<label for="email" class="col-md-2 mb-3 ml-3">Email :</label> 
-	   			<input id="email" class="col-md-3 mb-3" type="email" name="email" value="${ utilisateur.getEmail() }">
+	   		
+	   		<div class="form-row justify-content-center">
+		   		<div class="form-group row col-md-6">
+		   			<label for="prenom" class="col-5 col-md-4">Prénom :</label> 
+		   			<input id="prenom" class="col-7 col-md-6" type="text" name="prenom" value="${ utilisateur.getPrenom() }">
+	   			</div>
+		   		<div class="form-group row col-md-6">
+		   			<label for="email" class="col-5 col-md-4">Email :</label> 
+		   			<input id="email" class="col-7 col-md-6" type="email" name="email" value="${ utilisateur.getEmail() }">
+	   			</div>
 	   		</div>
-	   		<div class="row">
-	   			<label for="telephone" class="col-md-2 mb-3 offset-md-1">Téléphone :</label> 
-	   			<input id="telephone" class="col-md-3 mb-3" type="text" name="telephone" value="${ utilisateur.getTelephone() }">
-	   			<label for="rue" class="col-md-2 mb-3 ml-3">Rue :</label> 
-	   			<input id="rue" class="col-md-3 mb-3" type="text" name="rue" value="${ utilisateur.getRue() }">
+	   		
+	   		<div class="form-row justify-content-center">
+		   		<div class="form-group row col-md-6">
+		   			<label for="telephone" class="col-5 col-md-4">Téléphone :</label> 
+		   			<input id="telephone" class="col-7 col-md-6" type="text" name="telephone" value="${ utilisateur.getTelephone() }">
+	   			</div>
+		   		<div class="form-group row col-md-6">
+		   			<label for="rue" class="col-5 col-md-4">Rue :</label> 
+		   			<input id="rue" class="col-7 col-md-6" type="text" name="rue" value="${ utilisateur.getRue() }">
+		   		</div>
 	   		</div>
-	   		<div class="row">
-	   			<label for="code_postal" class="col-md-2 mb-3 offset-md-1">Code postal :</label> 
-	   			<input id="code_postal" class="col-md-3 mb-3" type="text" name="code_postal" value="${ utilisateur.getCode_postal() }">
-	   			<label for="ville" class="col-md-2 mb-3 ml-3">Ville :</label> 
-	   			<input id="ville" class="col-md-3 mb-3" type="text" name="ville" value="${ utilisateur.getVille() }">
+	   		
+	   		<div class="form-row justify-content-center">
+		   		<div class="form-group row col-md-6">
+		   			<label for="code_postal" class="col-5 col-md-4">Code postal :</label> 
+		   			<input id="code_postal" class="col-7 col-md-6" type="text" name="code_postal" value="${ utilisateur.getCode_postal() }">
+	   			</div>
+		   		<div class="form-group row col-md-6">
+		   			<label for="ville" class="col-5 col-md-4">Ville :</label> 
+		   			<input id="ville" class="col-7 col-md-6" type="text" name="ville" value="${ utilisateur.getVille() }">
+		   		</div>
 	   		</div>
-	   		<div class="row">
-	   			<label for="mot_de_passe" class="col-md-2 mb-3 offset-md-1">Nouveau mot de passe :</label> 
-	   			<input id="mot_de_passe" class="col-md-3 mb-3" type="password" name="mot_de_passe">
-	  			<label for="confirmation" class="col-md-2 mb-3 ml-3">Confirmation du mot de passe:</label> 
-	  			<input id="confirmation" class="col-md-3 mb-3" type="password" name="confirmation">
+	   		
+	   		<div class="form-row justify-content-center">
+		   		<div class="form-group row col-md-6">
+		   			<label for="mot_de_passe" class="col-5 col-md-4">Nouveau mot de passe :</label> 
+		   			<input id="mot_de_passe" class="col-7 col-md-6" type="password" name="mot_de_passe">
+	  			</div>
+		   		<div class="form-group row col-md-6">
+		  			<label for="confirmation" class="col-5 col-md-4">Confirmation du mot de passe:</label> 
+		  			<input id="confirmation" class="col-7 col-md-6" type="password" name="confirmation">
+		   		</div>
 	   		</div>
-	   		<div class="row">
-	  			<label class="col-md-2 mb-3 mt-3 offset-md-1">Crédit&nbsp;&nbsp;&nbsp;&nbsp; ${ utilisateur.getCredit() }</label>	
+	   		
+	   		<div class="form-row justify-content-center">
+		   		<div class="form-group row col-12 ml-md-2">
+	  				<label class="col-12">Crédit : &nbsp;&nbsp;&nbsp;&nbsp; ${ utilisateur.getCredit() }</label>	
+	   			</div>
 	   		</div>	
 			<div class="row justify-content-center">
 					<button type="submit" class="btn btn-primary mr-1">Enregistrer</button>
