@@ -2,6 +2,9 @@
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html>
+<%
+	String login = (String) request.getAttribute("login");
+%>
 <html>
 <jsp:include page="/WEB-INF/fragments/head.jsp"></jsp:include>
 <body>
@@ -23,7 +26,7 @@
 		<form action="connexion" method="post">
 			<div class="row mt-5">
 				<label for="identifiant" class="col-md-2 offset-md-3">Identifiant :</label>
-				<input id="identifiant" class="col-md-4" type="text" name="identifiant" placeholder=" Pseudo ou Email" required>
+				<input id="identifiant" class="col-md-4" type="text" name="identifiant" placeholder=" Pseudo ou Email" value="<%=(login != null && !login.isEmpty())? login : "" %>" required>
 			</div>
 			<div class="row mt-2">
 				<label for="mot_de_passe" class="col-md-2 offset-md-3">Mot de passe :</label>
