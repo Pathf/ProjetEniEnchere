@@ -1,4 +1,8 @@
-package org.encheres.dal;
+package org.encheres.dal.sql;
+
+import org.encheres.dal.sql.requete.Operator;
+import org.encheres.dal.sql.requete.type.Delete;
+import org.encheres.dal.sql.requete.type.Insert;
 
 public class SQLRequete {
 
@@ -83,22 +87,15 @@ public class SQLRequete {
 		return sb.toString();
 	}
 
+	/**
+	 *	Fonction d'insertion dans une base de donnée
+	 *
+	 * @param table La table dans laquelle on va faire l'insertion des nouvelles données
+	 * @param champs la liste des champs que l'on va modifié
+	 * @return Une requète d'insertion sous le format String
+	 */
 	public static final String insert(String table, String[] champs) {
-		StringBuffer sb = new StringBuffer();
-		sb.append("INSERT INTO ");
-		sb.append(table);
-		sb.append(" (");
-		for(String champ : champs) {
-			sb.append(champ);
-			sb.append(",");
-		}
-		sb.deleteCharAt(sb.length()-1);
-		sb.append(") VALUES (?");
-		for(int i = 1; i < champs.length; i++) {
-			sb.append(",?");
-		}
-		sb.append(")");
-		return sb.toString();
+		return new Insert().attributs(table, champs).values(null).toString();
 	}
 
 	public static final String update(String table, String[] champs, String[] champWheres) {
@@ -128,7 +125,7 @@ public class SQLRequete {
 	}
 
 	public static final String delete(String table) {
-		return delete(table, null);
+		return new Delete().table(table).toString();
 	}
 
 	public static final String delete(String table, String[] champs) {
@@ -144,5 +141,22 @@ public class SQLRequete {
 			sb.deleteCharAt(sb.length()-1);
 		}
 		return sb.toString();
+	}
+	/**
+	 * Fonction de suppression de ligne spécifique
+	 *
+	 * @param table la table qui va subir des suppressions
+	 * @param table1EtEspaceEtChamp1S est un tableau de String contenant une table et le champ de cette table, les deux séparés d'un espace (ex: "table idDeLaTable")
+	 * @param operators contient les opérations de chaque conditions
+	 * @param table2EtEspaceEtChamp2S est un tableau de String contenant une table et le champ de cette table, les deux séparés d'un espace. Si on met null à la place de la chaine de caractère alors sa sera remplacé par un "?" (ex: "table1 idDeLaTable", null)
+	 * @return
+	 */
+	public static final String delete(String table, String[] table1EtEspaceEtChamp1S, Operator[] operators, String[] table2EtEspaceEtChamp2S) {
+		Delete request = new Delete().table(table).where();
+		for(int i=0; i < table1EtEspaceEtChamp1S.length; i++) {
+			String[] tmp = table1EtEspaceEtChamp1S[i].split(" ");
+			request.condition(tmp[0], tmp[1], operators[i], table2EtEspaceEtChamp2S[i]);
+		}
+		return request.toString();
 	}
 }
