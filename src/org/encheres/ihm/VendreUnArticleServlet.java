@@ -71,7 +71,7 @@ public class VendreUnArticleServlet extends HttpServlet {
 			String article = request.getParameter("article");
 			String description = request.getParameter("description");
 			Integer categorieId = Integer.parseInt(request.getParameter("categorie"));
-			//String photoArticle = request.getParameter("photoArticle");
+			String photoName = request.getParameter("photoArticle");
 			try {
 				debutEnchere = new java.sql.Date(new SimpleDateFormat("yyyy-MM-dd").parse(request.getParameter("debutEnchere")).getTime());
 			} catch (ParseException e) {
@@ -109,7 +109,7 @@ public class VendreUnArticleServlet extends HttpServlet {
 								System.err.println(e);
 							}
 							Retrait retrait = new Retrait(null, rue, codePostal, ville);
-							ArticleVendu articleVendu = new ArticleVendu(null, article, description, debutEnchere, finEnchere, miseAPrix, null, utilisateur, categorie, retrait);
+							ArticleVendu articleVendu = new ArticleVendu(null, article, description, debutEnchere, finEnchere, miseAPrix, null, null, null, utilisateur, categorie, retrait);
 							try {
 								this.articleVenduManager.addArticleVendu(articleVendu);
 								response.sendRedirect(request.getContextPath());
