@@ -11,10 +11,6 @@ public class CategorieManagerException extends Exception{
 		super(message);
 	}
 
-	public CategorieManagerException(String message, Throwable cause) {
-		super(message, cause);
-	}
-
 	@Override
 	public String getMessage() {
 		StringBuffer sb = new StringBuffer("Couche BLL CategorieManagerException - ");

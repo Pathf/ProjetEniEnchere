@@ -24,9 +24,6 @@ import org.encheres.bo.Categorie;
 import org.encheres.bo.Retrait;
 import org.encheres.bo.Utilisateur;
 
-/**
- * Servlet implementation class VendreUnArticleServlet
- */
 @WebServlet("/nouvelle-vente")
 public class VendreUnArticleServlet extends HttpServlet {
 	private UtilisateurManager utilisateurManager = UtilisateurManager.getInstance();
@@ -35,25 +32,23 @@ public class VendreUnArticleServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	@Override
-	protected void doGet(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession session = request.getSession();
 		String pseudo = (String) session.getAttribute("pseudo");
 		Utilisateur utilisateur = null;
 		List<Categorie> categories = null;
-
 		if (session.getAttribute("pseudo") != null) {
 			try {
 				utilisateur = this.utilisateurManager.getUtilisateur(pseudo);
 				request.setAttribute("utilisateur", utilisateur);
 			} catch (UtilisateurManagerException e) {
-				System.out.println(e);
+				System.err.println(e);
 			}
 			try {
 				categories = this.categoriesManager.getListeCategorie();
 				request.setAttribute("categories", categories);
 			} catch (CategorieManagerException e) {
-				System.out.println(e);
+				System.err.println(e);
 			}
 
 			request.getRequestDispatcher("/WEB-INF/jsp/vendreUnArticle.jsp").forward(request, response);
@@ -63,13 +58,8 @@ public class VendreUnArticleServlet extends HttpServlet {
 
 	}
 
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
-	 *      response)
-	 */
 	@Override
-	protected void doPost(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession session = request.getSession();
 		if (session.getAttribute("pseudo") != null) {
 			Utilisateur utilisateur = null;
@@ -78,30 +68,26 @@ public class VendreUnArticleServlet extends HttpServlet {
 			String erreur = null;
 			Date debutEnchere = null;
 			Date finEnchere = null;
-
 			String article = request.getParameter("article");
 			String description = request.getParameter("description");
 			Integer categorieId = Integer.parseInt(request.getParameter("categorie"));
 			//String photoArticle = request.getParameter("photoArticle");
 			try {
-
 				debutEnchere = new java.sql.Date(new SimpleDateFormat("yyyy-MM-dd").parse(request.getParameter("debutEnchere")).getTime());
-			} catch (ParseException e2) {
-				e2.printStackTrace();
+			} catch (ParseException e) {
+				System.err.println(e);
 			}
 			try {
 				finEnchere = new java.sql.Date(new SimpleDateFormat("yyyy-MM-dd").parse(request.getParameter("finEnchere")).getTime());
-			} catch (ParseException e1) {
-				e1.printStackTrace();
+			} catch (ParseException e) {
+				System.err.println(e);
 			}
 			String rue = request.getParameter("rue");
 			String codePostal = request.getParameter("codePostal");
 			String ville = request.getParameter("ville");
 			String miseAPrixString = request.getParameter("miseAPrix");
-
 			if (miseAPrixString != null && !miseAPrixString.isEmpty()) {
 				Integer miseAPrix = Integer.parseInt(miseAPrixString);
-
 				if(		article != null && !article.isEmpty() &&
 						description != null && !description.isEmpty() &&
 						categorieId != null &&
@@ -110,18 +96,17 @@ public class VendreUnArticleServlet extends HttpServlet {
 						codePostal != null && !codePostal.isEmpty() &&
 						ville != null && !ville.isEmpty()
 						) {
-
 					if(finEnchere != null) {
-
 						if (finEnchere.after(debutEnchere)) {
-
 							try {
 								utilisateur = this.utilisateurManager.getUtilisateur(pseudo);
 							} catch (UtilisateurManagerException e) {
+								System.err.println(e);
 							}
 							try {
 								categorie = this.categoriesManager.getCategorie(categorieId);
 							} catch (CategorieManagerException e) {
+								System.err.println(e);
 							}
 							Retrait retrait = new Retrait(null, rue, codePostal, ville);
 							ArticleVendu articleVendu = new ArticleVendu(null, article, description, debutEnchere, finEnchere, miseAPrix, null, utilisateur, categorie, retrait);
@@ -130,7 +115,7 @@ public class VendreUnArticleServlet extends HttpServlet {
 								response.sendRedirect(request.getContextPath());
 								return;
 							} catch (ArticleVenduManagerException e) {
-								e.printStackTrace();
+								System.err.println(e);
 								erreur = "Une erreur est survenue !";
 							}
 						} else {

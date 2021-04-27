@@ -25,7 +25,7 @@ public class ArticleVendu {
 	public ArticleVendu(Integer no_article) {
 		this.no_article = no_article;
 	}
-	
+
 	public ArticleVendu(Integer no_article, String nom_article, String description, Date date_debut_encheres,
 			Date date_fin_encheres, Integer prix_initial, Integer prix_vente, Utilisateur utilisateur,
 			Categorie categorie, Retrait retrait) {
@@ -120,23 +120,6 @@ public class ArticleVendu {
 
 	public void setRetrait(Retrait retrait) {
 		this.retrait = retrait;
-	}
-
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((this.date_debut_encheres == null) ? 0 : this.date_debut_encheres.hashCode());
-		result = prime * result + ((this.date_fin_encheres == null) ? 0 : this.date_fin_encheres.hashCode());
-		result = prime * result + ((this.description == null) ? 0 : this.description.hashCode());
-		result = prime * result + ((this.no_article == null) ? 0 : this.no_article.hashCode());
-		result = prime * result + ((this.categorie == null) ? 0 : this.categorie.hashCode());
-		result = prime * result + ((this.retrait == null) ? 0 : this.retrait.hashCode());
-		result = prime * result + ((this.utilisateur == null) ? 0 : this.utilisateur.hashCode());
-		result = prime * result + ((this.nom_article == null) ? 0 : this.nom_article.hashCode());
-		result = prime * result + ((this.prix_initial == null) ? 0 : this.prix_initial.hashCode());
-		result = prime * result + ((this.prix_vente == null) ? 0 : this.prix_vente.hashCode());
-		return result;
 	}
 
 	@Override

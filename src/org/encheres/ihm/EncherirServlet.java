@@ -21,9 +21,6 @@ import org.encheres.bo.ArticleVendu;
 import org.encheres.bo.Enchere;
 import org.encheres.bo.Utilisateur;
 
-/**
- * Servlet implementation class EncherirServlet
- */
 @WebServlet("/detail-enchere")
 public class EncherirServlet extends HttpServlet {
 	private ArticleVenduManager articleVenduManager = ArticleVenduManager.getInstance();
@@ -32,8 +29,8 @@ public class EncherirServlet extends HttpServlet {
 	private Calendar calendar = Calendar.getInstance();
 	private static final long serialVersionUID = 1L;
 
-	protected void doGet(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+	@Override
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession session = request.getSession();
 		Boolean isConnect = false;
 		Boolean articleValide = false;
@@ -49,48 +46,41 @@ public class EncherirServlet extends HttpServlet {
 		Integer articleId = null;
 		if (request.getParameter("id") != null) {
 			articleId = Integer.parseInt(request.getParameter("id"));
-
 			isConnect = (pseudo != null);
-			
 			try {
 				article = this.articleVenduManager.getArticleVendu(articleId);
 				if(article != null) {
 					articleValide = true;
 					long debutEnchere = article.getDate_debut_encheres().getTime();
 					long finEnchere = article.getDate_fin_encheres().getTime();
-					
-				    Date date = new Date(calendar.getTime().getTime());
-				    if(date.getTime() >= debutEnchere && date.getTime() < finEnchere) {
-				    	isEnCour = true;
-				    }
-				    if (isConnect) {
-					    try {
+
+					Date date = new Date(this.calendar.getTime().getTime());
+					if(date.getTime() >= debutEnchere && date.getTime() < finEnchere) {
+						isEnCour = true;
+					}
+					if (isConnect) {
+						try {
 							vendeur = this.utilisateurManager.getUtilisateur(pseudo).equals(article.getUtilisateur());
 						} catch (UtilisateurManagerException e) {
-							System.out.println(e);
-							e.printStackTrace();
+							System.err.println(e);
 						}
-				    }
+					}
 				}
 			} catch (ArticleVenduManagerException e) {
-				System.out.println(e);
-			} 
+				System.err.println(e);
+			}
 			try {
 				meilleurEnchere = this.enchereManager.getMeilleurEnchereByArticle(articleId);
 				if(meilleurEnchere != null) {
 					meilleurEnchereNotNull = true;
 					isMeilleurEncherisseur = meilleurEnchere.getUtilisateur().equals(this.utilisateurManager.getUtilisateur(pseudo));
-					isGagnant = isGagnant(this.utilisateurManager.getUtilisateur(pseudo), article, meilleurEnchere);
-					isTerminee = isTerminee(article);
+					isGagnant = this.isGagnant(this.utilisateurManager.getUtilisateur(pseudo), article, meilleurEnchere);
+					isTerminee = this.isTerminee(article);
 				}
-			} catch (EnchereManagerException e) {
-				System.out.println(e);
-			} catch (UtilisateurManagerException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			} catch (EnchereManagerException | UtilisateurManagerException e) {
+				System.err.println(e);
 			}
-		} 
-		
+		}
 		request.setAttribute("isMeilleurEncherisseur", isMeilleurEncherisseur);
 		request.setAttribute("meilleurEnchereNotNull", meilleurEnchereNotNull);
 		request.setAttribute("isGagnant", isGagnant);
@@ -104,12 +94,8 @@ public class EncherirServlet extends HttpServlet {
 		request.getRequestDispatcher("/WEB-INF/jsp/detailEnchere.jsp").forward(request, response);
 	}
 
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
-	 *      response)
-	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+	@Override
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession session = request.getSession();
 		if (session.getAttribute("pseudo") != null) {
 			String pseudo = (String) session.getAttribute("pseudo");
@@ -122,28 +108,30 @@ public class EncherirServlet extends HttpServlet {
 				Integer proposition = Integer.parseInt(propositionString);
 				Enchere meilleurEnchere = null;
 				ArticleVendu articleVendu = null;
-				
 				try {
 					meilleurEnchere = this.enchereManager.getMeilleurEnchereByArticle(articleId);
 					if(meilleurEnchere != null) {
 						meilleurEnchereNotNull = true;
 					}
 				} catch (EnchereManagerException e) {
+					System.err.println(e);
 				}
-				
+
 				try {
 					articleVendu = this.articleVenduManager.getArticleVendu(articleId);
 				} catch (ArticleVenduManagerException e) {
+					System.err.println(e);
 				}
-				
+
 				try {
 					utilisateur = this.utilisateurManager.getUtilisateur(pseudo);
 				} catch (UtilisateurManagerException e) {
+					System.err.println(e);
 				}
 				if (meilleurEnchereNotNull) {
 					if (proposition > meilleurEnchere.getMontant_enchere()) {
-						if (isCreditable(proposition, utilisateur)) {
-						    Date date = new Date(calendar.getTime().getTime());
+						if (this.isCreditable(proposition, utilisateur)) {
+							Date date = new Date(this.calendar.getTime().getTime());
 							Enchere nouvelleEnchere = new Enchere(null, date, proposition, articleVendu, utilisateur);
 							try {
 								this.enchereManager.addEnchere(nouvelleEnchere);
@@ -152,11 +140,8 @@ public class EncherirServlet extends HttpServlet {
 								utilisateur.setCredit(utilisateur.getCredit() - proposition);
 								this.utilisateurManager.updateUtilisateur(utilisateur);
 								this.utilisateurManager.updateUtilisateur(acheteurPrecedent);
-							} catch (EnchereManagerException e) {
-								e.printStackTrace();
-							} catch (UtilisateurManagerException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
+							} catch (EnchereManagerException | UtilisateurManagerException e) {
+								System.err.println(e);
 							}
 						} else {
 							erreur = "Vous n'avez pas assez de points !";
@@ -166,14 +151,14 @@ public class EncherirServlet extends HttpServlet {
 					}
 				} else {
 					if (proposition > articleVendu.getPrix_initial()) {
-						if (isCreditable(proposition, utilisateur)) {
-						    Date date = new Date(calendar.getTime().getTime());
+						if (this.isCreditable(proposition, utilisateur)) {
+							Date date = new Date(this.calendar.getTime().getTime());
 							Enchere nouvelleEnchere = new Enchere(null, date, proposition, articleVendu, utilisateur);
 							try {
 								this.enchereManager.addEnchere(nouvelleEnchere);
 								utilisateur.setCredit(utilisateur.getCredit() - proposition);
 							} catch (EnchereManagerException e) {
-								e.printStackTrace();
+								System.err.println(e);
 							}
 						} else {
 							erreur = "Vous n'avez pas assez de points !";
@@ -184,30 +169,29 @@ public class EncherirServlet extends HttpServlet {
 				}
 			} else {
 				erreur = "La proposition est incorrect !";
-			}			
+			}
 			request.setAttribute("erreur", erreur);
-			doGet(request, response);
+			this.doGet(request, response);
 		} else {
 			response.sendRedirect(request.getContextPath());
 		}
 	}
-	
+
 	private Boolean isCreditable(Integer proposition, Utilisateur utilisateur) {
 		Boolean isCreditable = proposition <= utilisateur.getCredit();
-		return isCreditable;	
+		return isCreditable;
 	}
-	
+
 	private Boolean isGagnant(Utilisateur utilisateur, ArticleVendu articleVendu, Enchere enchere) {
 		Boolean isGagnant = false;
-		if (isTerminee(articleVendu)) {
+		if (this.isTerminee(articleVendu)) {
 			isGagnant = enchere.getUtilisateur().equals(utilisateur);
 		}
 		return isGagnant;
 	}
-	
+
 	private Boolean isTerminee(ArticleVendu articleVendu) {
-		Date date = new Date(calendar.getTime().getTime());
-		return articleVendu.getDate_fin_encheres().getTime() <= date.getTime();	
+		Date date = new Date(this.calendar.getTime().getTime());
+		return articleVendu.getDate_fin_encheres().getTime() <= date.getTime();
 	}
-	
 }

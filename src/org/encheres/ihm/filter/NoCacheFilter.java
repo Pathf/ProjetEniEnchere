@@ -27,16 +27,12 @@ public class NoCacheFilter implements Filter {
 				httpresponse.setHeader("Cache-Control", "no-cache, no-store, must-revalidate") ;
 				httpresponse.setHeader("Pragma", "no-cache");
 				httpresponse.setHeader("Expires", "0") ;
-				// Print out the URL we're filtering
+				// TODO : a mettre en log
 				//System.out.println("Filtrage du cache : " + ((HttpServletRequest)request).getRequestURI()) ;
 			}
 			chain.doFilter (request, response);
-		} catch (IOException e) {
-			System.err.println ("IOException dans NoCacheFilter :");
-			e.printStackTrace() ;
-		} catch (ServletException e) {
-			System.err.println ("ServletException dans NoCacheFilter :");
-			e.printStackTrace() ;
+		} catch (IOException | ServletException e) {
+			System.err.println ("Exception dans NoCacheFilter :\n" + e);
 		}
 	}
 }
