@@ -20,7 +20,7 @@ import org.encheres.bo.ArticleVendu;
 import org.encheres.bo.Categorie;
 
 @WebServlet("/encheres")
-public class accueilServlet extends HttpServlet {
+public class AccueilServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private ArticleVenduManager articleVenduManager = ArticleVenduManager.getInstance();
 	private CategoriesManager categorieManager = CategoriesManager.getInstance();
