@@ -8,8 +8,8 @@
 <jsp:include page="/WEB-INF/fragments/head.jsp"></jsp:include>
 <body>
 	<%@ include file="/WEB-INF/fragments/navbar.jspf" %>
-	<div class="container">
-		<div class="mx-auto text-center">
+	<div class="container w-75 p-3">
+		<div class="mx-auto text-center ">
 			<h1>Mon profil</h1>
 		</div>
 		
