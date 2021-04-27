@@ -1,6 +1,7 @@
 package org.encheres.ihm;
 
 import java.io.IOException;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -12,48 +13,30 @@ import org.encheres.bll.UtilisateurManager;
 import org.encheres.bll.UtilisateurManagerException;
 import org.encheres.bo.Utilisateur;
 
-/**
- * Servlet implementation class ModifierProfilServlet
- */
 @WebServlet("/monProfil")
 public class ModifierProfilServlet extends HttpServlet {
 	private UtilisateurManager utilisateurManager = UtilisateurManager.getInstance();
 	private static final long serialVersionUID = 1L;
-       
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
-    public ModifierProfilServlet() {
-        super();
-        // TODO Auto-generated constructor stub
-    }
 
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {		
+	@Override
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession session = request.getSession();
 		Utilisateur utilisateur = null;
-		
 		if (session.getAttribute("pseudo") != null) {
 			try {
-				utilisateur = this.utilisateurManager.getUtilisateur((String) session.getAttribute("pseudo"));			
+				utilisateur = this.utilisateurManager.getUtilisateur((String) session.getAttribute("pseudo"));
 			} catch (UtilisateurManagerException e) {
-				
+				System.err.println(e);
 			}
-
 			request.setAttribute("utilisateur", utilisateur);
 			request.getRequestDispatcher("/WEB-INF/jsp/modifierProfil.jsp").forward(request, response);
 		} else {
 			response.sendRedirect(request.getContextPath());
 		}
-		
+
 	}
 
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
+	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession session = request.getSession();
 		if (session.getAttribute("pseudo") != null) {
@@ -69,16 +52,12 @@ public class ModifierProfilServlet extends HttpServlet {
 			String ville = request.getParameter("ville");
 			String motDePasse = request.getParameter("mot_de_passe");
 			String confirmation = request.getParameter("confirmation");
-			
-			
 			try {
 				utilisateur = this.utilisateurManager.getUtilisateur((String) session.getAttribute("pseudo"));
-				
 			} catch (UtilisateurManagerException e) {
-				
+				System.err.println(e);
 			}
-			
-			
+
 			if(pseudo.matches("[a-zA-Z0-9]+")) {
 				utilisateur.setPseudo(pseudo);
 			} else {
@@ -110,28 +89,24 @@ public class ModifierProfilServlet extends HttpServlet {
 					erreur = "Le nouveau mot de passe et la confirmation du nouveau mot de passe sont différents !";
 				}
 			}
-			
 			try {
-				utilisateurManager.updateUtilisateur(utilisateur);
+				this.utilisateurManager.updateUtilisateur(utilisateur);
 			} catch (UtilisateurManagerException e) {
-				
 				if(e.toString().contains("Impossible d'insérer une clé en double dans l'objet")) {
 					erreur = "L'utilisateur ou l'email sont déjà utilisés !";
-					System.out.println(erreur);
 				} else {
 					erreur = "Une erreur est survenue !";
-					System.out.println(e);
 				}
+				System.err.println(e);
 			}
-			
 			if (erreur != null) {
 				request.setAttribute("erreur", erreur);
-				doGet(request, response);
+				this.doGet(request, response);
 			} else {
 				response.sendRedirect(request.getContextPath() + "/profil?pseudo=" + utilisateur.getPseudo());
 			}
 		} else {
 			response.sendRedirect(request.getContextPath());
-		}		
+		}
 	}
 }

@@ -13,27 +13,18 @@ import org.encheres.bll.UtilisateurManager;
 import org.encheres.bll.UtilisateurManagerException;
 import org.encheres.bo.Utilisateur;
 
-/**
- * Servlet implementation class InscriptionServlet
- */
 @WebServlet("/creercompte")
 public class InscriptionServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	private UtilisateurManager utilisateurManager = UtilisateurManager.getInstance();
 
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/jsp/inscription.jsp");
 		rd.forward(request, response);
 	}
 
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String bouton = request.getParameter("bouton");
@@ -60,7 +51,6 @@ public class InscriptionServlet extends HttpServlet {
 								ville != null && !ville.isEmpty()
 								) {
 							Utilisateur utilisateur = new Utilisateur(null, pseudo, nom, prenom, email, telephone, rue, code_postal, ville, mot_de_passe, 100, false);
-							System.out.println(utilisateur);
 							try {
 								this.utilisateurManager.addUtilisateur(utilisateur);
 								response.sendRedirect(request.getContextPath());
@@ -70,8 +60,8 @@ public class InscriptionServlet extends HttpServlet {
 									erreur = "L'utilisateur exista déjà !";
 								} else {
 									erreur = "Une erreur est survenue !";
-									System.out.println(e);
 								}
+								System.err.println(e);
 							}
 						} else {
 							erreur = "Vous avez oublié de remplir un champ !";

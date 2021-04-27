@@ -49,7 +49,6 @@ public class SuppressionServlet extends HttpServlet {
 						break;
 					}
 				}
-
 				//vendeur(article ou la date de fin de l'enchere n'est ps inferieur à now)
 				List<ArticleVendu> utilisateurArticleVendus = this.articleVenduManager.getListeArticleVenduByUtilisateur(utilisateur.getNo_utilisateur());
 				for(ArticleVendu articleVendu : utilisateurArticleVendus) {
@@ -60,7 +59,6 @@ public class SuppressionServlet extends HttpServlet {
 						break;
 					}
 				}
-
 				if(!enchereEnCour) {
 					// Déconnexion
 					request.getSession().removeAttribute("pseudo");

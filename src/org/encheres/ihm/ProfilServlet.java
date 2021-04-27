@@ -13,34 +13,27 @@ import org.encheres.bll.UtilisateurManager;
 import org.encheres.bll.UtilisateurManagerException;
 import org.encheres.bo.Utilisateur;
 
-/**
- * Servlet implementation class ProfilServlet
- */
 @WebServlet("/profil")
 public class ProfilServlet extends HttpServlet {
 	private UtilisateurManager utilisateurManager = UtilisateurManager.getInstance();
 	private static final long serialVersionUID = 1L;
 
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {		
+	@Override
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession session = request.getSession();
-		String pseudo = request.getParameter("pseudo");	
+		String pseudo = request.getParameter("pseudo");
 		Utilisateur utilisateur = null;
 		Boolean isMonProfil = false;
 		try {
-			utilisateur = this.utilisateurManager.getUtilisateur(pseudo);			
+			utilisateur = this.utilisateurManager.getUtilisateur(pseudo);
 		} catch (UtilisateurManagerException e) {
-			// TODO: handle exception
+			System.err.println(e);
 		}
 		if (session.getAttribute("pseudo") != null) {
-		isMonProfil= session.getAttribute("pseudo").equals(pseudo);
+			isMonProfil= session.getAttribute("pseudo").equals(pseudo);
 		}
 		request.setAttribute("utilisateur", utilisateur);
 		request.setAttribute("isMonProfil", isMonProfil);
 		request.getRequestDispatcher("/WEB-INF/jsp/profil.jsp").forward(request, response);
 	}
-
 }

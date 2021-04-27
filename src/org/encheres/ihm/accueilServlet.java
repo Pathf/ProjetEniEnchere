@@ -1,12 +1,7 @@
 package org.encheres.ihm;
 
 import java.io.IOException;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.sql.Date;
 import java.util.List;
 
 import javax.servlet.RequestDispatcher;
@@ -34,7 +29,6 @@ public class accueilServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		List<ArticleVendu> articlesVendus = null;
-
 		HttpSession session = request.getSession();
 
 		// recuperation des param de filtration
@@ -42,9 +36,7 @@ public class accueilServlet extends HttpServlet {
 		String categorie = request.getParameter("categorie");
 		Integer categorieInt = null;
 		String radioAchat = request.getParameter("radioAchatVente");
-//		String[] where;
 		Boolean filtreByDateDebut = false;
-//		String mine = null;
 		String noUtilisateur = request.getParameter("pseudo");
 		Boolean winBid = false;
 		Boolean process = false;
@@ -55,37 +47,31 @@ public class accueilServlet extends HttpServlet {
 			String[] checkboxAchat =null;
 			if (request.getParameterValues("checkboxAchat") != null) {
 				checkboxAchat = request.getParameterValues("checkboxAchat");
-			
-//			System.out.println(Arrays.toString(checkboxAchat));
-			if (Arrays.stream(checkboxAchat).anyMatch("open"::equals)) {
-				filtreByDateDebut = true;
-			}
-			if (Arrays.stream(checkboxAchat).anyMatch("mine"::equals)) {
-				if (session.getAttribute("pseudo") != null) {
-					noUtilisateur = (String) session.getAttribute("pseudo");
+				if (Arrays.stream(checkboxAchat).anyMatch("open"::equals)) {
+					filtreByDateDebut = true;
 				}
-				;
-			}
-			if (Arrays.stream(checkboxAchat).anyMatch("win"::equals)) {
-				winBid = true;
-				if (session.getAttribute("pseudo") != null) {
-					noUtilisateur = (String) session.getAttribute("pseudo");
+				if (Arrays.stream(checkboxAchat).anyMatch("mine"::equals)) {
+					if (session.getAttribute("pseudo") != null) {
+						noUtilisateur = (String) session.getAttribute("pseudo");
+					}
 				}
-				;
-			}
+				if (Arrays.stream(checkboxAchat).anyMatch("win"::equals)) {
+					winBid = true;
+					if (session.getAttribute("pseudo") != null) {
+						noUtilisateur = (String) session.getAttribute("pseudo");
+					}
+				}
 			}
 		}
 		if ("vente".equals(radioAchat)) {
 			String[] checkboxVente = null;
 			if (request.getParameterValues("checkboxVente") != null) {
 				checkboxVente = request.getParameterValues("checkboxVente");
-//					System.out.println(Arrays.toString(checkboxVente));
 				if (Arrays.stream(checkboxVente).anyMatch("process"::equals)) {
 					process = true;
 					if (session.getAttribute("pseudo") != null) {
 						noUtilisateur = (String) session.getAttribute("pseudo");
 					}
-					;
 				}
 				if (Arrays.stream(checkboxVente).anyMatch("start"::equals)) {
 					start = true;
@@ -106,11 +92,10 @@ public class accueilServlet extends HttpServlet {
 
 		// TEST LES FILTRES DEMANDE//
 		try {
-			articlesVendus = this.articleVenduManager.selectByFiltre(categorieInt, filtres, filtreByDateDebut,
-					noUtilisateur, process, start, finish);// System.out.println("liste articles " + articlesVendus);
+			articlesVendus = this.articleVenduManager.selectByFiltre(categorieInt, filtres, filtreByDateDebut, noUtilisateur, process, start, finish);
 			request.setAttribute("articlesVendus", articlesVendus);
 		} catch (ArticleVenduManagerException e) {
-			System.out.println(e);
+			System.err.println(e);
 		}
 
 		// FILTRE SUR ENCHERE REMPORTE UNIQUEMENT
@@ -123,7 +108,7 @@ public class accueilServlet extends HttpServlet {
 				articlesVendus.retainAll(articlesVendusGagné);
 				request.setAttribute("articlesVendus", articlesVendus);
 			} catch (ArticleVenduManagerException e) {
-				System.out.println(e);
+				System.err.println(e);
 			}
 		}
 
@@ -138,9 +123,8 @@ public class accueilServlet extends HttpServlet {
 		List<Categorie> categories = null;
 		try {
 			categories = this.categorieManager.getListeCategorie();
-
 		} catch (CategorieManagerException e) {
-			System.out.println(e);
+			System.err.println(e);
 		}
 		return categories;
 	}

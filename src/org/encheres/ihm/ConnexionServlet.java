@@ -36,14 +36,12 @@ public class ConnexionServlet extends HttpServlet {
 			HttpSession session = request.getSession();
 			session.setAttribute("pseudo", utilisateur.getPseudo());
 			session.setAttribute("id", utilisateur.getNo_utilisateur());
+			response.sendRedirect("encheres");
 		} catch (UtilisateurManagerException e) {
 			String erreur = (e.toString().contains("pas d'utilisateur")) ? "Identifiant ou mot de passe incorrect." : "Une erreur est survenue.";
 			request.setAttribute("erreur", erreur);
 			RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/jsp/connexion.jsp");
 			rd.forward(request, response);
-			return ;
 		}
-		response.sendRedirect("encheres");
 	}
-
 }
