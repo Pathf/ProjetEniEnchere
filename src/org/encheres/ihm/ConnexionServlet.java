@@ -17,7 +17,6 @@ import org.encheres.bo.Utilisateur;
 @WebServlet("/connexion")
 public class ConnexionServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-
 	private UtilisateurManager utilisateurManager = UtilisateurManager.getInstance();
 
 	@Override
