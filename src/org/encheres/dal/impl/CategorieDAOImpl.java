@@ -39,10 +39,10 @@ public class CategorieDAOImpl implements CategorieDAO {
 					categorie = new Categorie(id, rs.getString("libelle"));
 				}
 			}catch (SQLException e) {
-				throw new DALException("Select BYID failed - close failed for rs -  ", e);
+				throw new DALException("Select BYID failed - close failed for rs\n" + e);
 			}
 		} catch (SQLException e) {
-			throw new DALException("Select BYID failed - ", e);
+			throw new DALException("Select BYID failed\n" + e);
 		}
 		return categorie;
 	}
@@ -60,10 +60,10 @@ public class CategorieDAOImpl implements CategorieDAO {
 					categories.add(new Categorie(rs.getInt("no_categorie"), rs.getString("libelle")));
 				}
 			}catch (SQLException e) {
-				throw new DALException("Select ALL failed - close failed for rs -  ", e);
+				throw new DALException("Select ALL failed - close failed for rs\n" + e);
 			}
 		} catch (SQLException e) {
-			throw new DALException("Select All failed - ", e);
+			throw new DALException("Select All failed\n" + e);
 		}
 		return categories;
 	}
@@ -81,10 +81,10 @@ public class CategorieDAOImpl implements CategorieDAO {
 					categorie.setNo_categorie(rs.getInt(1));
 				}
 			} catch (SQLException e) {
-				throw new DALException("Insert categorie return key failed - " + categorie + " - ", e);
+				throw new DALException("Insert categorie return key failed - " + categorie + "\n" + e);
 			}
 		} catch (SQLException e) {
-			throw new DALException("Insert categorie failed - " + categorie + " - ", e);
+			throw new DALException("Insert categorie failed - " + categorie + "\n" + e);
 		}
 	}
 
@@ -97,7 +97,7 @@ public class CategorieDAOImpl implements CategorieDAO {
 			preparedStatement.setInt(2, categorie.getNo_categorie());
 			preparedStatement.executeUpdate();
 		} catch (SQLException e) {
-			throw new DALException("Update categorie failed - " + categorie + " - ", e);
+			throw new DALException("Update categorie failed - " + categorie + "\n" + e);
 		}
 	}
 
@@ -109,7 +109,7 @@ public class CategorieDAOImpl implements CategorieDAO {
 			preparedStatement.setInt(1, categorie.getNo_categorie());
 			preparedStatement.executeUpdate();
 		} catch (SQLException e) {
-			throw new DALException("Delete categorie failed - " + categorie + " - ", e);
+			throw new DALException("Delete categorie failed - " + categorie + "\n" + e);
 		}
 	}
 }

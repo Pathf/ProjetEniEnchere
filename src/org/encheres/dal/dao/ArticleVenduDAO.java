@@ -1,7 +1,5 @@
 package org.encheres.dal.dao;
 
-import java.sql.Date;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.encheres.bo.ArticleVendu;
@@ -19,15 +17,10 @@ public interface ArticleVenduDAO {
 
 	List<ArticleVendu> selectByUtilisateur(Integer no_utilisateur) throws DALException;
 
-//	List<ArticleVendu> selectByCategorie(Integer no_categorie) throws DALException;
-//
-//	List<ArticleVendu> selectByCategorieAndNom(Integer no_categorie, String nom) throws DALException;
-
 	List<ArticleVendu> selectBydNom(String nom) throws DALException;
-	
-	List<ArticleVendu> selectByFiltre(Integer no_categorie, String nom, Boolean date, String no_utilisateur, Boolean process, Boolean start, Boolean finish)
-			throws DALException;
-	
+
+	List<ArticleVendu> selectByFiltre(Integer no_categorie, String nom, Boolean date, String no_utilisateur, Boolean process, Boolean start, Boolean finish) throws DALException;
+
 	List<ArticleVendu> listByWinBid(String no_utilisateur) throws DALException;
-	
+
 }

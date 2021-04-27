@@ -55,10 +55,10 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
 							);
 				}
 			}catch (SQLException e) {
-				throw new DALException("Select BYID failed - close failed for rs -  \n"+ e);
+				throw new DALException("Select BYID failed - close failed for rs\n" + e);
 			}
 		} catch (SQLException e) {
-			throw new DALException("Select BYID failed - \n"+ e);
+			throw new DALException("Select BYID failed\n" + e);
 		}
 		return utilisateur;
 	}
@@ -89,10 +89,10 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
 							);
 				}
 			}catch (SQLException e) {
-				throw new DALException("Select BYPSEUDO failed - close failed for rs -  ", e);
+				throw new DALException("Select BYPSEUDO failed - close failed for rs\n" + e);
 			}
 		} catch (SQLException e) {
-			throw new DALException("Select BYPSEUDO failed - ", e);
+			throw new DALException("Select BYPSEUDO failed\n" + e);
 		}
 		return utilisateur;
 	}
@@ -124,10 +124,10 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
 							);
 				}
 			}catch (SQLException e) {
-				throw new DALException("Select BYEMAIL failed - close failed for rs -  \n"+ e);
+				throw new DALException("Select BYEMAIL failed - close failed for rs\n" + e);
 			}
 		} catch (SQLException e) {
-			throw new DALException("Select BYEMAIL failed - \n"+ e);
+			throw new DALException("Select BYEMAIL failed\n" + e);
 		}
 		return utilisateur;
 	}
@@ -159,10 +159,10 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
 							);
 				}
 			}catch (SQLException e) {
-				throw new DALException("Select BYPSEUDO failed - close failed for rs -  \n"+ e);
+				throw new DALException("Select BYPSEUDO failed - close failed for rs\n" + e);
 			}
 		} catch (SQLException e) {
-			throw new DALException("Select BYPSEUDO failed - \n"+ e);
+			throw new DALException("Select BYPSEUDO failed\n" + e);
 		}
 		return utilisateur;
 	}
@@ -193,10 +193,10 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
 							));
 				}
 			}catch (SQLException e) {
-				throw new DALException("Select ALL failed - close failed for rs -  \n"+ e);
+				throw new DALException("Select ALL failed - close failed for rs\n" + e);
 			}
 		} catch (SQLException e) {
-			throw new DALException("Select All failed - \n"+ e);
+			throw new DALException("Select All failed\n" + e);
 		}
 		return utilisateur;
 	}
@@ -225,10 +225,10 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
 					utilisateur.setNo_utilisateur(rs.getInt(1));
 				}
 			} catch (SQLException e) {
-				throw new DALException("Insert utilisateur return key failed - " + utilisateur + " - \n" + e);
+				throw new DALException("Insert utilisateur return key failed - " + utilisateur + "\n" + e);
 			}
 		} catch (SQLException e) {
-			throw new DALException("Insert utilisateur failed - " + utilisateur + " - \n" + e);
+			throw new DALException("Insert utilisateur failed - " + utilisateur + "\n" + e);
 		}
 	}
 
@@ -251,7 +251,7 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
 			preparedStatement.setInt(12, utilisateur.getNo_utilisateur());
 			preparedStatement.executeUpdate();
 		} catch (SQLException e) {
-			throw new DALException("Update utilisateur failed - " + utilisateur + " - \n" + e);
+			throw new DALException("Update utilisateur failed - " + utilisateur + "\n" + e);
 		}
 	}
 
@@ -263,7 +263,7 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
 			preparedStatement.setInt(1, utilisateur.getNo_utilisateur());
 			preparedStatement.executeUpdate();
 		} catch (SQLException e) {
-			throw new DALException("Delete utilisateur failed - " + utilisateur + " - \n" + e);
+			throw new DALException("Delete utilisateur failed - " + utilisateur + "\n" + e);
 		}
 	}
 }

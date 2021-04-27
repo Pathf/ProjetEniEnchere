@@ -43,10 +43,10 @@ public class RetraitDAOImpl implements RetraitDAO {
 							);
 				}
 			}catch (SQLException e) {
-				throw new DALException("Select BYID failed - close failed for rs -  ", e);
+				throw new DALException("Select BYID failed - close failed for rs\n" + e);
 			}
 		} catch (SQLException e) {
-			throw new DALException("Select BYID failed - ", e);
+			throw new DALException("Select BYID failed\n" + e);
 		}
 		return retrait;
 	}
@@ -69,10 +69,10 @@ public class RetraitDAOImpl implements RetraitDAO {
 							));
 				}
 			}catch (SQLException e) {
-				throw new DALException("Select ALL failed - close failed for rs -  ", e);
+				throw new DALException("Select ALL failed - close failed for rs\n" + e);
 			}
 		} catch (SQLException e) {
-			throw new DALException("Select All failed - ", e);
+			throw new DALException("Select All failed\n" + e);
 		}
 		return retrait;
 	}
@@ -92,10 +92,10 @@ public class RetraitDAOImpl implements RetraitDAO {
 					retrait.setNo_retrait(rs.getInt(1));
 				}
 			} catch (SQLException e) {
-				throw new DALException("Insert retrait return key failed - " + retrait + " - ", e);
+				throw new DALException("Insert retrait return key failed - " + retrait + "\n" + e);
 			}
 		} catch (SQLException e) {
-			throw new DALException("Insert retrait failed - " + retrait + " - ", e);
+			throw new DALException("Insert retrait failed - " + retrait + "\n" + e);
 		}
 	}
 
@@ -110,7 +110,7 @@ public class RetraitDAOImpl implements RetraitDAO {
 			preparedStatement.setInt(4, retrait.getNo_retrait());
 			preparedStatement.executeUpdate();
 		} catch (SQLException e) {
-			throw new DALException("Update retrait failed - " + retrait + " - ", e);
+			throw new DALException("Update retrait failed - " + retrait + "\n" + e);
 		}
 	}
 }
