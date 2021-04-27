@@ -107,15 +107,13 @@
 							C/O https://placeholder.com/"
 											alt="Card image cap">
 										<div class="card-body">
-											<h5 class="card-title">${c.nom_article}</h5>
+											<h5 class="card-title"><a href="${pageContext.request.contextPath}/detail-enchere?id=${c.no_article}" class="text-decoration-none">${c.nom_article}</a></h5>
 											<p class="card-text">Prix :${c.prix_initial}</p>
 											<p class="card-text">Categorie :${c.categorie.libelle}</p>
 											<p class="card-text">Fin de l'enchère
 												:${c.date_fin_encheres}</p>
 											<p class="card-text">
-												<small class="text-muted">Vendeur : <a href="#"
-													class="btn btn-primary">Vendeur
-														:${c.utilisateur.pseudo}</a></small>
+												<small class="text-muted"><a href="${pageContext.request.contextPath}/profil?pseudo=${c.utilisateur.pseudo}" class="btn btn-primary">Vendeur : ${c.utilisateur.pseudo}</a></small>
 											</p>
 										</div>
 									</div>
