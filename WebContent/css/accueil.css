@@ -14,9 +14,6 @@
 }
 
 @media ( max-width : 575.98px) {
-	body {
-		background-color: red;
-	}
 	.searchModule {
 		display: flex;
 		flex-direction: column-reverse;
