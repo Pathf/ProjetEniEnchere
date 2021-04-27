@@ -80,18 +80,6 @@ public class ArticleVenduManager {
 		return articleVendus;
 	}
 
-	public List<ArticleVendu> selectBydNom(String nom) throws ArticleVenduManagerException {
-		List<ArticleVendu> articleVendus = null;
-
-		try {
-			articleVendus = this.articleVenduDAO.selectBydNom(nom);
-		} catch (DALException e) {
-			throw new ArticleVenduManagerException("selectBydNom failed\n" + e);
-		}
-
-		return articleVendus;
-	}
-
 	public void addArticleVendu(ArticleVendu articleVendu) throws ArticleVenduManagerException {
 		try {
 			this.retraitDAO.insert(articleVendu.getRetrait());

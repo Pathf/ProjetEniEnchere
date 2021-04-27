@@ -11,8 +11,8 @@ import java.util.List;
 import org.encheres.bo.Categorie;
 import org.encheres.dal.DALException;
 import org.encheres.dal.DAOTools;
-import org.encheres.dal.SQLRequete;
 import org.encheres.dal.dao.CategorieDAO;
+import org.encheres.dal.sql.SQLRequete;
 
 public class CategorieDAOImpl implements CategorieDAO {
 

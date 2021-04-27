@@ -11,8 +11,8 @@ import java.util.List;
 import org.encheres.bo.Retrait;
 import org.encheres.dal.DALException;
 import org.encheres.dal.DAOTools;
-import org.encheres.dal.SQLRequete;
 import org.encheres.dal.dao.RetraitDAO;
+import org.encheres.dal.sql.SQLRequete;
 
 public class RetraitDAOImpl implements RetraitDAO {
 

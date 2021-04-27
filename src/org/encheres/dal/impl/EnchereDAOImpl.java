@@ -15,18 +15,13 @@ import org.encheres.bo.Retrait;
 import org.encheres.bo.Utilisateur;
 import org.encheres.dal.DALException;
 import org.encheres.dal.DAOTools;
-import org.encheres.dal.SQLRequete;
 import org.encheres.dal.dao.EnchereDAO;
+import org.encheres.dal.sql.SQLRequete;
 
 public class EnchereDAOImpl implements EnchereDAO {
-
-	private static final String TABLE = "ENCHERES";
-	private static final String[] IDS = new String[]{"no_article"};
-	private static final String[] CHAMPS = new String[]{"date_enchere","montant_enchere","no_article","no_utilisateur"};
-
 	//TODO : GROSSE REQUETE POUR ALLER TOUT CHERCHER
 	//"SELECT e.date_enchere, e.montant_enchere, a.no_article, u.no_utilisateur FROM ENCHERES as e INNER JOIN ARTICLES_VENDUS as a ON e.no_article = a.no_article INNER JOIN UTILISATEURS as u ON e.no_utilisateur = u.no_utilisateur WHERE e.no_enchere=?"
-	private static final String SQLSELECT_ID = SQLRequete.select(null, TABLE, IDS);
+	private static final String SQLSELECT_ID = SQLRequete.select(null, BDD.ENCHERES_TABLENOM, BDD.ENCHERES_IDS);
 	//private static final String SQLSELECT_UTILISATEUR = SQLRequete.select(null, TABLE, new String[]{"no_utilisateur"});
 	private static final String SQLSELECT_UTILISATEUR = "SELECT * FROM ENCHERES as e INNER JOIN ARTICLES_VENDUS as a ON e.no_article = a.no_article INNER JOIN UTILISATEURS as u ON e.no_utilisateur = u.no_utilisateur WHERE a.no_utilisateur=?";
 	private static final String SQLSELECT_MEILLEUR_ARTICLE = "SELECT e.no_enchere, e.date_enchere, MAX(e.montant_enchere) as montant_enchere, e.no_article, e.no_utilisateur, \r\n" +
@@ -36,8 +31,8 @@ public class EnchereDAOImpl implements EnchereDAO {
 			"WHERE e.no_article=? AND e.montant_enchere = (SELECT MAX(montant_enchere) FROM ENCHERES WHERE ENCHERES.no_article=?)\r\n" +
 			"GROUP BY e.no_enchere, e.date_enchere, e.montant_enchere, e.no_article, e.no_utilisateur, \r\n" +
 			"u.no_utilisateur , u.pseudo, u.nom, u.prenom, u.email, u.telephone, u.rue, u.code_postal, u.ville, u.mot_de_passe, u.credit, u.administrateur";
-	private static final String SQLINSERT = SQLRequete.insert(TABLE, CHAMPS);
-	private static final String SQLUPDATE = SQLRequete.update(TABLE, CHAMPS, IDS);
+	private static final String SQLINSERT = SQLRequete.insert(BDD.ENCHERES_TABLENOM, BDD.ENCHERES_CHAMPS);
+	private static final String SQLUPDATE = SQLRequete.update(BDD.ENCHERES_TABLENOM, BDD.ENCHERES_CHAMPS, BDD.ENCHERES_IDS);
 
 	//TODO : Opti eventuelle
 	@Override
@@ -109,8 +104,10 @@ public class EnchereDAOImpl implements EnchereDAO {
 									rs.getDate(BDD.ARTICLESVENDUS_CHAMPS[3]),
 									rs.getInt(BDD.ARTICLESVENDUS_CHAMPS[4]),
 									rs.getInt(BDD.ARTICLESVENDUS_CHAMPS[5]),
+									rs.getString(BDD.ARTICLESVENDUS_CHAMPS[6]),
+									rs.getBytes(BDD.ARTICLESVENDUS_CHAMPS[7]),
 									new Utilisateur(
-											rs.getInt(BDD.ARTICLESVENDUS_CHAMPS[6]),
+											rs.getInt(BDD.ARTICLESVENDUS_CHAMPS[8]),
 											null,
 											null,
 											null,
@@ -124,11 +121,11 @@ public class EnchereDAOImpl implements EnchereDAO {
 											false
 											),
 									new Categorie(
-											rs.getInt(BDD.ARTICLESVENDUS_CHAMPS[7]),
+											rs.getInt(BDD.ARTICLESVENDUS_CHAMPS[9]),
 											null
 											),
 									new Retrait(
-											rs.getInt(BDD.ARTICLESVENDUS_CHAMPS[8]),
+											rs.getInt(BDD.ARTICLESVENDUS_CHAMPS[10]),
 											null,
 											null,
 											null
