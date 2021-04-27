@@ -4,7 +4,7 @@
   <welcome-file-list>
 	  <welcome-file>encheres</welcome-file> 
   </welcome-file-list>
-  
+
   <!-- Les filtres -->
   <filter>
         <filter-name>NoCacheFilter</filter-name>
