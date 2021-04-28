@@ -83,7 +83,14 @@
 				<ul class="list-group col-12 card-deck cardFlex flex-column">		
 					<c:forEach var="c" items="${articlesVendus}">
 						<div class="card border border-dark flex-sm-row">
-							<img class="card-img-top" src="https://via.placeholder.com/150	C/O https://placeholder.com/" alt="Card image cap">
+							<c:choose>
+								<c:when test="${c.photoNom != null}">
+									<img class="card-img-top" alt="Pas de photo disponible" class="img-fluid" src="images?id=${c.no_article}">
+								</c:when>
+								<c:otherwise>
+									<img class="card-img-top" alt="Card image cap" class="img-fluid" src="https://via.placeholder.com/150	C/O https://placeholder.com/">
+								</c:otherwise>
+							</c:choose>
 							<div class="card-body">
 								<h5 class="card-title"><a href="${pageContext.request.contextPath}/detail-enchere?id=${c.no_article}" class="text-decoration-none">${c.nom_article}</a></h5>
 								<p class="card-text">Prix : ${c.prix_initial}</p>
