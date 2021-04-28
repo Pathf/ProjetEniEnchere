@@ -42,6 +42,8 @@ public class AccueilServlet extends HttpServlet {
 		Boolean start = false;
 		Boolean finish = false;
 		Boolean filtreByDateDebut = false;
+		Integer idUtilisateur=null;
+		
 
 		// verification succinte du champs de saisi libre pour eviter injection SQL
 		if (filtres != null) {
@@ -62,12 +64,18 @@ public class AccueilServlet extends HttpServlet {
 					if (session.getAttribute("pseudo") != null) {
 						noUtilisateur = (String) session.getAttribute("pseudo");
 					}
+					if (session.getAttribute("id") != null) {
+						 idUtilisateur = (Integer) session.getAttribute("id");	
+						}
 				}
 				if (Arrays.stream(checkboxAchat).anyMatch("win"::equals)) {
 					winBid = true;
 					if (session.getAttribute("pseudo") != null) {
 						noUtilisateur = (String) session.getAttribute("pseudo");
 					}
+					if (session.getAttribute("id") != null) {
+						 idUtilisateur = (Integer) session.getAttribute("id");	
+						}
 				}
 			}
 		}
@@ -80,6 +88,9 @@ public class AccueilServlet extends HttpServlet {
 					if (session.getAttribute("pseudo") != null) {
 						noUtilisateur = (String) session.getAttribute("pseudo");
 					}
+					if (session.getAttribute("id") != null) {
+						 idUtilisateur = (Integer) session.getAttribute("id");	
+						}
 				}
 				if (Arrays.stream(checkboxVente).anyMatch("start"::equals)) {
 					start = true;
@@ -101,7 +112,7 @@ public class AccueilServlet extends HttpServlet {
 		// TEST LES FILTRES DEMANDE//
 		try {
 			articlesVendus = this.articleVenduManager.selectByFiltre(categorieInt, filtres, filtreByDateDebut,
-					noUtilisateur, process, start, finish);
+					idUtilisateur, process, start, finish);
 			request.setAttribute("articlesVendus", articlesVendus);
 		} catch (ArticleVenduManagerException e) {
 			System.err.println(e);
@@ -111,7 +122,7 @@ public class AccueilServlet extends HttpServlet {
 		if (winBid) {
 			try {
 				List<ArticleVendu> articlesVendusGagné = null;
-				articlesVendusGagné = this.articleVenduManager.listByWinBid(noUtilisateur);
+				articlesVendusGagné = this.articleVenduManager.listByWinBid(idUtilisateur);
 
 				// ON COMPARE AVEC LA LISTE DE FILTRE PRECEDENTE
 				articlesVendus.retainAll(articlesVendusGagné);

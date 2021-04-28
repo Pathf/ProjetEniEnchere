@@ -7,6 +7,10 @@ public class Categorie {
 	Integer no_categorie;
 	String libelle;
 
+	public Categorie() {
+		this(null,null);
+	}
+	
 	public Categorie(Integer no_categorie, String libelle) {
 		this.no_categorie = no_categorie;
 		this.libelle = libelle;

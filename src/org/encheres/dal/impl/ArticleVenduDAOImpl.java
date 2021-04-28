@@ -72,7 +72,7 @@ public class ArticleVenduDAOImpl implements ArticleVenduDAO {
 	}
 
 	@Override
-	public List<ArticleVendu> selectByFiltre(Integer no_categorie, String nom, Boolean date, String no_utilisateur, Boolean process, Boolean start, Boolean finish)
+	public List<ArticleVendu> selectByFiltre(Integer no_categorie, String nom, Boolean date, Integer no_utilisateur, Boolean process, Boolean start, Boolean finish)
 			throws DALException {
 		List<ArticleVendu> articles = new ArrayList<>();
 
@@ -96,7 +96,7 @@ public class ArticleVenduDAOImpl implements ArticleVenduDAO {
 			position++;
 		}
 		if (no_categorie != null) {
-			query += " AND no_categorie = ?";
+			query += " AND a.no_categorie = ?";
 			positionCategorie = position;
 			position++;
 		}
@@ -106,7 +106,7 @@ public class ArticleVenduDAOImpl implements ArticleVenduDAO {
 		// TODO a revoir lorsque l'on aura l'id en session
 		if (no_utilisateur != null) {
 			//			query += " AND no_utilisateur = ?";// query += " AND no_utilisateur = (SELECTED no_utilisateur WHERE pseudo
-			query += " AND no_utilisateur = (SELECT no_utilisateur FROM UTILISATEURS WHERE pseudo = ?)";
+			query += " AND a.no_utilisateur = ?";
 			positionNoUtilisateur = position;
 			position++;
 		}
@@ -131,7 +131,7 @@ public class ArticleVenduDAOImpl implements ArticleVenduDAO {
 				preparedStatement.setInt(positionCategorie, no_categorie);
 			}
 			if (no_utilisateur != null) {
-				preparedStatement.setString(positionNoUtilisateur, no_utilisateur);
+				preparedStatement.setInt(positionNoUtilisateur, no_utilisateur);
 			}
 
 			try (ResultSet rs = preparedStatement.executeQuery();) {
@@ -149,15 +149,15 @@ public class ArticleVenduDAOImpl implements ArticleVenduDAO {
 	}
 
 	@Override
-	public List<ArticleVendu> listByWinBid(String no_utilisateur) throws DALException {
+	public List<ArticleVendu> listByWinBid(Integer no_utilisateur) throws DALException {
 		List<ArticleVendu> articles = new ArrayList<>();
 		List<Integer> no_utilisateurs = new ArrayList<>();
 		List<Integer> no_categories = new ArrayList<>();
 		List<Integer> no_retraits = new ArrayList<>();
 
-		String query = "SELECT e2.no_article,a.nom_article, a.description, a.date_debut_encheres, a.date_fin_encheres,a.prix_initial,a.prix_vente, e2.no_utilisateur, a.no_categorie, a.no_retrait FROM ENCHERES AS e2 LEFT JOIN ARTICLES_VENDUS AS a ON e2.no_article = a.no_article\r\n"
+		String query = "SELECT e2.no_article,a.nom_article, a.description, a.date_debut_encheres, a.date_fin_encheres,a.prix_initial,a.prix_vente, e2.no_utilisateur, a.no_categorie, a.no_retrait , a.photo_nom , a.photo_data FROM ENCHERES AS e2 LEFT JOIN ARTICLES_VENDUS AS a ON e2.no_article = a.no_article\r\n"
 				+ "WHERE a.date_fin_encheres <= GETDATE()\r\n"
-				+ "and e2.no_utilisateur = (SELECT u.no_utilisateur FROM UTILISATEURS as u WHERE pseudo = ?)\r\n"
+				+ "AND e2.no_utilisateur = ?\r\n"
 				+ "AND e2.no_enchere IN (SELECT no_enchere\r\n"
 				+ "FROM ENCHERES AS e LEFT JOIN (SELECT no_article, max(montant_enchere)\r\n"
 				+ "AS montant FROM ENCHERES GROUP BY no_article) AS tmp ON e.no_article = tmp.no_article\r\n"
@@ -166,7 +166,7 @@ public class ArticleVenduDAOImpl implements ArticleVenduDAO {
 		try (Connection connection = DAOTools.getConnection();
 				PreparedStatement preparedStatement = connection.prepareStatement(query);) {
 
-			preparedStatement.setString(1, no_utilisateur);
+			preparedStatement.setInt(1, no_utilisateur);
 
 			try (ResultSet rs = preparedStatement.executeQuery();) {
 				while (rs.next()) {
@@ -314,9 +314,9 @@ public class ArticleVenduDAOImpl implements ArticleVenduDAO {
 	}
 
 	private ArticleVendu buildArticleVendu(ResultSet rs, boolean avecUtilisateur, boolean avecCategorie, boolean avecRetrait) throws SQLException {
-		Utilisateur utilisateur = null;
-		Categorie categorie = null;
-		Retrait retrait = null;
+		Utilisateur utilisateur = new Utilisateur();
+		Categorie categorie = new Categorie();
+		Retrait retrait = new Retrait();
 
 		if(avecUtilisateur) {
 			utilisateur = new Utilisateur(
