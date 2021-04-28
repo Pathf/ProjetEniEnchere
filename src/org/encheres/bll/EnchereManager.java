@@ -53,18 +53,28 @@ public class EnchereManager {
 		return encheres;
 	}
 
-	public void addEnchere(Enchere enchere) throws EnchereManagerException {
+	public void addEnchere(Enchere nouvelleEnchere) throws EnchereManagerException {
 		try {
-			this.enchereDAO.insert(enchere);
+			if(nouvelleEnchere.getMontant_enchere() >= nouvelleEnchere.getArticle().getPrix_initial() &&
+						nouvelleEnchere.getUtilisateur().getCredit() >= nouvelleEnchere.getMontant_enchere()) {
+				UtilisateurManager utilisateurManager = UtilisateurManager.getInstance();
+				// decredite le nouveau encherisseur
+				Utilisateur utilisateurNouvelleEnchere = nouvelleEnchere.getUtilisateur();
+				utilisateurNouvelleEnchere.setCredit(utilisateurNouvelleEnchere.getCredit() - nouvelleEnchere.getMontant_enchere());
+				utilisateurManager.updateUtilisateur(utilisateurNouvelleEnchere);
+				this.enchereDAO.insert(nouvelleEnchere);
+			}
 		} catch (DALException e) {
 			throw new EnchereManagerException("addEnchere failed\n" + e);
+		} catch (UtilisateurManagerException e) {
+			throw new EnchereManagerException("updateEncher failed - updateUtilisateur failed\n" + e);
 		}
 	}
 
 	public void updateEncher(Enchere nouvelleEnchere) throws EnchereManagerException {
 		try {
 			// select encheractuelle
-			Enchere encherePrecedente = this.enchereDAO.selectById(nouvelleEnchere.getNo_enchere());
+			Enchere encherePrecedente = this.enchereDAO.selectMeilleurByArticle(nouvelleEnchere.getArticle().getNo_article());
 			// verifie si l'enchere proposé est strictement supérieur a l'actuelle
 			if(nouvelleEnchere.getMontant_enchere() > encherePrecedente.getMontant_enchere() &&
 					nouvelleEnchere.getUtilisateur().getCredit() >= nouvelleEnchere.getMontant_enchere()) {
