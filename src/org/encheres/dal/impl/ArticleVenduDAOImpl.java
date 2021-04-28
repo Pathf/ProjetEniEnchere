@@ -266,10 +266,16 @@ public class ArticleVenduDAOImpl implements ArticleVenduDAO {
 			preparedStatement.setDate(4, articleVendu.getDate_fin_encheres());
 			preparedStatement.setInt(5, articleVendu.getPrix_initial());
 			preparedStatement.setNull(6, Types.INTEGER);
-			preparedStatement.setInt(7, articleVendu.getUtilisateur().getNo_utilisateur());
-			preparedStatement.setInt(8, articleVendu.getCategorie().getNo_categorie());
-			preparedStatement.setInt(9, articleVendu.getRetrait().getNo_retrait());
-
+			if(articleVendu.getPhotoNom() != null) {
+				preparedStatement.setString(7, articleVendu.getPhotoNom());
+				preparedStatement.setBytes(8, articleVendu.getPhotoData());
+			} else {
+				preparedStatement.setNull(7, Types.VARCHAR);
+				preparedStatement.setNull(8, Types.BLOB);
+			}
+			preparedStatement.setInt(9, articleVendu.getUtilisateur().getNo_utilisateur());
+			preparedStatement.setInt(10, articleVendu.getCategorie().getNo_categorie());
+			preparedStatement.setInt(11, articleVendu.getRetrait().getNo_retrait());
 			preparedStatement.executeUpdate();
 
 			try (ResultSet rs = preparedStatement.getGeneratedKeys()) {
@@ -294,10 +300,12 @@ public class ArticleVenduDAOImpl implements ArticleVenduDAO {
 			preparedStatement.setDate(4, articleVendu.getDate_fin_encheres());
 			preparedStatement.setInt(5, articleVendu.getPrix_initial());
 			preparedStatement.setInt(6, articleVendu.getPrix_vente());
-			preparedStatement.setInt(7, articleVendu.getUtilisateur().getNo_utilisateur());
-			preparedStatement.setInt(8, articleVendu.getCategorie().getNo_categorie());
-			preparedStatement.setInt(9, articleVendu.getRetrait().getNo_retrait());
-			preparedStatement.setInt(10, articleVendu.getNo_article());
+			preparedStatement.setString(7, articleVendu.getPhotoNom());
+			preparedStatement.setBytes(8, articleVendu.getPhotoData());
+			preparedStatement.setInt(9, articleVendu.getUtilisateur().getNo_utilisateur());
+			preparedStatement.setInt(10, articleVendu.getCategorie().getNo_categorie());
+			preparedStatement.setInt(11, articleVendu.getRetrait().getNo_retrait());
+			preparedStatement.setInt(12, articleVendu.getNo_article());
 
 			preparedStatement.executeUpdate();
 		} catch (SQLException e) {
