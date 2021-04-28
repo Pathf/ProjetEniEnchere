@@ -32,14 +32,14 @@ public class EncherirServlet extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession session = request.getSession();
-		Boolean isConnect = false;
-		Boolean articleValide = false;
-		Boolean meilleurEnchereNotNull = false;
-		Boolean isMeilleurEncherisseur = false;
-		Boolean isEnCour = false;
-		Boolean isGagnant = false;
-		Boolean isTerminee = false;
-		Boolean vendeur = false;
+		boolean isConnect = false;
+		boolean articleValide = false;
+		boolean meilleurEnchereNotNull = false;
+		boolean isMeilleurEncherisseur = false;
+		boolean isEnCour = false;
+		boolean isGagnant = false;
+		boolean isTerminee = false;
+		boolean vendeur = false;
 		String pseudo = (String) session.getAttribute("pseudo");
 		ArticleVendu article = null;
 		Enchere meilleurEnchere = null;
@@ -113,62 +113,42 @@ public class EncherirServlet extends HttpServlet {
 					if(meilleurEnchere != null) {
 						meilleurEnchereNotNull = true;
 					}
+					utilisateur = this.utilisateurManager.getUtilisateur(pseudo);
+					articleVendu = this.articleVenduManager.getArticleVendu(articleId);
+					
+					if (this.isCreditable(proposition, utilisateur)) {
+						Date date = new Date(this.calendar.getTime().getTime());
+						Enchere nouvelleEnchere = new Enchere(null, date, proposition, articleVendu, utilisateur);
+						
+						if (meilleurEnchereNotNull) {
+							try {
+								this.enchereManager.updateEncher(nouvelleEnchere);
+							} catch (EnchereManagerException e) {
+								erreur ="Votre proposition n'est pas valable !";
+							}
+						} else {
+							try {
+								this.enchereManager.addEnchere(nouvelleEnchere);
+							} catch (EnchereManagerException e) {
+								erreur ="Votre proposition n'est pas valable !";
+							}
+						}
+					} else {
+						erreur ="Vous n'avez pas assez de crédits !";
+					}							
 				} catch (EnchereManagerException e) {
 					System.err.println(e);
-				}
-
-				try {
-					articleVendu = this.articleVenduManager.getArticleVendu(articleId);
-				} catch (ArticleVenduManagerException e) {
-					System.err.println(e);
-				}
-
-				try {
-					utilisateur = this.utilisateurManager.getUtilisateur(pseudo);
 				} catch (UtilisateurManagerException e) {
-					System.err.println(e);
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (ArticleVenduManagerException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
-				if (meilleurEnchereNotNull) {
-					if (proposition > meilleurEnchere.getMontant_enchere()) {
-						if (this.isCreditable(proposition, utilisateur)) {
-							Date date = new Date(this.calendar.getTime().getTime());
-							Enchere nouvelleEnchere = new Enchere(null, date, proposition, articleVendu, utilisateur);
-							try {
-								this.enchereManager.addEnchere(nouvelleEnchere);
-								Utilisateur acheteurPrecedent = meilleurEnchere.getUtilisateur();
-								acheteurPrecedent.setCredit(acheteurPrecedent.getCredit() + meilleurEnchere.getMontant_enchere());
-								utilisateur.setCredit(utilisateur.getCredit() - proposition);
-								this.utilisateurManager.updateUtilisateur(utilisateur);
-								this.utilisateurManager.updateUtilisateur(acheteurPrecedent);
-							} catch (EnchereManagerException | UtilisateurManagerException e) {
-								System.err.println(e);
-							}
-						} else {
-							erreur = "Vous n'avez pas assez de points !";
-						}
-					} else {
-						erreur = "La proposition doit être supérieure à l'offre en cours !";
-					}
-				} else {
-					if (proposition > articleVendu.getPrix_initial()) {
-						if (this.isCreditable(proposition, utilisateur)) {
-							Date date = new Date(this.calendar.getTime().getTime());
-							Enchere nouvelleEnchere = new Enchere(null, date, proposition, articleVendu, utilisateur);
-							try {
-								this.enchereManager.addEnchere(nouvelleEnchere);
-								utilisateur.setCredit(utilisateur.getCredit() - proposition);
-							} catch (EnchereManagerException e) {
-								System.err.println(e);
-							}
-						} else {
-							erreur = "Vous n'avez pas assez de points !";
-						}
-					} else {
-						erreur = "La proposition doit être supérieure à l'offre en cours !";
-					}
-				}
+					
+				
 			} else {
-				erreur = "La proposition est incorrect !";
+				erreur = "Veuillez faire une proposition !";
 			}
 			request.setAttribute("erreur", erreur);
 			this.doGet(request, response);
