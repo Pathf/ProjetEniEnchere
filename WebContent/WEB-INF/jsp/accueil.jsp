@@ -15,7 +15,7 @@
 	<div class="container text-center">
 		<h1 class="d-none d-sm-block">Liste des enchères</h1>
 		<div class="d-flex flex-column flex-column-reverse-xs">
-			<h4 class="container text-left">Filtres :</h4>
+			<h4 class="container text-left">Filtres&#8239;:</h4>
 
 			<Form class="d-flex" method="get" action="encheres">
 
@@ -125,30 +125,29 @@
 		<c:choose>
 			<c:when test="${articlesVendus.size()>0}">
 				<div class="list-group col-12 ">
-					<div class="card-deck cardFlex flex-wrap flex-row col-12">
+					<div class="card-deck cardFlex flex-wrap flex-row col-12 m-1 p-0">
 						<!-- //flex-wrap flex direction row -->
 
 						<c:forEach var="c" items="${articlesVendus}">
-							<div class="card border border-dark flex-sm-row col col-lg-6 ">
+							<div class="card border border-dark flex-sm-row col col-lg-6 m-1 p-0 ">
 								<!-- width 40 % flex 1 1 auto -->
-								<img class="card-img-top"
+								<img class="card-img-top col-4 m-1 p-0"
 									src="https://via.placeholder.com/150
 							C/O https://placeholder.com/"
 									alt="Card image cap">
-								<div class="card-body">
-									<h5 class="card-title">
+								<div class="card-body col-8 m-1 p-0">
+									<h5 class="card-title col-12">
 										<a
 											href="${pageContext.request.contextPath}/detail-enchere?id=${c.no_article}"
 											class="text-decoration-none">${c.nom_article}</a>
 									</h5>
-									<p class="card-text">Prix :${c.prix_initial}</p>
-									<p class="card-text">Categorie :${c.categorie.libelle}</p>
-									<p class="card-text">Fin de l'enchère
-										:${c.date_fin_encheres}</p>
-									<p class="card-text">
+									<p class="card-text col-12">Prix&#8239;: ${c.prix_initial}</p>
+									<p class="card-text col-12">Categorie&#8239;: ${c.categorie.libelle}</p>
+									<p class="card-text col-12">Fin de l'enchère&#8239;: ${c.date_fin_encheres}</p>
+									<p class="card-text col-12">
 										<small class="text-muted"><a
 											href="${pageContext.request.contextPath}/profil?pseudo=${c.utilisateur.pseudo}"
-											class="btn btn-primary">Vendeur : ${c.utilisateur.pseudo}</a></small>
+											class="btn btn-primary">Vendeur&#8239;: ${c.utilisateur.pseudo}</a></small>
 									</p>
 								</div>
 							</div>
@@ -159,7 +158,7 @@
 			</c:when>
 			<c:otherwise>
 				<p>Pas de liste actuellement.
-				<p>
+				</p>
 			</c:otherwise>
 		</c:choose>
 		<%-- </c:when>
@@ -175,13 +174,13 @@
 		<c:choose>
 			<c:when test="${pseudo != null}">
 				<p>connecté comme ${pseudo}
-				<p>
+				</p>
 			</c:when>
 
 
 			<c:otherwise>
 				<p>non connecté
-				<p>
+				</p>
 			</c:otherwise>
 		</c:choose>
 
