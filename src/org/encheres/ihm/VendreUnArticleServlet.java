@@ -1,17 +1,21 @@
 package org.encheres.ihm;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.servlet.http.Part;
 
 import org.encheres.bll.ArticleVenduManager;
 import org.encheres.bll.ArticleVenduManagerException;
@@ -25,6 +29,7 @@ import org.encheres.bo.Retrait;
 import org.encheres.bo.Utilisateur;
 
 @WebServlet("/nouvelle-vente")
+@MultipartConfig(maxFileSize = 16177215)    // upload file's size up to 16MB
 public class VendreUnArticleServlet extends HttpServlet {
 	private UtilisateurManager utilisateurManager = UtilisateurManager.getInstance();
 	private ArticleVenduManager articleVenduManager = ArticleVenduManager.getInstance();
@@ -71,7 +76,13 @@ public class VendreUnArticleServlet extends HttpServlet {
 			String article = request.getParameter("article");
 			String description = request.getParameter("description");
 			Integer categorieId = Integer.parseInt(request.getParameter("categorie"));
-			String photoName = request.getParameter("photoArticle");
+			Part filePart = request.getPart("photoArticle");
+			String photoNom = null;
+			byte[] photoData = null;
+			if(filePart != null) {
+				photoNom = filePart.getSubmittedFileName();
+				photoData = this.toByteArray(filePart.getInputStream());
+			}
 			try {
 				debutEnchere = new java.sql.Date(new SimpleDateFormat("yyyy-MM-dd").parse(request.getParameter("debutEnchere")).getTime());
 			} catch (ParseException e) {
@@ -109,7 +120,7 @@ public class VendreUnArticleServlet extends HttpServlet {
 								System.err.println(e);
 							}
 							Retrait retrait = new Retrait(null, rue, codePostal, ville);
-							ArticleVendu articleVendu = new ArticleVendu(null, article, description, debutEnchere, finEnchere, miseAPrix, null, null, null, utilisateur, categorie, retrait);
+							ArticleVendu articleVendu = new ArticleVendu(null, article, description, debutEnchere, finEnchere, miseAPrix, null, photoNom, photoData, utilisateur, categorie, retrait);
 							try {
 								this.articleVenduManager.addArticleVendu(articleVendu);
 								response.sendRedirect(request.getContextPath());
@@ -135,5 +146,17 @@ public class VendreUnArticleServlet extends HttpServlet {
 		} else {
 			response.sendRedirect(request.getContextPath());
 		}
+	}
+
+	private byte[] toByteArray(InputStream inputStream) throws IOException {
+		ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+		int nRead;
+		byte[] data = new byte[1024];
+		while ((nRead = inputStream.read(data, 0, data.length)) != -1) {
+			buffer.write(data, 0, nRead);
+		}
+
+		buffer.flush();
+		return buffer.toByteArray();
 	}
 }
