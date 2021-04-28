@@ -100,7 +100,7 @@ public class EncherirServlet extends HttpServlet {
 		if (session.getAttribute("pseudo") != null) {
 			String pseudo = (String) session.getAttribute("pseudo");
 			Utilisateur utilisateur = null;
-			Boolean meilleurEnchereNotNull = false;
+			boolean meilleurEnchereNotNull = false;
 			String erreur = null;
 			String propositionString = request.getParameter("proposition");
 			Integer articleId = Integer.parseInt(request.getParameter("id"));
@@ -121,15 +121,21 @@ public class EncherirServlet extends HttpServlet {
 						Enchere nouvelleEnchere = new Enchere(null, date, proposition, articleVendu, utilisateur);
 						
 						if (meilleurEnchereNotNull) {
-							try {
-								this.enchereManager.updateEncher(nouvelleEnchere);
-							} catch (EnchereManagerException e) {
+							if(proposition > meilleurEnchere.getMontant_enchere()) {
+								try {
+									this.enchereManager.updateEncher(nouvelleEnchere);
+								} catch (EnchereManagerException e) {
+								}
+							}else {
 								erreur ="Votre proposition n'est pas valable !";
 							}
 						} else {
-							try {
-								this.enchereManager.addEnchere(nouvelleEnchere);
-							} catch (EnchereManagerException e) {
+							if(proposition >= articleVendu.getPrix_initial()) {
+								try {
+									this.enchereManager.addEnchere(nouvelleEnchere);
+								} catch (EnchereManagerException e) {
+								}
+							} else {
 								erreur ="Votre proposition n'est pas valable !";
 							}
 						}
@@ -144,9 +150,7 @@ public class EncherirServlet extends HttpServlet {
 				} catch (ArticleVenduManagerException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
-				}
-					
-				
+				}		
 			} else {
 				erreur = "Veuillez faire une proposition !";
 			}
