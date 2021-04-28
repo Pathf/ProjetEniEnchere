@@ -31,8 +31,7 @@ public class AccueilServlet extends HttpServlet {
 		HttpSession session = request.getSession();
 		List<ArticleVendu> articlesVendus = null;
 
-		
-		//Verification du champ filtre 
+		// Verification du champ filtre
 		String filtres = request.getParameter("filtres");
 		String categorie = request.getParameter("categorie");
 		String radioAchat = request.getParameter("radioAchatVente");
@@ -43,14 +42,17 @@ public class AccueilServlet extends HttpServlet {
 		Boolean start = false;
 		Boolean finish = false;
 		Boolean filtreByDateDebut = false;
-		
+
 		// verification succinte du champs de saisi libre pour eviter injection SQL
-		if (!filtres.matches("[a-zA-Z0-9]+")) {
-			filtres = null;
-		};
+		if (filtres != null) {
+			if (!filtres.matches("[a-zA-Z0-9]+")) {
+				filtres = null;
+			}
+			;
+		}
 
 		if ("achat".equals(radioAchat)) {
-			String[] checkboxAchat =null;
+			String[] checkboxAchat = null;
 			if (request.getParameterValues("checkboxAchat") != null) {
 				checkboxAchat = request.getParameterValues("checkboxAchat");
 				if (Arrays.stream(checkboxAchat).anyMatch("open"::equals)) {
@@ -98,7 +100,8 @@ public class AccueilServlet extends HttpServlet {
 
 		// TEST LES FILTRES DEMANDE//
 		try {
-			articlesVendus = this.articleVenduManager.selectByFiltre(categorieInt, filtres, filtreByDateDebut, noUtilisateur, process, start, finish);
+			articlesVendus = this.articleVenduManager.selectByFiltre(categorieInt, filtres, filtreByDateDebut,
+					noUtilisateur, process, start, finish);
 			request.setAttribute("articlesVendus", articlesVendus);
 		} catch (ArticleVenduManagerException e) {
 			System.err.println(e);
