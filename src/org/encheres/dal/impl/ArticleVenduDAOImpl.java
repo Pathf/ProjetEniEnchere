@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,8 +15,8 @@ import org.encheres.bo.Retrait;
 import org.encheres.bo.Utilisateur;
 import org.encheres.dal.DALException;
 import org.encheres.dal.DAOTools;
-import org.encheres.dal.SQLRequete;
 import org.encheres.dal.dao.ArticleVenduDAO;
+import org.encheres.dal.sql.SQLRequete;
 
 public class ArticleVenduDAOImpl implements ArticleVenduDAO {
 	/*
@@ -41,16 +42,14 @@ public class ArticleVenduDAOImpl implements ArticleVenduDAO {
 	 * JOIN CATEGORIES AS c ON a.no_categorie = c.no_categorie WHERE a.no_article=?;
 	 */
 
-	private static final String SQLSELECT_LIKE = "SELECT * FROM ARTICLES_VENDUS WHERE NOM_ARTICLE LIKE ? ";
 	// SQLRequete.selectLeftJoin(TABLES, CHAMPALLTABLES, BDD.ARTICLESVENDUS_IDS);
-	private static final String SQLSELECT_ID = "SELECT a.no_article, a.nom_article, a.description, a.date_debut_encheres, a.date_fin_encheres, a.prix_initial, a.prix_vente, a.no_utilisateur, a.no_categorie, a.no_retrait, u.pseudo, u.nom, u.prenom, u.email, u.telephone, u.rue as rueUTILISATEURS, u.code_postal as code_postalUTILISATEURS, u.ville as villeUTILISATEURS, u.mot_de_passe, u.credit, u.administrateur, r.rue as rueRETRAITS, r.code_postal as code_postalRETRAITS, r.ville as villeRETRAITS, c.libelle FROM ARTICLES_VENDUS AS a LEFT JOIN UTILISATEURS AS u ON a.no_utilisateur = u.no_utilisateur LEFT JOIN RETRAITS AS r ON a.no_retrait = r.no_retrait LEFT JOIN CATEGORIES AS c ON a.no_categorie = c.no_categorie WHERE a.no_article=?";
+	private static final String SQLSELECT_ID = "SELECT a.no_article, a.nom_article, a.description, a.date_debut_encheres, a.date_fin_encheres, a.prix_initial, a.prix_vente, a.photo_nom, a.photo_data, a.no_utilisateur, a.no_categorie, a.no_retrait, u.pseudo, u.nom, u.prenom, u.email, u.telephone, u.rue as rueUTILISATEURS, u.code_postal as code_postalUTILISATEURS, u.ville as villeUTILISATEURS, u.mot_de_passe, u.credit, u.administrateur, r.rue as rueRETRAITS, r.code_postal as code_postalRETRAITS, r.ville as villeRETRAITS, c.libelle FROM ARTICLES_VENDUS AS a LEFT JOIN UTILISATEURS AS u ON a.no_utilisateur = u.no_utilisateur LEFT JOIN RETRAITS AS r ON a.no_retrait = r.no_retrait LEFT JOIN CATEGORIES AS c ON a.no_categorie = c.no_categorie WHERE a.no_article=?";
 	// SQLRequete.selectLeftJoin(TABLES, CHAMPALLTABLES, BDD.UTILISATEURS_IDS);
-	private static final String SQLSELECT_UTILISATEUR = "SELECT a.no_article, a.nom_article, a.description, a.date_debut_encheres, a.date_fin_encheres, a.prix_initial, a.prix_vente, a.no_utilisateur, a.no_categorie, a.no_retrait, u.pseudo, u.nom, u.prenom, u.email, u.telephone, u.rue as rueUTILISATEURS, u.code_postal as code_postalUTILISATEURS, u.ville as villeUTILISATEURS, u.mot_de_passe, u.credit, u.administrateur, r.rue as rueRETRAITS, r.code_postal as code_postalRETRAITS, r.ville as villeRETRAITS, c.libelle FROM ARTICLES_VENDUS AS a LEFT JOIN UTILISATEURS AS u ON a.no_utilisateur = u.no_utilisateur LEFT JOIN RETRAITS AS r ON a.no_retrait = r.no_retrait LEFT JOIN CATEGORIES AS c ON a.no_categorie = c.no_categorie WHERE a.no_utilisateur=?";
+	private static final String SQLSELECT_UTILISATEUR = "SELECT a.no_article, a.nom_article, a.description, a.date_debut_encheres, a.date_fin_encheres, a.prix_initial, a.prix_vente, a.photo_nom, a.photo_data, a.no_utilisateur, a.no_categorie, a.no_retrait, u.pseudo, u.nom, u.prenom, u.email, u.telephone, u.rue as rueUTILISATEURS, u.code_postal as code_postalUTILISATEURS, u.ville as villeUTILISATEURS, u.mot_de_passe, u.credit, u.administrateur, r.rue as rueRETRAITS, r.code_postal as code_postalRETRAITS, r.ville as villeRETRAITS, c.libelle FROM ARTICLES_VENDUS AS a LEFT JOIN UTILISATEURS AS u ON a.no_utilisateur = u.no_utilisateur LEFT JOIN RETRAITS AS r ON a.no_retrait = r.no_retrait LEFT JOIN CATEGORIES AS c ON a.no_categorie = c.no_categorie WHERE a.no_utilisateur=?";
 	// SQLRequete.selectLeftJoin(TABLES, CHAMPALLTABLES, null);
-	private static final String SQLSELECT_ALL = "SELECT a.no_article, a.nom_article, a.description, a.date_debut_encheres, a.date_fin_encheres, a.prix_initial, a.prix_vente, a.no_utilisateur, a.no_categorie, a.no_retrait, u.pseudo, u.nom, u.prenom, u.email, u.telephone, u.rue as rueUTILISATEURS, u.code_postal as code_postalUTILISATEURS, u.ville as villeUTILISATEURS, u.mot_de_passe, u.credit, u.administrateur, r.rue as rueRETRAITS, r.code_postal as code_postalRETRAITS, r.ville as villeRETRAITS, c.libelle FROM ARTICLES_VENDUS AS a LEFT JOIN UTILISATEURS AS u ON a.no_utilisateur = u.no_utilisateur LEFT JOIN RETRAITS AS r ON a.no_retrait = r.no_retrait LEFT JOIN CATEGORIES AS c ON a.no_categorie = c.no_categorie";
+	private static final String SQLSELECT_ALL = "SELECT a.no_article, a.nom_article, a.description, a.date_debut_encheres, a.date_fin_encheres, a.prix_initial, a.prix_vente, a.photo_nom, a.photo_data, a.no_utilisateur, a.no_categorie, a.no_retrait, u.pseudo, u.nom, u.prenom, u.email, u.telephone, u.rue as rueUTILISATEURS, u.code_postal as code_postalUTILISATEURS, u.ville as villeUTILISATEURS, u.mot_de_passe, u.credit, u.administrateur, r.rue as rueRETRAITS, r.code_postal as code_postalRETRAITS, r.ville as villeRETRAITS, c.libelle FROM ARTICLES_VENDUS AS a LEFT JOIN UTILISATEURS AS u ON a.no_utilisateur = u.no_utilisateur LEFT JOIN RETRAITS AS r ON a.no_retrait = r.no_retrait LEFT JOIN CATEGORIES AS c ON a.no_categorie = c.no_categorie";
 	private static final String SQLINSERT = SQLRequete.insert(BDD.ARTICLESVENDUS_TABLENOM, BDD.ARTICLESVENDUS_CHAMPS);
-	private static final String SQLUPDATE = SQLRequete.update(BDD.ARTICLESVENDUS_TABLENOM, BDD.ARTICLESVENDUS_CHAMPS,
-			BDD.ARTICLESVENDUS_IDS);
+	private static final String SQLUPDATE = SQLRequete.update(BDD.ARTICLESVENDUS_TABLENOM, BDD.ARTICLESVENDUS_CHAMPS, BDD.ARTICLESVENDUS_IDS);
 
 	@Override
 	public ArticleVendu selectById(Integer id) throws DALException {
@@ -60,39 +59,7 @@ public class ArticleVenduDAOImpl implements ArticleVenduDAO {
 			preparedStatement.setInt(1, id);
 			try (ResultSet rs = preparedStatement.executeQuery();) {
 				if (rs.next()) {
-					article = new ArticleVendu(
-							id,
-							rs.getString(BDD.ARTICLESVENDUS_CHAMPS[0]).trim(),
-							rs.getString(BDD.ARTICLESVENDUS_CHAMPS[1]),
-							rs.getDate(BDD.ARTICLESVENDUS_CHAMPS[2]),
-							rs.getDate(BDD.ARTICLESVENDUS_CHAMPS[3]),
-							rs.getInt(BDD.ARTICLESVENDUS_CHAMPS[4]),
-							rs.getInt(BDD.ARTICLESVENDUS_CHAMPS[5]),
-							new Utilisateur(
-									rs.getInt(BDD.ARTICLESVENDUS_CHAMPS[6]),
-									rs.getString("pseudo"),
-									rs.getString("nom"),
-									rs.getString("prenom"),
-									rs.getString("email"),
-									rs.getString("telephone"),
-									rs.getString("rueUTILISATEURS"),
-									rs.getString("code_postalUTILISATEURS"),
-									rs.getString("villeUTILISATEURS"),
-									rs.getString("mot_de_passe"),
-									rs.getInt("credit"),
-									rs.getBoolean("administrateur")
-									),
-							new Categorie(
-									rs.getInt(BDD.ARTICLESVENDUS_CHAMPS[7]),
-									rs.getString("libelle")
-									),
-							new Retrait(
-									rs.getInt(BDD.ARTICLESVENDUS_CHAMPS[8]),
-									rs.getString("rueRETRAITS"),
-									rs.getString("code_postalRETRAITS"),
-									rs.getString("villeRETRAITS")
-									)
-							);
+					article = this.buildArticleVendu(rs, true, true, true);
 				}
 			} catch (SQLException e) {
 				throw new DALException("Select BYID failed - close failed for rs\n" + e);
@@ -108,9 +75,6 @@ public class ArticleVenduDAOImpl implements ArticleVenduDAO {
 	public List<ArticleVendu> selectByFiltre(Integer no_categorie, String nom, Boolean date, String no_utilisateur, Boolean process, Boolean start, Boolean finish)
 			throws DALException {
 		List<ArticleVendu> articles = new ArrayList<>();
-		List<Integer> no_utilisateurs = new ArrayList<>();
-		List<Integer> no_categories = new ArrayList<>();
-		List<Integer> no_retraits = new ArrayList<>();
 
 		Integer position = 1;
 		Integer positionNom = null;
@@ -118,11 +82,11 @@ public class ArticleVenduDAOImpl implements ArticleVenduDAO {
 		Integer positionNoUtilisateur = null;
 		String nomByDefault = null;
 
-		String query = "SELECT * FROM ARTICLES_VENDUS WHERE ";
+		String query = "SELECT a.no_article, a.nom_article, a.description, a.date_debut_encheres, a.date_fin_encheres, a.prix_initial, a.prix_vente, a.photo_nom, a.photo_data, a.no_utilisateur, a.no_categorie, a.no_retrait, u.pseudo, u.nom, u.prenom, u.email, u.telephone, u.rue as rueUTILISATEURS, u.code_postal as code_postalUTILISATEURS, u.ville as villeUTILISATEURS, u.mot_de_passe, u.credit, u.administrateur, r.rue as rueRETRAITS, r.code_postal as code_postalRETRAITS, r.ville as villeRETRAITS, c.libelle FROM ARTICLES_VENDUS AS a LEFT JOIN UTILISATEURS AS u ON a.no_utilisateur = u.no_utilisateur LEFT JOIN RETRAITS AS r ON a.no_retrait = r.no_retrait LEFT JOIN CATEGORIES AS c ON a.no_categorie = c.no_categorie WHERE ";
 
 		if (nom == null) {
 			query += " nom_article LIKE ?";
-			nomByDefault = "%%";
+			nomByDefault = "%";
 			positionNom = position;
 			position++;
 		}
@@ -158,7 +122,6 @@ public class ArticleVenduDAOImpl implements ArticleVenduDAO {
 
 		try (Connection connection = DAOTools.getConnection();
 				PreparedStatement preparedStatement = connection.prepareStatement(query);) {
-
 			if (nom != null) {
 				preparedStatement.setString(positionNom, "%" + nom + "%");
 			} else {
@@ -172,61 +135,14 @@ public class ArticleVenduDAOImpl implements ArticleVenduDAO {
 			}
 
 			try (ResultSet rs = preparedStatement.executeQuery();) {
-
 				while (rs.next()) {
-
-					articles.add(
-							new ArticleVendu(
-									rs.getInt("no_article"),
-									rs.getString("nom_article").trim(),
-									rs.getString("description"),
-									rs.getDate("date_debut_encheres"),
-									rs.getDate("date_fin_encheres"),
-									rs.getInt("prix_initial"),
-									rs.getInt("prix_vente"),
-									null,
-									null,
-									null
-									)
-							);
-					no_utilisateurs.add((rs.getInt("no_utilisateur") != 0) ? rs.getInt("no_utilisateur") : -1);
-					no_categories.add((rs.getInt("no_categorie") != 0) ? rs.getInt("no_categorie") : -1);
-					no_retraits.add((rs.getInt("no_retrait") != 0) ? rs.getInt("no_retrait") : -1);
+					articles.add(this.buildArticleVendu(rs, true, true, true));
 				}
 			} catch (SQLException e) {
 				throw new DALException("SelectByFiltre failed - close failed for rs\n" + e);
 			}
 		} catch (SQLException e) {
 			throw new DALException("SelectByFiltre All failed\n" + e);
-		}
-
-		try {
-			UtilisateurDAOImpl utilisateurDAOImpl = new UtilisateurDAOImpl();
-			for (int i = 0; i < no_utilisateurs.size(); i++) {
-				if (no_utilisateurs.get(i) != -1) {
-					articles.get(i).setUtilisateur(utilisateurDAOImpl.selectById(no_utilisateurs.get(i)));
-				} else {
-					throw new DALException("Select BYID failed - le no_utilisateur n'est pas référencé");
-				}
-			}
-			CategorieDAOImpl categorieDAOImpl = new CategorieDAOImpl();
-			for (int i = 0; i < no_categories.size(); i++) {
-				if (no_categories.get(i) != -1) {
-					articles.get(i).setCategorie(categorieDAOImpl.selectById(no_categories.get(i)));
-				} else {
-					throw new DALException("Select BYID failed - le no_categorie n'est pas référencé");
-				}
-			}
-			RetraitDAOImpl retraitDAOImpl = new RetraitDAOImpl();
-			for (int i = 0; i < no_retraits.size(); i++) {
-				if (no_retraits.get(i) != -1) {
-					articles.get(i).setRetrait(retraitDAOImpl.selectById(no_retraits.get(i)));
-				} else {
-					throw new DALException("Select BYID failed - le no_retrait n'est pas référencé");
-				}
-			}
-		} catch (Exception e) {
-			throw new DALException("Select BYID failed - close failed for rs\n" + e);
 		}
 
 		return articles;
@@ -254,20 +170,7 @@ public class ArticleVenduDAOImpl implements ArticleVenduDAO {
 
 			try (ResultSet rs = preparedStatement.executeQuery();) {
 				while (rs.next()) {
-					articles.add(
-							new ArticleVendu(
-									rs.getInt("no_article"),
-									rs.getString("nom_article").trim(),
-									rs.getString("description"),
-									rs.getDate("date_debut_encheres"),
-									rs.getDate("date_fin_encheres"),
-									rs.getInt("prix_initial"),
-									rs.getInt("prix_vente"),
-									null,
-									null,
-									null
-									)
-							);
+					articles.add(this.buildArticleVendu(rs, false, false, false));
 					no_utilisateurs.add((rs.getInt("no_utilisateur") != 0) ? rs.getInt("no_utilisateur") : -1);
 					no_categories.add((rs.getInt("no_categorie") != 0) ? rs.getInt("no_categorie") : -1);
 					no_retraits.add((rs.getInt("no_retrait") != 0) ? rs.getInt("no_retrait") : -1);
@@ -311,78 +214,6 @@ public class ArticleVenduDAOImpl implements ArticleVenduDAO {
 		return articles;
 	}
 
-	@Override
-	public List<ArticleVendu> selectBydNom(String nom) throws DALException {
-		List<ArticleVendu> articles = new ArrayList<>();
-		List<Integer> no_utilisateurs = new ArrayList<>();
-		List<Integer> no_categories = new ArrayList<>();
-		List<Integer> no_retraits = new ArrayList<>();
-
-		try (Connection connection = DAOTools.getConnection();
-				PreparedStatement preparedStatement = connection.prepareStatement(SQLSELECT_LIKE);) {
-
-			preparedStatement.setString(1, "%" + nom + "%");
-
-			try (ResultSet rs = preparedStatement.executeQuery();) {
-
-				while (rs.next()) {
-					articles.add(
-							new ArticleVendu(
-									rs.getInt("no_article"),
-									rs.getString("nom_article").trim(),
-									rs.getString("description"),
-									rs.getDate("date_debut_encheres"),
-									rs.getDate("date_fin_encheres"),
-									rs.getInt("prix_initial"),
-									rs.getInt("prix_vente"),
-									null,
-									null,
-									null
-									)
-							);
-					no_utilisateurs.add((rs.getInt("no_utilisateur") != 0) ? rs.getInt("no_utilisateur") : -1);
-					no_categories.add((rs.getInt("no_categorie") != 0) ? rs.getInt("no_categorie") : -1);
-					no_retraits.add((rs.getInt("no_retrait") != 0) ? rs.getInt("no_retrait") : -1);
-				}
-			} catch (SQLException e) {
-				throw new DALException("SelectByCategorie failed - close failed for rs\n" + e);
-			}
-		} catch (SQLException e) {
-			throw new DALException("SelectByCategorie All failed\n" + e);
-		}
-
-		try {
-			UtilisateurDAOImpl utilisateurDAOImpl = new UtilisateurDAOImpl();
-			for (int i = 0; i < no_utilisateurs.size(); i++) {
-				if (no_utilisateurs.get(i) != -1) {
-					articles.get(i).setUtilisateur(utilisateurDAOImpl.selectById(no_utilisateurs.get(i)));
-				} else {
-					throw new DALException("Select BYID failed - le no_utilisateur n'est pas référencé");
-				}
-			}
-			CategorieDAOImpl categorieDAOImpl = new CategorieDAOImpl();
-			for (int i = 0; i < no_categories.size(); i++) {
-				if (no_categories.get(i) != -1) {
-					articles.get(i).setCategorie(categorieDAOImpl.selectById(no_categories.get(i)));
-				} else {
-					throw new DALException("Select BYID failed - le no_categorie n'est pas référencé");
-				}
-			}
-			RetraitDAOImpl retraitDAOImpl = new RetraitDAOImpl();
-			for (int i = 0; i < no_retraits.size(); i++) {
-				if (no_retraits.get(i) != -1) {
-					articles.get(i).setRetrait(retraitDAOImpl.selectById(no_retraits.get(i)));
-				} else {
-					throw new DALException("Select BYID failed - le no_retrait n'est pas référencé");
-				}
-			}
-		} catch (Exception e) {
-			throw new DALException("Select BYID failed - close failed for rs\n" + e);
-		}
-
-		return articles;
-	}
-
 	// TODO: A optimiser
 	@Override
 	public List<ArticleVendu> selectAll() throws DALException {
@@ -392,39 +223,7 @@ public class ArticleVenduDAOImpl implements ArticleVenduDAO {
 			statement.execute(SQLSELECT_ALL);
 			try (ResultSet rs = statement.getResultSet();) {
 				while (rs.next()) {
-					articles.add(
-							new ArticleVendu(
-									rs.getInt(BDD.ARTICLESVENDUS_IDS[0]),
-									rs.getString(BDD.ARTICLESVENDUS_CHAMPS[0]).trim(),
-									rs.getString(BDD.ARTICLESVENDUS_CHAMPS[1]),
-									rs.getDate(BDD.ARTICLESVENDUS_CHAMPS[2]),
-									rs.getDate(BDD.ARTICLESVENDUS_CHAMPS[3]),
-									rs.getInt(BDD.ARTICLESVENDUS_CHAMPS[4]),
-									rs.getInt(BDD.ARTICLESVENDUS_CHAMPS[5]),
-									new Utilisateur(
-											rs.getInt(BDD.ARTICLESVENDUS_CHAMPS[6]),
-											rs.getString("pseudo"),
-											rs.getString("nom"),
-											rs.getString("prenom"),
-											rs.getString("email"),
-											rs.getString("telephone"),
-											rs.getString("rueUTILISATEURS"),
-											rs.getString("code_postalUTILISATEURS"),
-											rs.getString("villeUTILISATEURS"),
-											rs.getString("mot_de_passe"),
-											rs.getInt("credit"),
-											rs.getBoolean("administrateur")),
-									new Categorie(
-											rs.getInt(BDD.ARTICLESVENDUS_CHAMPS[7]),
-											rs.getString("libelle")),
-									new Retrait(
-											rs.getInt(BDD.ARTICLESVENDUS_CHAMPS[8]),
-											rs.getString("rueRETRAITS"),
-											rs.getString("code_postalRETRAITS"),
-											rs.getString("villeRETRAITS")
-											)
-									)
-							);
+					articles.add(this.buildArticleVendu(rs, true, true, true));
 				}
 			} catch (SQLException e) {
 				throw new DALException("Select ALL failed - close failed for rs\n" + e);
@@ -444,39 +243,7 @@ public class ArticleVenduDAOImpl implements ArticleVenduDAO {
 			preparedStatement.setInt(1, no_utilisateur);
 			try (ResultSet rs = preparedStatement.executeQuery();) {
 				while (rs.next()) {
-					articles.add(
-							new ArticleVendu(
-									rs.getInt(BDD.ARTICLESVENDUS_IDS[0]),
-									rs.getString(BDD.ARTICLESVENDUS_CHAMPS[0]).trim(),
-									rs.getString(BDD.ARTICLESVENDUS_CHAMPS[1]),
-									rs.getDate(BDD.ARTICLESVENDUS_CHAMPS[2]),
-									rs.getDate(BDD.ARTICLESVENDUS_CHAMPS[3]),
-									rs.getInt(BDD.ARTICLESVENDUS_CHAMPS[4]),
-									rs.getInt(BDD.ARTICLESVENDUS_CHAMPS[5]),
-									new Utilisateur(
-											rs.getInt(BDD.ARTICLESVENDUS_CHAMPS[6]),
-											rs.getString("pseudo"),
-											rs.getString("nom"),
-											rs.getString("prenom"),
-											rs.getString("email"),
-											rs.getString("telephone"),
-											rs.getString("rueUTILISATEURS"),
-											rs.getString("code_postalUTILISATEURS"),
-											rs.getString("villeUTILISATEURS"),
-											rs.getString("mot_de_passe"),
-											rs.getInt("credit"),
-											rs.getBoolean("administrateur")),
-									new Categorie(
-											rs.getInt(BDD.ARTICLESVENDUS_CHAMPS[7]),
-											rs.getString("libelle")),
-									new Retrait(
-											rs.getInt(BDD.ARTICLESVENDUS_CHAMPS[8]),
-											rs.getString("rueRETRAITS"),
-											rs.getString("code_postalRETRAITS"),
-											rs.getString("villeRETRAITS")
-											)
-									)
-							);
+					articles.add(this.buildArticleVendu(rs, true, true, true));
 				}
 			} catch (SQLException e) {
 				throw new DALException("Select UTILISATEUR failed - close failed for rs\n" + e);
@@ -498,11 +265,17 @@ public class ArticleVenduDAOImpl implements ArticleVenduDAO {
 			preparedStatement.setDate(3, articleVendu.getDate_debut_encheres());
 			preparedStatement.setDate(4, articleVendu.getDate_fin_encheres());
 			preparedStatement.setInt(5, articleVendu.getPrix_initial());
-			preparedStatement.setNull(6, java.sql.Types.INTEGER);
-			preparedStatement.setInt(7, articleVendu.getUtilisateur().getNo_utilisateur());
-			preparedStatement.setInt(8, articleVendu.getCategorie().getNo_categorie());
-			preparedStatement.setInt(9, articleVendu.getRetrait().getNo_retrait());
-
+			preparedStatement.setNull(6, Types.INTEGER);
+			if(articleVendu.getPhotoNom() != null) {
+				preparedStatement.setString(7, articleVendu.getPhotoNom());
+				preparedStatement.setBytes(8, articleVendu.getPhotoData());
+			} else {
+				preparedStatement.setNull(7, Types.VARCHAR);
+				preparedStatement.setNull(8, Types.BLOB);
+			}
+			preparedStatement.setInt(9, articleVendu.getUtilisateur().getNo_utilisateur());
+			preparedStatement.setInt(10, articleVendu.getCategorie().getNo_categorie());
+			preparedStatement.setInt(11, articleVendu.getRetrait().getNo_retrait());
 			preparedStatement.executeUpdate();
 
 			try (ResultSet rs = preparedStatement.getGeneratedKeys()) {
@@ -527,14 +300,71 @@ public class ArticleVenduDAOImpl implements ArticleVenduDAO {
 			preparedStatement.setDate(4, articleVendu.getDate_fin_encheres());
 			preparedStatement.setInt(5, articleVendu.getPrix_initial());
 			preparedStatement.setInt(6, articleVendu.getPrix_vente());
-			preparedStatement.setInt(7, articleVendu.getUtilisateur().getNo_utilisateur());
-			preparedStatement.setInt(8, articleVendu.getCategorie().getNo_categorie());
-			preparedStatement.setInt(9, articleVendu.getRetrait().getNo_retrait());
-			preparedStatement.setInt(10, articleVendu.getNo_article());
+			preparedStatement.setString(7, articleVendu.getPhotoNom());
+			preparedStatement.setBytes(8, articleVendu.getPhotoData());
+			preparedStatement.setInt(9, articleVendu.getUtilisateur().getNo_utilisateur());
+			preparedStatement.setInt(10, articleVendu.getCategorie().getNo_categorie());
+			preparedStatement.setInt(11, articleVendu.getRetrait().getNo_retrait());
+			preparedStatement.setInt(12, articleVendu.getNo_article());
 
 			preparedStatement.executeUpdate();
 		} catch (SQLException e) {
 			throw new DALException("Update articleVendu failed - " + articleVendu + "\n" + e);
 		}
+	}
+
+	private ArticleVendu buildArticleVendu(ResultSet rs, boolean avecUtilisateur, boolean avecCategorie, boolean avecRetrait) throws SQLException {
+		Utilisateur utilisateur = null;
+		Categorie categorie = null;
+		Retrait retrait = null;
+
+		if(avecUtilisateur) {
+			utilisateur = new Utilisateur(
+					null,
+					rs.getString(BDD.UTILISATEURS_CHAMPS[0]),
+					rs.getString(BDD.UTILISATEURS_CHAMPS[1]),
+					rs.getString(BDD.UTILISATEURS_CHAMPS[2]),
+					rs.getString(BDD.UTILISATEURS_CHAMPS[3]),
+					rs.getString(BDD.UTILISATEURS_CHAMPS[4]),
+					rs.getString(BDD.UTILISATEURS_CHAMPS[5] + BDD.UTILISATEURS_TABLENOM),
+					rs.getString(BDD.UTILISATEURS_CHAMPS[6] + BDD.UTILISATEURS_TABLENOM),
+					rs.getString(BDD.UTILISATEURS_CHAMPS[7] + BDD.UTILISATEURS_TABLENOM),
+					rs.getString(BDD.UTILISATEURS_CHAMPS[8]),
+					rs.getInt(BDD.UTILISATEURS_CHAMPS[9]),
+					rs.getBoolean(BDD.UTILISATEURS_CHAMPS[10]));
+		}
+		utilisateur.setNo_utilisateur(rs.getInt(BDD.ARTICLESVENDUS_CHAMPS[8]));
+
+		if(avecCategorie) {
+			categorie = new Categorie(
+					null,
+					rs.getString(BDD.CATEGORIES_CHAMPS[0]));
+		}
+		categorie.setNo_categorie(rs.getInt(BDD.ARTICLESVENDUS_CHAMPS[9]));
+
+		if(avecRetrait) {
+			retrait = new Retrait(
+					null,
+					rs.getString(BDD.RETRAIT_CHAMPS[0] + BDD.RETRAITS_TABLENOM),
+					rs.getString(BDD.RETRAIT_CHAMPS[1] + BDD.RETRAITS_TABLENOM),
+					rs.getString(BDD.RETRAIT_CHAMPS[2] + BDD.RETRAITS_TABLENOM)
+					);
+		}
+		retrait.setNo_retrait(rs.getInt(BDD.ARTICLESVENDUS_CHAMPS[10]));
+
+		return new ArticleVendu(
+				rs.getInt(BDD.ARTICLESVENDUS_IDS[0]),
+				rs.getString(BDD.ARTICLESVENDUS_CHAMPS[0]).trim(),
+				rs.getString(BDD.ARTICLESVENDUS_CHAMPS[1]),
+				rs.getDate(BDD.ARTICLESVENDUS_CHAMPS[2]),
+				rs.getDate(BDD.ARTICLESVENDUS_CHAMPS[3]),
+				rs.getInt(BDD.ARTICLESVENDUS_CHAMPS[4]),
+				rs.getInt(BDD.ARTICLESVENDUS_CHAMPS[5]),
+				rs.getString(BDD.ARTICLESVENDUS_CHAMPS[6]),
+				rs.getBytes(BDD.ARTICLESVENDUS_CHAMPS[7]),
+				utilisateur,
+				categorie,
+				retrait
+				);
 	}
 }

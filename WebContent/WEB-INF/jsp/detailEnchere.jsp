@@ -1,3 +1,4 @@
+<%@page import="org.encheres.bo.ArticleVendu"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
@@ -50,7 +51,14 @@
 				</c:if>
 				<div class="row mt-5">
 					<div class="photo offset-md-1 col-md-4">
-						<img alt="photo de l'objet" src="https://via.placeholder.com/300">
+					<c:choose>
+						<c:when test="${article.getPhotoNom() != null}">
+							<a href="images?id=${article.getNo_article()}"><img alt="Pas de photo disponible." class="img-thumbnail" src="images?id=${article.getNo_article()}"></a>
+						</c:when>
+						<c:otherwise>
+							<img alt="Pas de photo disponible." class="img-thumbnail" src="https://via.placeholder.com/150	C/O https://placeholder.com/">
+						</c:otherwise>
+					</c:choose>
 					</div>
 					<div class="infos col-md-6 ml-3">
 						<table class="table">

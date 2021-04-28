@@ -15,15 +15,12 @@
 		<h1 class="d-none d-sm-block">Liste des enchères</h1>
 		<div class="d-flex flex-column flex-column-reverse-xs">
 			<h4 class="container text-left">Filtres&#8239;:</h4>
-
 			<Form class="d-flex" method="get" action="encheres">
-
 				<div class="text-left w-100 searchModule">
 					<input name="filtres" type="search" class="form-control rounded mb-3 rounded" placeholder="${defaultFiltresPlaceHolder!= null ? defaultFiltresPlaceHolder:
 						'&#x1F50D; le nom de l\'article contient'}" aria-label="Search" aria-describedby="search-addon" /> <span class="input-group-text border-0" id="search-addon"> <i class="fas fa-search"></i>
 					</span>
 					<div class="block">
-
 						<label for="categorie">Catégorie </label> <select name="categorie" class="custom-select custom-select-lg mb-3 w-75 float-right">
 							<option value="0">Toutes</option>
 							<c:choose>
@@ -37,9 +34,7 @@
 								</c:otherwise>
 							</c:choose>
 						</select>
-
 					</div>
-
 					<c:choose>
 						<c:when test="${pseudo != null}">
 							<div class="d-flex justify-content-around mt-3 float-left blockRadioButton">
@@ -57,7 +52,6 @@
 										</div>
 									</div>
 								</div>
-
 								<div class="form-check">
 									<input class="form-check-input ml-0" type="radio" name="radioAchatVente" id="exampleRadios2" value="vente"> <label class="form-check-label" for="exampleRadios2"> Vente </label>
 									<div class="ml-5">
@@ -84,20 +78,12 @@
 				</div>
 			</Form>
 		</div>
-
-
-		<%-- <c:choose>
-			<c:when test="${pseudo == null}"> --%>
-
 		<c:choose>
 			<c:when test="${articlesVendus.size()>0}">
 				<div class="list-group col-12 ">
 					<div class="card-deck cardFlex flex-wrap flex-row col-12 m-1 p-0">
-						<!-- //flex-wrap flex direction row -->
-
 						<c:forEach var="c" items="${articlesVendus}">
 							<div class="card border border-dark flex-sm-row col col-lg-6 m-1 p-0 ">
-								<!-- width 40 % flex 1 1 auto -->
 								<img class="card-img-top col-4 m-1 p-0" src="https://via.placeholder.com/150
 							C/O https://placeholder.com/" alt="Card image cap">
 								<div class="card-body col-8 m-1 p-0">
@@ -113,7 +99,6 @@
 								</div>
 							</div>
 						</c:forEach>
-
 					</div>
 				</div>
 			</c:when>
@@ -121,31 +106,15 @@
 				<p>Pas de liste actuellement.</p>
 			</c:otherwise>
 		</c:choose>
-		<%-- </c:when>
-			<c:otherwise>
-				<p>Un utilisateur est connecté afficher liste plus complète</p>
-			</c:otherwise>
-		</c:choose> --%>
-
-
-
-
-
 		<c:choose>
 			<c:when test="${pseudo != null}">
 				<p>connecté comme ${pseudo}</p>
 			</c:when>
-
-
 			<c:otherwise>
 				<p>non connecté</p>
 			</c:otherwise>
 		</c:choose>
-
-		<%-- <% String pseudo = (String)session.getAttribute("pseudo"); %>
-	<%=pseudo%> --%>
 	</div>
 </body>
 <%@ include file="/WEB-INF/fragments/script.html"%>
 </html>
-

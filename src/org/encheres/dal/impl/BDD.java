@@ -4,7 +4,7 @@ public class BDD {
 	// ARTICLES_VENDUS :
 	public static final String ARTICLESVENDUS_TABLENOM = "ARTICLES_VENDUS";
 	public static final String[] ARTICLESVENDUS_IDS = new String[]{"no_article"};
-	public static final String[] ARTICLESVENDUS_CHAMPS = new String[]{"nom_article","description","date_debut_encheres","date_fin_encheres","prix_initial","prix_vente","no_utilisateur","no_categorie","no_retrait"};
+	public static final String[] ARTICLESVENDUS_CHAMPS = new String[]{"nom_article","description","date_debut_encheres","date_fin_encheres","prix_initial","prix_vente","photo_nom","photo_data","no_utilisateur","no_categorie","no_retrait"};
 	public static final String[][] ARTICLESVENDUS_TABLE = new String[][] {new String[] {ARTICLESVENDUS_TABLENOM}, ARTICLESVENDUS_IDS, ARTICLESVENDUS_CHAMPS};
 
 	// UTILISATEURS :
@@ -25,6 +25,7 @@ public class BDD {
 	public static final String[] CATEGORIES_CHAMPS = new String[] {"libelle"};
 	public static final String[][] CATEGORIES_TABLE = new String[][] {new String[] {CATEGORIES_TABLENOM}, CATEGORIES_IDS, CATEGORIES_CHAMPS};
 
+	// ENCHERES :
 	public static final String ENCHERES_TABLENOM = "ENCHERES";
 	public static final String[] ENCHERES_IDS = new String[]{"no_enchere"};
 	public static final String[] ENCHERES_CHAMPS = new String[] {"date_enchere", "montant_enchere", "no_article", "no_utilisateur"};
