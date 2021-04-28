@@ -17,6 +17,10 @@ public class Utilisateur {
 	Integer credit;
 	boolean administrateur;
 
+	public Utilisateur(Integer no_utilisateur, String pseudo, boolean administrateur) {
+		this(no_utilisateur, pseudo, null, null, null, null, null, null, null, null, null, administrateur);
+	}
+
 	public Utilisateur(Integer no_utilisateur, String pseudo, String nom, String prenom, String email, String telephone,
 			String rue, String code_postal, String ville, String mot_de_passe, Integer credit, boolean administrateur) {
 		this.no_utilisateur = no_utilisateur;
