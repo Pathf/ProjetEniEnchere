@@ -101,4 +101,7 @@ ALTER TABLE ARTICLES_VENDUS
     ADD CONSTRAINT ventes_utilisateur_fk FOREIGN KEY ( no_utilisateur )
         REFERENCES utilisateurs ( no_utilisateur )
 ON DELETE NO ACTION 
-    ON UPDATE no action 
+    ON UPDATE no action
+    
+-- Ajout de l'utilisateur inconnu pour le fonctionnement du site :
+INSERT INTO UTILISATEURS (pseudo,nom,prenom,email,telephone,rue,code_postal,ville,mot_de_passe,credit,administrateur) VALUES('inconnu','','','','','','','','',0,1);

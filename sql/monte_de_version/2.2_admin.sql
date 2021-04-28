@@ -1,0 +1,1 @@
+INSERT INTO UTILISATEURS (pseudo,nom,prenom,email,telephone,rue,code_postal,ville,mot_de_passe,credit,administrateur) VALUES('inconnu','','','','','','','','',0,1);
