@@ -27,7 +27,7 @@
 				<img class="col-12" alt="photo de l'objet" src="https://via.placeholder.com/300">
 			</div>
 			<div class="formulaire col-md-6 ml-md-3">
-				<form action="nouvelle-vente" method="post">
+				<form action="nouvelle-vente" method="post" enctype="multipart/form-data">
 			   		<div class="form-group row">
 					    <label for="article" class="col-4 col-md-3 col-form-label">Article :</label>
 					    <div class="col-8 col-md-8">
@@ -105,7 +105,6 @@
 				</form>
 			</div>
 		</div>
-
 	</div>
 </body>
 <%@ include file="/WEB-INF/fragments/script.html" %>

@@ -1,6 +1,7 @@
 package org.encheres.bo;
 
 import java.sql.Date;
+import java.util.Arrays;
 import java.util.Objects;
 
 public class ArticleVendu {
@@ -12,6 +13,8 @@ public class ArticleVendu {
 	Date date_fin_encheres;
 	Integer prix_initial;
 	Integer prix_vente;
+	String photoNom;
+	byte[] photoData;
 
 	// FK : Utilisateurs
 	Utilisateur utilisateur;
@@ -27,8 +30,8 @@ public class ArticleVendu {
 	}
 
 	public ArticleVendu(Integer no_article, String nom_article, String description, Date date_debut_encheres,
-			Date date_fin_encheres, Integer prix_initial, Integer prix_vente, Utilisateur utilisateur,
-			Categorie categorie, Retrait retrait) {
+			Date date_fin_encheres, Integer prix_initial, Integer prix_vente, String photoNom, byte[] photoData,
+			Utilisateur utilisateur, Categorie categorie, Retrait retrait) {
 		this.no_article = no_article;
 		this.nom_article = nom_article;
 		this.description = description;
@@ -36,6 +39,8 @@ public class ArticleVendu {
 		this.date_fin_encheres = date_fin_encheres;
 		this.prix_initial = prix_initial;
 		this.prix_vente = prix_vente;
+		this.photoNom = photoNom;
+		this.photoData = photoData;
 		this.utilisateur = utilisateur;
 		this.categorie = categorie;
 		this.retrait = retrait;
@@ -97,6 +102,21 @@ public class ArticleVendu {
 		this.prix_vente = prix_vente;
 	}
 
+	public String getPhotoNom() {
+		return this.photoNom;
+	}
+
+	public void setPhotoNom(String photoName) {
+		this.photoNom = photoName;
+	}
+
+	public byte[] getPhotoData() {
+		return this.photoData;
+	}
+
+	public void setPhotoData(byte[] photoData) {
+		this.photoData = photoData;
+	}
 
 	public Utilisateur getUtilisateur() {
 		return this.utilisateur;
@@ -134,6 +154,9 @@ public class ArticleVendu {
 			return false;
 		}
 		ArticleVendu other = (ArticleVendu) obj;
+		if (!Objects.equals(this.categorie, other.categorie)) {
+			return false;
+		}
 		if (!Objects.equals(this.date_debut_encheres, other.date_debut_encheres)) {
 			return false;
 		}
@@ -146,22 +169,25 @@ public class ArticleVendu {
 		if (!Objects.equals(this.no_article, other.no_article)) {
 			return false;
 		}
-		if (!Objects.equals(this.categorie, other.categorie)) {
-			return false;
-		}
-		if (!Objects.equals(this.retrait, other.retrait)) {
-			return false;
-		}
-		if (!Objects.equals(this.utilisateur, other.utilisateur)) {
-			return false;
-		}
 		if (!Objects.equals(this.nom_article, other.nom_article)) {
+			return false;
+		}
+		if (!Arrays.equals(this.photoData, other.photoData)) {
+			return false;
+		}
+		if (!Objects.equals(this.photoNom, other.photoNom)) {
 			return false;
 		}
 		if (!Objects.equals(this.prix_initial, other.prix_initial)) {
 			return false;
 		}
 		if (!Objects.equals(this.prix_vente, other.prix_vente)) {
+			return false;
+		}
+		if (!Objects.equals(this.retrait, other.retrait)) {
+			return false;
+		}
+		if (!Objects.equals(this.utilisateur, other.utilisateur)) {
 			return false;
 		}
 		return true;
@@ -171,8 +197,8 @@ public class ArticleVendu {
 	public String toString() {
 		return "ArticleVendu [no_article=" + this.no_article + ", nom_article=" + this.nom_article + ", description="
 				+ this.description + ", date_debut_encheres=" + this.date_debut_encheres + ", date_fin_encheres="
-				+ this.date_fin_encheres + ", prix_initial=" + this.prix_initial + ", prix_vente=" + this.prix_vente
-				+ ", no_utilisateur=" + this.utilisateur + ", no_categorie=" + this.categorie + ", no_retrait=" + this.retrait
+				+ this.date_fin_encheres + ", prix_initial=" + this.prix_initial + ", prix_vente=" + this.prix_vente + ", photoName="
+				+ this.photoNom + ", utilisateur=" + this.utilisateur + ", categorie=" + this.categorie + ", retrait=" + this.retrait
 				+ "]";
 	}
 }
