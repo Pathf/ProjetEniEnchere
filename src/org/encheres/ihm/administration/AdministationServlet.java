@@ -17,7 +17,7 @@ public class AdministationServlet extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		Utilisateur utilisateur = (Utilisateur) request.getSession().getAttribute("utilisateur");
-		if(utilisateur.getAdministrateur()) {
+		if(utilisateur != null && utilisateur.getAdministrateur()) {
 			request.getRequestDispatcher("/WEB-INF/jsp/admin.jsp").forward(request, response);
 		} else {
 			response.sendRedirect(request.getContextPath());
