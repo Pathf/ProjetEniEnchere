@@ -50,6 +50,7 @@ public class ConnexionServlet extends HttpServlet {
 			HttpSession session = request.getSession();
 			session.setAttribute("pseudo", utilisateur.getPseudo());
 			session.setAttribute("id", utilisateur.getNo_utilisateur());
+			session.setMaxInactiveInterval(5*60);
 			response.sendRedirect("encheres");
 		} catch (UtilisateurManagerException e) {
 			String erreur = (e.toString().contains("pas d'utilisateur")) ? "Identifiant ou mot de passe incorrect." : "Une erreur est survenue.";
