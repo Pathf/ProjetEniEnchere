@@ -84,8 +84,14 @@
 					<div class="card-deck cardFlex flex-wrap flex-row col-12 m-1 p-0">
 						<c:forEach var="c" items="${articlesVendus}">
 							<div class="card border border-dark flex-sm-row col col-lg-6 m-1 p-0 ">
-								<img class="card-img-top col-4 m-1 p-0" src="https://via.placeholder.com/150
-							C/O https://placeholder.com/" alt="Card image cap">
+								<c:choose>
+									<c:when test="${c.photoNom != null}">
+										<img class="card-img-top col-4 m-1 p-0" alt="Pas de photo disponible" class="img-fluid  max-width: 100%" src="images?id=${c.no_article}">
+									</c:when>
+									<c:otherwise>
+										<img class="card-img-top col-4 m-1 p-0" alt="Card image cap" class="img-fluid  max-width: 100%" src="https://via.placeholder.com/150	C/O https://placeholder.com/">
+									</c:otherwise>
+								</c:choose>
 								<div class="card-body col-8 m-1 p-0">
 									<h5 class="card-title col-12">
 										<a href="${pageContext.request.contextPath}/detail-enchere?id=${c.no_article}" class="text-decoration-none">${c.nom_article}</a>
