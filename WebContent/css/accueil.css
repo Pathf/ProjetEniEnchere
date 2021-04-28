@@ -33,5 +33,6 @@
 	    .card-deck .card{
 	    flex-direction:row;
 	    width:80%;
+	    margin: 0.4em;
 	    }
 }

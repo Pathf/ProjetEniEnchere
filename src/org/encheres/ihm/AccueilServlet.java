@@ -28,20 +28,20 @@ public class AccueilServlet extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		List<ArticleVendu> articlesVendus = null;
 		HttpSession session = request.getSession();
+		List<ArticleVendu> articlesVendus = null;
 
 		// recuperation des param de filtration
 		String filtres = request.getParameter("filtres");
 		String categorie = request.getParameter("categorie");
-		Integer categorieInt = null;
 		String radioAchat = request.getParameter("radioAchatVente");
-		Boolean filtreByDateDebut = false;
 		String noUtilisateur = request.getParameter("pseudo");
+		Integer categorieInt = null;
 		Boolean winBid = false;
 		Boolean process = false;
 		Boolean start = false;
 		Boolean finish = false;
+		Boolean filtreByDateDebut = false;
 
 		if ("achat".equals(radioAchat)) {
 			String[] checkboxAchat =null;
@@ -99,7 +99,7 @@ public class AccueilServlet extends HttpServlet {
 		}
 
 		// FILTRE SUR ENCHERE REMPORTE UNIQUEMENT
-		if (winBid == true) {
+		if (winBid) {
 			try {
 				List<ArticleVendu> articlesVendusGagné = null;
 				articlesVendusGagné = this.articleVenduManager.listByWinBid(noUtilisateur);

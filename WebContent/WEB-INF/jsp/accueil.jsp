@@ -13,7 +13,7 @@
 	<div class="container text-center">
 		<h1 class="d-none d-sm-block">Liste des enchères</h1>
 		<div class="d-flex flex-column flex-column-reverse-xs">
-			<h4 class="container text-left">Filtres :</h4>
+			<h4 class="container text-left">Filtres&#8239;:</h4>
 			<form class="d-flex" method="get" action="encheres">
 				<div class="text-left w-100 searchModule">
 					<input name="filtres" type="search" class="form-control rounded mb-3 rounded" placeholder="${defaultFiltresPlaceHolder!= null ? defaultFiltresPlaceHolder:'&#x1F50D; le nom de l\'article contient'}" aria-label="Search" aria-describedby="search-addon" /> <span class="input-group-text border-0" id="search-addon"> <i class="fas fa-search"></i>
@@ -84,10 +84,10 @@
 							<div class="card border border-dark flex-sm-row col col-lg-6 m-1 p-0 ">
 								<c:choose>
 									<c:when test="${c.photoNom != null}">
-										<img class="card-img-top" alt="Pas de photo disponible" class="img-fluid" src="images?id=${c.no_article}">
+										<img class="card-img-top col-4 m-1 p-0" alt="Pas de photo disponible" class="img-fluid" src="images?id=${c.no_article}">
 									</c:when>
 									<c:otherwise>
-										<img class="card-img-top" alt="Card image cap" class="img-fluid" src="https://via.placeholder.com/150	C/O https://placeholder.com/">
+										<img class="card-img-top col-4 m-1 p-0" alt="Card image cap" class="img-fluid" src="https://via.placeholder.com/150	C/O https://placeholder.com/">
 									</c:otherwise>
 								</c:choose>
 								<div class="card-body col-8 m-1 p-0">
