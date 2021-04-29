@@ -50,7 +50,7 @@ public class InscriptionServlet extends HttpServlet {
 								rue != null && !rue.isEmpty() &&
 								ville != null && !ville.isEmpty()
 								) {
-							Utilisateur utilisateur = new Utilisateur(null, pseudo, nom, prenom, email, telephone, rue, code_postal, ville, mot_de_passe, 100, false);
+							Utilisateur utilisateur = new Utilisateur(null, pseudo, nom, prenom, email, telephone, rue, code_postal, ville, mot_de_passe, 100, false, true);
 							try {
 								this.utilisateurManager.addUtilisateur(utilisateur);
 								response.sendRedirect(request.getContextPath());

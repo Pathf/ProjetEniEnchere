@@ -60,8 +60,16 @@ public class AdministationServlet extends HttpServlet {
 		this.doGet(request, response);
 	}
 
-	private void desactivation(String no_desactivation, HttpServletRequest request, HttpServletResponse response) {
+	private void desactivation(String no_desactivation, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, UtilisateurManagerException {
+		Integer no_utilisateurADesactiver = Integer.valueOf(no_desactivation);
 
+		Utilisateur utilisateur = this.utilisateurManager.getUtilisateur(no_utilisateurADesactiver);
+		if(utilisateur.getAdministrateur()) {
+			System.err.println("On ne peut pas supprimer un administrateur !");
+			this.doGet(request, response);
+			return;
+		}
+		this.utilisateurManager.inverseActiver(utilisateur);
 	}
 
 	private void suppression(String no_suppression, HttpServletRequest request, HttpServletResponse response) throws UtilisateurManagerException, EnchereManagerException, ServletException, IOException, ArticleVenduManagerException {
