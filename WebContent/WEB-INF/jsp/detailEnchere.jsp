@@ -118,7 +118,7 @@
 								</div>
 							</c:when>     
 							<c:when test="${vendeur && !isEnCour && !isTerminee}">
-				   				<a href="${pageContext.request.contextPath}/nouvelle-vente?id=${article.getNo_article() }" class="btn btn-secondary p-3 col-md-4" role="button">Modifier l'article</a>
+				   				<a href="${pageContext.request.contextPath}/modifier-vente?id=${article.getNo_article() }" class="btn btn-secondary p-3 col-md-4" role="button">Modifier l'article</a>
 				   			</c:when>
 		   					 <c:when test="${isEnCour && !isMeilleurEncherisseur && !vendeur}">
 								<form action="detail-enchere?id=${article.getNo_article() }" method="post" class="form-inline">
