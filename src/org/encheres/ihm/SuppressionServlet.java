@@ -44,7 +44,7 @@ public class SuppressionServlet extends HttpServlet {
 				for(Enchere enchere : encheres) {
 					Date dateNow = new Date(System.currentTimeMillis());
 					Date dateFinEnchere = enchere.getArticle().getDate_fin_encheres();
-					if(dateNow.before(dateFinEnchere) || dateNow.toString().equals(dateFinEnchere.toString())) {
+					if(dateNow.before(dateFinEnchere)) {
 						enchereEnCour = true;
 						break;
 					}
@@ -54,7 +54,7 @@ public class SuppressionServlet extends HttpServlet {
 				for(ArticleVendu articleVendu : utilisateurArticleVendus) {
 					Date dateNow = new Date(System.currentTimeMillis());
 					Date dateFinEnchere = articleVendu.getDate_fin_encheres();
-					if(dateNow.before(dateFinEnchere) || dateNow.toString().equals(dateFinEnchere.toString())) {
+					if(dateNow.before(dateFinEnchere)) {
 						enchereEnCour = true;
 						break;
 					}

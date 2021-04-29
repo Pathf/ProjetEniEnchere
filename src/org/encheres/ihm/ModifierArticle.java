@@ -21,16 +21,9 @@ import org.encheres.bll.ArticleVenduManager;
 import org.encheres.bll.ArticleVenduManagerException;
 import org.encheres.bll.CategorieManagerException;
 import org.encheres.bll.CategoriesManager;
-import org.encheres.bll.UtilisateurManager;
-import org.encheres.bll.UtilisateurManagerException;
 import org.encheres.bo.ArticleVendu;
 import org.encheres.bo.Categorie;
-import org.encheres.bo.Retrait;
-import org.encheres.bo.Utilisateur;
 
-/**
- * Servlet implementation class ModifierArticle
- */
 @WebServlet("/modifier-vente")
 @MultipartConfig(maxFileSize = 16177215)    // upload file's size up to 16MB
 public class ModifierArticle extends HttpServlet {
@@ -46,12 +39,11 @@ public class ModifierArticle extends HttpServlet {
 		ArticleVendu articleVendu = null;
 		List<Categorie> categories = null;
 		Date dateActuelle = new Date(new java.util.Date().getTime());
-		
+
 		try {
 			articleVendu = this.articleVenduManager.getArticleVendu(articleId);
-		} catch (ArticleVenduManagerException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
+		} catch (ArticleVenduManagerException e) {
+			System.err.println(e);
 		}
 		if (pseudo.equals(articleVendu.getUtilisateur().getPseudo()) && dateActuelle.before(articleVendu.getDate_debut_encheres())) {
 			try {
@@ -76,12 +68,11 @@ public class ModifierArticle extends HttpServlet {
 		ArticleVendu articleVendu = null;
 		Date dateActuelle = new Date(new java.util.Date().getTime());
 		Integer articleId = Integer.parseInt(request.getParameter("id"));
-		
+
 		try {
 			articleVendu = this.articleVenduManager.getArticleVendu(articleId);
-		} catch (ArticleVenduManagerException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
+		} catch (ArticleVenduManagerException e) {
+			System.err.println(e);
 		}
 		if (pseudo.equals(articleVendu.getUtilisateur().getPseudo()) && dateActuelle.before(articleVendu.getDate_debut_encheres())) {
 			Categorie categorie = null;
@@ -112,10 +103,7 @@ public class ModifierArticle extends HttpServlet {
 			} catch (ParseException e) {
 				System.err.println(e);
 			}
-			
-			
-			
-			
+
 			if (miseAPrixString != null && !miseAPrixString.isEmpty()) {
 				Integer miseAPrix = Integer.parseInt(miseAPrixString);
 				if(		article != null && !article.isEmpty() &&
@@ -133,7 +121,7 @@ public class ModifierArticle extends HttpServlet {
 							} catch (CategorieManagerException e) {
 								System.err.println(e);
 							}
-							
+
 							articleVendu.setNom_article(article);
 							articleVendu.setDescription(description);
 							articleVendu.setCategorie(categorie);
@@ -147,7 +135,7 @@ public class ModifierArticle extends HttpServlet {
 								articleVendu.setPhotoNom(photoNom);
 								articleVendu.setPhotoData(photoData);
 							}
-							
+
 							try {
 								this.articleVenduManager.updateArticleVendu(articleVendu);
 								response.sendRedirect(request.getContextPath()+"/detail-enchere?id="+articleVendu.getNo_article());

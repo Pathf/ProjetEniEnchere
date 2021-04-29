@@ -66,17 +66,15 @@ public class AdministationServlet extends HttpServlet {
 					}
 				}
 			}
-
 			// Vend : Recredité le dernier à avoir proposé > supprime les enchere > Supprime les articles
 			List<ArticleVendu> utilisateurArticleVendus = this.articleVenduManager.getListeArticleVenduByUtilisateur(utilisateur.getNo_utilisateur());
 			for(ArticleVendu articleVendu : utilisateurArticleVendus) {
 				Date dateNow = new Date(System.currentTimeMillis());
 				Date dateFinEnchere = articleVendu.getDate_fin_encheres();
-				if(dateNow.before(dateFinEnchere) || dateNow.toString().equals(dateFinEnchere.toString())) {
+				if(dateNow.before(dateFinEnchere)) {
 					this.articleVenduManager.suppression(articleVendu);
 				}
 			}
-
 			// modifier tous les article possedant le no_utilisateur correspondant à l'utilisateur
 			Utilisateur utilisateurInconnu = this.utilisateurManager.getUtilisateur("inconnu");
 			List<ArticleVendu> articleVendus = this.articleVenduManager.getListeArticleVenduByUtilisateur(utilisateur.getNo_utilisateur());
@@ -93,7 +91,7 @@ public class AdministationServlet extends HttpServlet {
 			// suppression utilisateur
 			this.utilisateurManager.delete(utilisateur);
 		} catch (Exception e) {
-			System.err.println(e);
+			System.err.println("doPost - administration\n" + e);
 		}
 		this.doGet(request, response);
 	}
