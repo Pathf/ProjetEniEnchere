@@ -44,10 +44,14 @@
 									<td>${utilisateur.prenom}</td>
 									<td>${utilisateur.email}</td>
 									<td>${utilisateur.telephone}</td>
-									<td>${utilisateur.rue},${utilisateur.code_postal}${utilisateur.ville}</td>
+									<td>${utilisateur.rue}&#8239;${utilisateur.code_postal}&#8239;${utilisateur.ville}</td>
 									<td>${utilisateur.credit}</td>
 									<td>${utilisateur.administrateur}</td>
-									<td><button type="submit" class="btn btn-danger" name="no_suppression" value="${utilisateur.no_utilisateur}">X</button></td>
+									<td><c:choose>
+											<c:when test="${!utilisateur.administrateur}">
+												<button type="submit" class="btn btn-danger" name="no_suppression" value="${utilisateur.no_utilisateur}">X</button>
+											</c:when>
+										</c:choose></td>
 								</tr>
 							</c:forEach>
 						</tbody>
