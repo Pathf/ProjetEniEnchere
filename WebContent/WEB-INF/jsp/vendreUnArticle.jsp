@@ -22,10 +22,7 @@
 			  </button>
 			</div>
 		</c:if>
-		<div class="row mt-5">
-			<div class="photo d-none d-md-block col-md-4">
-				<img class="col-12" alt="photo de l'objet" src="https://via.placeholder.com/300">
-			</div>
+		<div class="row mt-5 justify-content-center">
 			<div class="formulaire col-md-6 ml-md-3">
 				<form action="nouvelle-vente" method="post" enctype="multipart/form-data">
 			   		<div class="form-group row">
@@ -56,9 +53,6 @@
 				      		<input type="file" class="form-control-file col-12" id="photoArticle" name="photoArticle">
 					    </div>
 			  		</div>
-			  		<div class="photo d-md-none col-12 mb-3">
-						<img class="col-12" alt="photo de l'objet" src="https://via.placeholder.com/300">
-					</div>
 			  		<div class="form-group row">
 					    <label for="miseAPrix" class="col-4 col-md-4 col-form-label">Mise à prix :</label>
 					    <div class="col-7 col-md-7">
