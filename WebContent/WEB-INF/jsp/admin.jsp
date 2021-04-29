@@ -32,6 +32,7 @@
 								<th scope="col">Adresse</th>
 								<th scope="col">Crédit</th>
 								<th scope="col">Admin</th>
+								<th scope="col">Activer</th>
 								<th scope="col">Désactiver</th>
 								<th scope="col">Supprimer</th>
 							</tr>
@@ -50,9 +51,19 @@
 											<td>${utilisateur.rue}&#8239;${utilisateur.code_postal}&#8239;${utilisateur.ville}</td>
 											<td>${utilisateur.credit}</td>
 											<td>${utilisateur.administrateur}</td>
+											<td>${utilisateur.activer}</td>
 											<td><c:choose>
 													<c:when test="${!utilisateur.administrateur}">
-														<button type="submit" class="btn btn-secondary" name="no_desactivation" value="${utilisateur.no_utilisateur}">D</button>
+														<button type="submit" class="btn btn-secondary" name="no_desactivation" value="${utilisateur.no_utilisateur}">
+															<c:choose>
+																<c:when test="${utilisateur.activer}">
+																	D
+																</c:when>
+																<c:otherwise>
+																	A
+																</c:otherwise>
+															</c:choose>
+														</button>
 													</c:when>
 												</c:choose></td>
 											<td><c:choose>
