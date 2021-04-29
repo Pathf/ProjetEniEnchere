@@ -88,7 +88,7 @@ String erreur = (String) request.getAttribute("erreur");
 					Êtes-vous sur de vouloir supprimer votre compte ?<br /> (Cette action est irreversible)
 				</div>
 				<div class="modal-footer">
-					<button type="button" class="btn btn-primary" data-bs-dismiss="modal">Anuller</button>
+					<button type="button" class="btn btn-primary" data-bs-dismiss="modal">Annuler</button>
 					<form action="suppression" method="get">
 						<button type="submit" class="btn btn-danger">Supprimer</button>
 					</form>
