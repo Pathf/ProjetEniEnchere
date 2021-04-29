@@ -118,7 +118,31 @@
 								</div>
 							</c:when>     
 							<c:when test="${vendeur && !isEnCour && !isTerminee}">
-				   				<a href="${pageContext.request.contextPath}/modifier-vente?id=${article.getNo_article() }" class="btn btn-secondary p-3 col-md-4" role="button">Modifier l'article</a>
+				   				<a href="${pageContext.request.contextPath}/modifier-vente?id=${article.getNo_article() }" class="btn btn-secondary p-3 mt-1 col-md-4" role="button">Modifier l'article</a>
+				   				<button type="button" class="btn btn-danger ml-md-1 mt-1 p-3 col-12 col-md-5" data-toggle="modal" data-target="#suppression">Supprimer mon article</button>
+				   				<div class="modal fade" id="suppression" tabindex="-1" role="dialog" aria-labelledby="suppressionLabel" aria-hidden="true">
+								<div class="modal-dialog" role="document">
+									<div class="modal-content">
+										<div class="modal-header">
+											<h5 class="modal-title" id="suppressionLabel">Suppression du compte</h5>
+												<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+													<span aria-hidden="true">&times;</span>
+												</button>
+										</div>
+										<div class="modal-body">
+						        			Êtes-vous sur de vouloir supprimer votre article ?<br/>
+						        			(Cette action est irreversible)
+						      			</div>
+						      			<div class="modal-footer">
+						      				<button type="button" class="btn btn-primary" data-dismiss="modal">Anuller</button>
+						      				<form action="suppression-article?id=${article.getNo_article() }" method="post">
+						      					<button type="submit" class="btn btn-danger">Supprimer</button>
+						      				</form>
+						      			</div>
+						      		</div>
+						      	</div>
+						      </div>
+				   			
 				   			</c:when>
 		   					 <c:when test="${isEnCour && !isMeilleurEncherisseur && !vendeur}">
 								<form action="detail-enchere?id=${article.getNo_article() }" method="post" class="form-inline">

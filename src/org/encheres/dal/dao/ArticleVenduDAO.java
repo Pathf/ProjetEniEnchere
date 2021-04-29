@@ -21,4 +21,6 @@ public interface ArticleVenduDAO {
 
 	List<ArticleVendu> listByWinBid(Integer no_utilisateur) throws DALException;
 
+	void remove(ArticleVendu articleVendu) throws DALException;
+
 }

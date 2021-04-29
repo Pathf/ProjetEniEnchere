@@ -97,4 +97,13 @@ public class ArticleVenduManager {
 			throw new ArticleVenduManagerException("updateArticleVendu failed\n" + e);
 		}
 	}
+
+	public void delete(ArticleVendu articleVendu) throws ArticleVenduManagerException {
+		try {
+			this.articleVenduDAO.remove(articleVendu);
+		} catch (DALException e) {
+			throw new ArticleVenduManagerException("delete failed\n" +e);
+		}
+		
+	}
 }
