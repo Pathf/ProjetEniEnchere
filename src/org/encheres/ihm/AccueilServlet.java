@@ -31,7 +31,7 @@ public class AccueilServlet extends HttpServlet {
 		HttpSession session = request.getSession();
 		List<ArticleVendu> articlesVendus = null;
 
-		// recuperation des param de filtration
+		// Verification du champ filtre
 		String filtres = request.getParameter("filtres");
 		String categorie = request.getParameter("categorie");
 		String radioAchat = request.getParameter("radioAchatVente");
@@ -42,9 +42,19 @@ public class AccueilServlet extends HttpServlet {
 		Boolean start = false;
 		Boolean finish = false;
 		Boolean filtreByDateDebut = false;
+		Integer idUtilisateur=null;
+		
+
+		// verification succinte du champs de saisi libre pour eviter injection SQL
+		if (filtres != null) {
+			if (!filtres.matches("[a-zA-Z0-9]+")) {
+				filtres = null;
+			}
+			;
+		}
 
 		if ("achat".equals(radioAchat)) {
-			String[] checkboxAchat =null;
+			String[] checkboxAchat = null;
 			if (request.getParameterValues("checkboxAchat") != null) {
 				checkboxAchat = request.getParameterValues("checkboxAchat");
 				if (Arrays.stream(checkboxAchat).anyMatch("open"::equals)) {
@@ -54,12 +64,18 @@ public class AccueilServlet extends HttpServlet {
 					if (session.getAttribute("pseudo") != null) {
 						noUtilisateur = (String) session.getAttribute("pseudo");
 					}
+					if (session.getAttribute("id") != null) {
+						 idUtilisateur = (Integer) session.getAttribute("id");	
+						}
 				}
 				if (Arrays.stream(checkboxAchat).anyMatch("win"::equals)) {
 					winBid = true;
 					if (session.getAttribute("pseudo") != null) {
 						noUtilisateur = (String) session.getAttribute("pseudo");
 					}
+					if (session.getAttribute("id") != null) {
+						 idUtilisateur = (Integer) session.getAttribute("id");	
+						}
 				}
 			}
 		}
@@ -72,6 +88,9 @@ public class AccueilServlet extends HttpServlet {
 					if (session.getAttribute("pseudo") != null) {
 						noUtilisateur = (String) session.getAttribute("pseudo");
 					}
+					if (session.getAttribute("id") != null) {
+						 idUtilisateur = (Integer) session.getAttribute("id");	
+						}
 				}
 				if (Arrays.stream(checkboxVente).anyMatch("start"::equals)) {
 					start = true;
@@ -92,7 +111,8 @@ public class AccueilServlet extends HttpServlet {
 
 		// TEST LES FILTRES DEMANDE//
 		try {
-			articlesVendus = this.articleVenduManager.selectByFiltre(categorieInt, filtres, filtreByDateDebut, noUtilisateur, process, start, finish);
+			articlesVendus = this.articleVenduManager.selectByFiltre(categorieInt, filtres, filtreByDateDebut,
+					idUtilisateur, process, start, finish);
 			request.setAttribute("articlesVendus", articlesVendus);
 		} catch (ArticleVenduManagerException e) {
 			System.err.println(e);
@@ -102,7 +122,7 @@ public class AccueilServlet extends HttpServlet {
 		if (winBid) {
 			try {
 				List<ArticleVendu> articlesVendusGagné = null;
-				articlesVendusGagné = this.articleVenduManager.listByWinBid(noUtilisateur);
+				articlesVendusGagné = this.articleVenduManager.listByWinBid(idUtilisateur);
 
 				// ON COMPARE AVEC LA LISTE DE FILTRE PRECEDENTE
 				articlesVendus.retainAll(articlesVendusGagné);

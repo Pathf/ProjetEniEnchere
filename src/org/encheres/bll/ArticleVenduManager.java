@@ -56,7 +56,7 @@ public class ArticleVenduManager {
 		return articleVendus;
 	}
 
-	public List<ArticleVendu> selectByFiltre(Integer no_categorie , String nom, Boolean date,String no_utilisateur, Boolean process, Boolean start, Boolean finish) throws ArticleVenduManagerException {
+	public List<ArticleVendu> selectByFiltre(Integer no_categorie , String nom, Boolean date,Integer no_utilisateur, Boolean process, Boolean start, Boolean finish) throws ArticleVenduManagerException {
 		List<ArticleVendu> articleVendus = null;
 
 		try {
@@ -68,7 +68,7 @@ public class ArticleVenduManager {
 		return articleVendus;
 	}
 
-	public List<ArticleVendu> listByWinBid(String no_utilisateur) throws ArticleVenduManagerException{
+	public List<ArticleVendu> listByWinBid(Integer no_utilisateur) throws ArticleVenduManagerException{
 		List<ArticleVendu> articleVendus = null;
 
 		try {

@@ -9,6 +9,10 @@ public class Retrait {
 	String code_postal;
 	String ville;
 
+	public Retrait() {
+		this(null, null, null, null);
+	}
+	
 	public Retrait(Integer no_retrait, String rue, String code_postal, String ville) {
 		this.no_retrait = no_retrait;
 		this.rue = rue;
