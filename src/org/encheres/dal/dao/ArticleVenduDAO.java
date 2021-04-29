@@ -17,8 +17,11 @@ public interface ArticleVenduDAO {
 
 	List<ArticleVendu> selectByUtilisateur(Integer no_utilisateur) throws DALException;
 
-	List<ArticleVendu> selectByFiltre(Integer no_categorie, String nom, Boolean date, Integer no_utilisateur, Boolean process, Boolean start, Boolean finish) throws DALException;
+	List<ArticleVendu> selectByFiltre(Integer no_categorie, String nom, Boolean date, Integer no_utilisateur, Boolean process, Boolean start, Boolean finish,Integer firstRow, Integer lastRow) throws DALException;
 
 	List<ArticleVendu> listByWinBid(Integer no_utilisateur) throws DALException;
+	
+	Integer countSelectByFilter(Integer no_categorie, String nom, Boolean date, Integer no_utilisateur,
+			Boolean process, Boolean start, Boolean finish)throws DALException;
 
 }
