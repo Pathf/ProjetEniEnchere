@@ -15,4 +15,8 @@ public interface EnchereDAO {
 	void update(Enchere enchere) throws DALException;
 
 	Enchere selectMeilleurByArticle(Integer id_article) throws DALException;
+
+	void remove(Enchere enchere) throws DALException;
+
+	List<Enchere> selectByArticle(Integer no_article) throws DALException;
 }

@@ -41,7 +41,7 @@ public class ArticleVenduDAOImpl implements ArticleVenduDAO {
 	 * u.no_utilisateur LEFT JOIN RETRAITS AS r ON a.no_retrait = r.no_retrait LEFT
 	 * JOIN CATEGORIES AS c ON a.no_categorie = c.no_categorie WHERE a.no_article=?;
 	 */
-	
+
 	// SQLRequete.selectLeftJoin(TABLES, CHAMPALLTABLES, BDD.ARTICLESVENDUS_IDS);
 	private static final String SQLSELECT_ID = "SELECT a.no_article, a.nom_article, a.description, a.date_debut_encheres, a.date_fin_encheres, a.prix_initial, a.prix_vente, a.photo_nom, a.photo_data, a.no_utilisateur, a.no_categorie, a.no_retrait, u.pseudo, u.nom, u.prenom, u.email, u.telephone, u.rue as rueUTILISATEURS, u.code_postal as code_postalUTILISATEURS, u.ville as villeUTILISATEURS, u.mot_de_passe, u.credit, u.administrateur, r.rue as rueRETRAITS, r.code_postal as code_postalRETRAITS, r.ville as villeRETRAITS, c.libelle FROM ARTICLES_VENDUS AS a LEFT JOIN UTILISATEURS AS u ON a.no_utilisateur = u.no_utilisateur LEFT JOIN RETRAITS AS r ON a.no_retrait = r.no_retrait LEFT JOIN CATEGORIES AS c ON a.no_categorie = c.no_categorie WHERE a.no_article=?";
 	// SQLRequete.selectLeftJoin(TABLES, CHAMPALLTABLES, BDD.UTILISATEURS_IDS);
@@ -50,8 +50,8 @@ public class ArticleVenduDAOImpl implements ArticleVenduDAO {
 	private static final String SQLSELECT_ALL = "SELECT a.no_article, a.nom_article, a.description, a.date_debut_encheres, a.date_fin_encheres, a.prix_initial, a.prix_vente, a.photo_nom, a.photo_data, a.no_utilisateur, a.no_categorie, a.no_retrait, u.pseudo, u.nom, u.prenom, u.email, u.telephone, u.rue as rueUTILISATEURS, u.code_postal as code_postalUTILISATEURS, u.ville as villeUTILISATEURS, u.mot_de_passe, u.credit, u.administrateur, r.rue as rueRETRAITS, r.code_postal as code_postalRETRAITS, r.ville as villeRETRAITS, c.libelle FROM ARTICLES_VENDUS AS a LEFT JOIN UTILISATEURS AS u ON a.no_utilisateur = u.no_utilisateur LEFT JOIN RETRAITS AS r ON a.no_retrait = r.no_retrait LEFT JOIN CATEGORIES AS c ON a.no_categorie = c.no_categorie";
 	private static final String SQLINSERT = SQLRequete.insert(BDD.ARTICLESVENDUS_TABLENOM, BDD.ARTICLESVENDUS_CHAMPS);
 	private static final String SQLUPDATE = SQLRequete.update(BDD.ARTICLESVENDUS_TABLENOM, BDD.ARTICLESVENDUS_CHAMPS, BDD.ARTICLESVENDUS_IDS);
-	private static final String SQLREMOVE = SQLRequete.delete(BDD.ARTICLESVENDUS_TABLENOM, BDD.ARTICLESVENDUS_IDS);
-	
+	private static final String SQLDELETE = SQLRequete.delete(BDD.ARTICLESVENDUS_TABLENOM, BDD.ARTICLESVENDUS_IDS);
+
 	@Override
 	public ArticleVendu selectById(Integer id) throws DALException {
 		ArticleVendu article = null;
@@ -314,6 +314,18 @@ public class ArticleVenduDAOImpl implements ArticleVenduDAO {
 		}
 	}
 
+	@Override
+	public void remove(ArticleVendu articleVendu) throws DALException {
+		try (	Connection connection = DAOTools.getConnection();
+				PreparedStatement preparedStatement = connection.prepareStatement(SQLDELETE);
+				){
+			preparedStatement.setInt(1, articleVendu.getNo_article());
+			preparedStatement.executeUpdate();
+		} catch (SQLException e) {
+			throw new DALException("Remove article failed - " + articleVendu + "\n" + e);
+		}
+	}
+
 	private ArticleVendu buildArticleVendu(ResultSet rs, boolean avecUtilisateur, boolean avecCategorie, boolean avecRetrait) throws SQLException {
 		Utilisateur utilisateur = new Utilisateur();
 		Categorie categorie = new Categorie();
@@ -367,18 +379,5 @@ public class ArticleVenduDAOImpl implements ArticleVenduDAO {
 				categorie,
 				retrait
 				);
-	}
-
-	@Override
-	public void remove(ArticleVendu articleVendu) throws DALException {
-		try (	Connection connection = DAOTools.getConnection();
-				PreparedStatement preparedStatement = connection.prepareStatement(SQLREMOVE);
-			){
-					preparedStatement.setInt(1, articleVendu.getNo_article());
-					preparedStatement.executeUpdate();
-		} catch (SQLException e) {
-			throw new DALException("Delete article failed - " + "\n" + e);
-		}
-		
 	}
 }

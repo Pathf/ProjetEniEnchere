@@ -97,7 +97,7 @@ public class UtilisateurManager {
 		try {
 			this.utilisateurDAO.remove(utilisateur);
 		} catch (DALException e) {
-			throw new UtilisateurManagerException("update failed\n" + e);
+			throw new UtilisateurManagerException("Delete failed\n" + e);
 		}
 	}
 }

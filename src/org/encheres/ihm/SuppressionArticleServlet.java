@@ -41,7 +41,7 @@ public class SuppressionArticleServlet extends HttpServlet {
 		
 		if (pseudo.equals(articleVendu.getUtilisateur().getPseudo()) && dateActuelle.before(articleVendu.getDate_debut_encheres())) {
 			try {
-				this.articleVenduManager.delete(articleVendu);
+				this.articleVenduManager.suppression(articleVendu);
 				response.sendRedirect(request.getContextPath());
 			} catch (ArticleVenduManagerException e) {
 				e.printStackTrace();
