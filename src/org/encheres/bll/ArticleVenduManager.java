@@ -99,6 +99,15 @@ public class ArticleVenduManager {
 		}
 	}
 
+	public void delete(ArticleVendu articleVendu) throws ArticleVenduManagerException {
+		try {
+			this.articleVenduDAO.remove(articleVendu);
+		} catch (DALException e) {
+			throw new ArticleVenduManagerException("delete failed\n" +e);
+		}
+		
+	}
+
 	public void suppression(ArticleVendu articleVendu) throws ArticleVenduManagerException {
 		EnchereManager enchereManager = EnchereManager.getInstance();
 		List<Enchere> enchereASupprimer;
