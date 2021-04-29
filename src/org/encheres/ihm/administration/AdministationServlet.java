@@ -11,7 +11,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.encheres.bll.ArticleVenduManager;
+import org.encheres.bll.ArticleVenduManagerException;
 import org.encheres.bll.EnchereManager;
+import org.encheres.bll.EnchereManagerException;
 import org.encheres.bll.UtilisateurManager;
 import org.encheres.bll.UtilisateurManagerException;
 import org.encheres.bo.ArticleVendu;
@@ -45,54 +47,69 @@ public class AdministationServlet extends HttpServlet {
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		try {
-			Integer no_utilisateurASupprimer = Integer.valueOf(request.getParameter("no_suppression"));
-			Utilisateur utilisateur = this.utilisateurManager.getUtilisateur(no_utilisateurASupprimer);
-			if(utilisateur.getAdministrateur()) {
-				System.err.println("On ne peut pas supprimer un administrateur !");
-				this.doGet(request, response);
-				return;
+			String no_suppression = request.getParameter("no_suppression");
+			String no_desactivation = request.getParameter("no_desactivation");
+			if(no_suppression != null) {
+				this.suppression(no_suppression, request, response);
+			} else {
+				this.desactivation(no_desactivation, request, response);
 			}
-			// Proposition :
-			List<Enchere> encheresPosteParUtilisateurS = this.enchereManager.getListeEnchere(utilisateur.getNo_utilisateur());
-			for(Enchere enchere : encheresPosteParUtilisateurS) {
-				Date dateNow = new Date(System.currentTimeMillis());
-				Date dateFinEnchere = enchere.getArticle().getDate_fin_encheres();
-				if(dateNow.before(dateFinEnchere) || dateNow.toString().equals(dateFinEnchere.toString())) {
-					Enchere meilleureEnchere = this.enchereManager.getMeilleurEnchereByArticle(enchere.getArticle().getNo_article());
-					if(meilleureEnchere.getNo_enchere() == enchere.getNo_enchere()) {
-						this.enchereManager.suppressionDeLaMeilleureEnchere(enchere);
-					} else {
-						this.enchereManager.suppressionDeLaProposition(enchere);
-					}
-				}
-			}
-			// Vend : Recredité le dernier à avoir proposé > supprime les enchere > Supprime les articles
-			List<ArticleVendu> utilisateurArticleVendus = this.articleVenduManager.getListeArticleVenduByUtilisateur(utilisateur.getNo_utilisateur());
-			for(ArticleVendu articleVendu : utilisateurArticleVendus) {
-				Date dateNow = new Date(System.currentTimeMillis());
-				Date dateFinEnchere = articleVendu.getDate_fin_encheres();
-				if(dateNow.before(dateFinEnchere)) {
-					this.articleVenduManager.suppression(articleVendu);
-				}
-			}
-			// modifier tous les article possedant le no_utilisateur correspondant à l'utilisateur
-			Utilisateur utilisateurInconnu = this.utilisateurManager.getUtilisateur("inconnu");
-			List<ArticleVendu> articleVendus = this.articleVenduManager.getListeArticleVenduByUtilisateur(utilisateur.getNo_utilisateur());
-			for(ArticleVendu articleVendu : articleVendus) {
-				articleVendu.setUtilisateur(utilisateurInconnu);
-				this.articleVenduManager.updateArticleVendu(articleVendu);
-			}
-			// modifier toutes les encheres possedant le no_utilisateur correspondant à l'utilisateur
-			encheresPosteParUtilisateurS = this.enchereManager.getListeEnchere(utilisateur.getNo_utilisateur());
-			for(Enchere enchere : encheresPosteParUtilisateurS) {
-				enchere.setUtilisateur(utilisateurInconnu);
-				this.enchereManager.updateEncher(enchere);
-			}
-			// suppression utilisateur
-			this.utilisateurManager.delete(utilisateur);
 		} catch (Exception e) {
 			System.err.println("doPost - administration\n" + e);
 		}
 		this.doGet(request, response);
+	}
+
+	private void desactivation(String no_desactivation, HttpServletRequest request, HttpServletResponse response) {
+
+	}
+
+	private void suppression(String no_suppression, HttpServletRequest request, HttpServletResponse response) throws UtilisateurManagerException, EnchereManagerException, ServletException, IOException, ArticleVenduManagerException {
+		Integer no_utilisateurASupprimer = Integer.valueOf(no_suppression);
+
+		Utilisateur utilisateur = this.utilisateurManager.getUtilisateur(no_utilisateurASupprimer);
+		if(utilisateur.getAdministrateur()) {
+			System.err.println("On ne peut pas supprimer un administrateur !");
+			this.doGet(request, response);
+			return;
+		}
+		// Proposition :
+		List<Enchere> encheresPosteParUtilisateurS = this.enchereManager.getListeEnchere(utilisateur.getNo_utilisateur());
+		for(Enchere enchere : encheresPosteParUtilisateurS) {
+			Date dateNow = new Date(System.currentTimeMillis());
+			Date dateFinEnchere = enchere.getArticle().getDate_fin_encheres();
+			if(dateNow.before(dateFinEnchere) || dateNow.toString().equals(dateFinEnchere.toString())) {
+				Enchere meilleureEnchere = this.enchereManager.getMeilleurEnchereByArticle(enchere.getArticle().getNo_article());
+				if(meilleureEnchere.getNo_enchere() == enchere.getNo_enchere()) {
+					this.enchereManager.suppressionDeLaMeilleureEnchere(enchere);
+				} else {
+					this.enchereManager.suppressionDeLaProposition(enchere);
+				}
+			}
+		}
+		// Vend : Recredité le dernier à avoir proposé > supprime les enchere > Supprime les articles
+		List<ArticleVendu> utilisateurArticleVendus = this.articleVenduManager.getListeArticleVenduByUtilisateur(utilisateur.getNo_utilisateur());
+		for(ArticleVendu articleVendu : utilisateurArticleVendus) {
+			Date dateNow = new Date(System.currentTimeMillis());
+			Date dateFinEnchere = articleVendu.getDate_fin_encheres();
+			if(dateNow.before(dateFinEnchere)) {
+				this.articleVenduManager.suppression(articleVendu);
+			}
+		}
+		// modifier tous les article possedant le no_utilisateur correspondant à l'utilisateur
+		Utilisateur utilisateurInconnu = this.utilisateurManager.getUtilisateur("inconnu");
+		List<ArticleVendu> articleVendus = this.articleVenduManager.getListeArticleVenduByUtilisateur(utilisateur.getNo_utilisateur());
+		for(ArticleVendu articleVendu : articleVendus) {
+			articleVendu.setUtilisateur(utilisateurInconnu);
+			this.articleVenduManager.updateArticleVendu(articleVendu);
+		}
+		// modifier toutes les encheres possedant le no_utilisateur correspondant à l'utilisateur
+		encheresPosteParUtilisateurS = this.enchereManager.getListeEnchere(utilisateur.getNo_utilisateur());
+		for(Enchere enchere : encheresPosteParUtilisateurS) {
+			enchere.setUtilisateur(utilisateurInconnu);
+			this.enchereManager.updateEncher(enchere);
+		}
+		// suppression utilisateur
+		this.utilisateurManager.delete(utilisateur);
 	}
 }
