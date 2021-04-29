@@ -15,19 +15,14 @@ import org.encheres.dal.dao.UtilisateurDAO;
 import org.encheres.dal.sql.SQLRequete;
 
 public class UtilisateurDAOImpl implements UtilisateurDAO {
-
-	private static final String TABLE = "UTILISATEURS";
-	private static final String[] IDS = new String[]{"no_utilisateur"};
-	private static final String[] CHAMPS = new String[]{"pseudo","nom","prenom","email","telephone","rue","code_postal","ville","mot_de_passe","credit","administrateur"};
-
-	private static final String SQLSELECT_ID = SQLRequete.select(null, TABLE, IDS);
-	private static final String SQLSELECT_PSEUDO = SQLRequete.select(null, TABLE, new String[] {"pseudo"} );
-	private static final String SQLSELECT_PSEUDO_MDP = SQLRequete.select(null, TABLE, new String[] {"pseudo","mot_de_passe"});
-	private static final String SQLSELECT_EMAIL_MDP = SQLRequete.select(null, TABLE, new String[] {"email","mot_de_passe"});
-	private static final String SQLSELECT_ALL = SQLRequete.select(TABLE);
-	private static final String SQLINSERT = SQLRequete.insert(TABLE, CHAMPS);
-	private static final String SQLUPDATE = SQLRequete.update(TABLE, CHAMPS, IDS);
-	private static final String SQLREMOVE = SQLRequete.delete(TABLE, IDS);
+	private static final String SQLSELECT_ID = SQLRequete.select(null, BDD.UTILISATEURS_TABLENOM, BDD.UTILISATEURS_IDS);
+	private static final String SQLSELECT_PSEUDO = SQLRequete.select(null, BDD.UTILISATEURS_TABLENOM, new String[] {"pseudo"} );
+	private static final String SQLSELECT_PSEUDO_MDP = SQLRequete.select(null, BDD.UTILISATEURS_TABLENOM, new String[] {"pseudo","mot_de_passe"});
+	private static final String SQLSELECT_EMAIL_MDP = SQLRequete.select(null, BDD.UTILISATEURS_TABLENOM, new String[] {"email","mot_de_passe"});
+	private static final String SQLSELECT_ALL = SQLRequete.select(BDD.UTILISATEURS_TABLENOM);
+	private static final String SQLINSERT = SQLRequete.insert(BDD.UTILISATEURS_TABLENOM, BDD.UTILISATEURS_CHAMPS);
+	private static final String SQLUPDATE = SQLRequete.update(BDD.UTILISATEURS_TABLENOM, BDD.UTILISATEURS_CHAMPS, BDD.UTILISATEURS_IDS);
+	private static final String SQLREMOVE = SQLRequete.delete(BDD.UTILISATEURS_TABLENOM, BDD.UTILISATEURS_IDS);
 
 	@Override
 	public Utilisateur selectById(Integer id) throws DALException {
@@ -39,20 +34,7 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
 
 			try (ResultSet rs = preparedStatement.executeQuery();){
 				if(rs.next()){
-					utilisateur = new Utilisateur(
-							id,
-							rs.getString("pseudo"),
-							rs.getString("nom"),
-							rs.getString("prenom"),
-							rs.getString("email"),
-							rs.getString("telephone"),
-							rs.getString("rue"),
-							rs.getString("code_postal"),
-							rs.getString("ville"),
-							rs.getString("mot_de_passe"),
-							rs.getInt("credit"),
-							rs.getBoolean("administrateur")
-							);
+					utilisateur = this.buildUtilisateur(rs);
 				}
 			}catch (SQLException e) {
 				throw new DALException("Select BYID failed - close failed for rs\n" + e);
@@ -73,20 +55,7 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
 
 			try (ResultSet rs = preparedStatement.executeQuery();){
 				if(rs.next()){
-					utilisateur = new Utilisateur(
-							rs.getInt("no_utilisateur"),
-							rs.getString("pseudo"),
-							rs.getString("nom"),
-							rs.getString("prenom"),
-							rs.getString("email"),
-							rs.getString("telephone"),
-							rs.getString("rue"),
-							rs.getString("code_postal"),
-							rs.getString("ville"),
-							rs.getString("mot_de_passe"),
-							rs.getInt("credit"),
-							rs.getBoolean("administrateur")
-							);
+					utilisateur = this.buildUtilisateur(rs);
 				}
 			}catch (SQLException e) {
 				throw new DALException("Select BYPSEUDO failed - close failed for rs\n" + e);
@@ -108,20 +77,7 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
 
 			try (ResultSet rs = preparedStatement.executeQuery();){
 				if(rs.next()){
-					utilisateur = new Utilisateur(
-							rs.getInt("no_utilisateur"),
-							rs.getString("pseudo"),
-							rs.getString("nom"),
-							rs.getString("prenom"),
-							rs.getString("email"),
-							rs.getString("telephone"),
-							rs.getString("rue"),
-							rs.getString("code_postal"),
-							rs.getString("ville"),
-							rs.getString("mot_de_passe"),
-							rs.getInt("credit"),
-							rs.getBoolean("administrateur")
-							);
+					utilisateur = this.buildUtilisateur(rs);
 				}
 			}catch (SQLException e) {
 				throw new DALException("Select BYEMAIL failed - close failed for rs\n" + e);
@@ -143,20 +99,7 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
 
 			try (ResultSet rs = preparedStatement.executeQuery();){
 				if(rs.next()){
-					utilisateur = new Utilisateur(
-							rs.getInt("no_utilisateur"),
-							rs.getString("pseudo"),
-							rs.getString("nom"),
-							rs.getString("prenom"),
-							rs.getString("email"),
-							rs.getString("telephone"),
-							rs.getString("rue"),
-							rs.getString("code_postal"),
-							rs.getString("ville"),
-							rs.getString("mot_de_passe"),
-							rs.getInt("credit"),
-							rs.getBoolean("administrateur")
-							);
+					utilisateur = this.buildUtilisateur(rs);
 				}
 			}catch (SQLException e) {
 				throw new DALException("Select BYPSEUDO failed - close failed for rs\n" + e);
@@ -177,20 +120,7 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
 
 			try (ResultSet rs = statement.getResultSet();){
 				while(rs.next()){
-					utilisateur.add(new Utilisateur(
-							rs.getInt("no_utilisateur"),
-							rs.getString("pseudo"),
-							rs.getString("nom"),
-							rs.getString("prenom"),
-							rs.getString("email"),
-							rs.getString("telephone"),
-							rs.getString("rue"),
-							rs.getString("code_postal"),
-							rs.getString("ville"),
-							rs.getString("mot_de_passe"),
-							rs.getInt("credit"),
-							rs.getBoolean("administrateur")
-							));
+					utilisateur.add(this.buildUtilisateur(rs));
 				}
 			}catch (SQLException e) {
 				throw new DALException("Select ALL failed - close failed for rs\n" + e);
@@ -217,6 +147,7 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
 			preparedStatement.setString(9, utilisateur.getMot_de_passe());
 			preparedStatement.setInt(10, utilisateur.getCredit());
 			preparedStatement.setBoolean(11, utilisateur.getAdministrateur());
+			preparedStatement.setBoolean(12, utilisateur.isActiver());
 
 			preparedStatement.executeUpdate();
 
@@ -248,7 +179,8 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
 			preparedStatement.setString(9, utilisateur.getMot_de_passe());
 			preparedStatement.setInt(10, utilisateur.getCredit());
 			preparedStatement.setBoolean(11, utilisateur.getAdministrateur());
-			preparedStatement.setInt(12, utilisateur.getNo_utilisateur());
+			preparedStatement.setBoolean(12, utilisateur.isActiver());
+			preparedStatement.setInt(13, utilisateur.getNo_utilisateur());
 			preparedStatement.executeUpdate();
 		} catch (SQLException e) {
 			throw new DALException("Update utilisateur failed - " + utilisateur + "\n" + e);
@@ -265,5 +197,23 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
 		} catch (SQLException e) {
 			throw new DALException("Delete utilisateur failed - " + utilisateur + "\n" + e);
 		}
+	}
+
+	private Utilisateur buildUtilisateur(ResultSet rs) throws SQLException {
+		return new Utilisateur(
+				rs.getInt(BDD.UTILISATEURS_IDS[0]),
+				rs.getString(BDD.UTILISATEURS_CHAMPS[0]),
+				rs.getString(BDD.UTILISATEURS_CHAMPS[1]),
+				rs.getString(BDD.UTILISATEURS_CHAMPS[2]),
+				rs.getString(BDD.UTILISATEURS_CHAMPS[3]),
+				rs.getString(BDD.UTILISATEURS_CHAMPS[4]),
+				rs.getString(BDD.UTILISATEURS_CHAMPS[5]),
+				rs.getString(BDD.UTILISATEURS_CHAMPS[6]),
+				rs.getString(BDD.UTILISATEURS_CHAMPS[7]),
+				rs.getString(BDD.UTILISATEURS_CHAMPS[8]),
+				rs.getInt(BDD.UTILISATEURS_CHAMPS[9]),
+				rs.getBoolean(BDD.UTILISATEURS_CHAMPS[10]),
+				rs.getBoolean(BDD.UTILISATEURS_CHAMPS[11])
+				);
 	}
 }

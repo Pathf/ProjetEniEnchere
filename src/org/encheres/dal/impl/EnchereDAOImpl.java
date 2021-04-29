@@ -111,7 +111,8 @@ public class EnchereDAOImpl implements EnchereDAO {
 									rs.getString(BDD.UTILISATEURS_CHAMPS[7]),
 									rs.getString(BDD.UTILISATEURS_CHAMPS[8]),
 									rs.getInt(BDD.UTILISATEURS_CHAMPS[9]),
-									rs.getBoolean(BDD.UTILISATEURS_CHAMPS[10])
+									rs.getBoolean(BDD.UTILISATEURS_CHAMPS[10]),
+									rs.getBoolean(BDD.UTILISATEURS_CHAMPS[11])
 									)
 							);
 				}
@@ -162,7 +163,8 @@ public class EnchereDAOImpl implements EnchereDAO {
 											null,
 											null,
 											null,
-											false
+											false,
+											true
 											),
 									new Categorie(
 											rs.getInt(BDD.ARTICLESVENDUS_CHAMPS[9]),
