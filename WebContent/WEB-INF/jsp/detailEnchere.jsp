@@ -60,7 +60,7 @@
 						</c:otherwise>
 					</c:choose>
 					</div>
-					<div class="infos col-md-6 ml-3">
+					<div class="infos col-10 offset-1 col-md-6 ml-md-3">
 						<table class="table">
 							<tbody>
 							<tr class="row">
