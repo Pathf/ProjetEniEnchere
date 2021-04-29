@@ -29,7 +29,7 @@
 						class="alert alert-danger alert-dismissible fade show mx-auto col-md-10 offset-md-1 mt-3"
 						role="alert">
 						<strong>Erreur !</strong><%=erreur%>
-						<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+						<button type="button" class="close" data-bs-dismiss="alert" aria-label="Close">
 							<span aria-hidden="true">&times;</span>
 						</button>
 					</div>
@@ -39,7 +39,7 @@
 						class="alert alert-success alert-dismissible fade show mx-auto col-md-10 offset-md-1 mt-3"
 						role="alert">
 						<strong>Bravo !</strong> Vous avez remporté la vente.
-						<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+						<button type="button" class="close" data-bs-dismiss="alert" aria-label="Close">
 							<span aria-hidden="true">&times;</span>
 						</button>
 					</div>
