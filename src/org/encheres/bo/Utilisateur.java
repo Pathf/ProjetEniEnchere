@@ -17,6 +17,10 @@ public class Utilisateur {
 	Integer credit;
 	boolean administrateur;
 
+	public Utilisateur() {
+		this(null, null, null, null, null, null, null, null, null, null, null, false);
+	}
+	
 	public Utilisateur(Integer no_utilisateur) {
 		this(no_utilisateur, null, null, null, null, null, null, null, null, null, null, false);
 	}

@@ -60,7 +60,7 @@
 						</c:otherwise>
 					</c:choose>
 					</div>
-					<div class="infos col-md-6 ml-3">
+					<div class="infos col-10 offset-1 col-md-6 ml-md-3">
 						<table class="table">
 							<tbody>
 							<tr class="row">
@@ -118,7 +118,7 @@
 								</div>
 							</c:when>     
 							<c:when test="${vendeur && !isEnCour && !isTerminee}">
-				   				<a href="${pageContext.request.contextPath}/nouvelle-vente?id=${article.getNo_article() }" class="btn btn-secondary p-3 col-md-4" role="button">Modifier l'article</a>
+				   				<a href="${pageContext.request.contextPath}/modifier-vente?id=${article.getNo_article() }" class="btn btn-secondary p-3 col-md-4" role="button">Modifier l'article</a>
 				   			</c:when>
 		   					 <c:when test="${isEnCour && !isMeilleurEncherisseur && !vendeur}">
 								<form action="detail-enchere?id=${article.getNo_article() }" method="post" class="form-inline">

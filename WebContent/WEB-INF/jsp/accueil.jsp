@@ -9,17 +9,19 @@
 	<jsp:param value="./css/accueil.css" name="style" />
 </jsp:include>
 <body>
+	<%-- <%		String isConnecte = (String) request.getSession().getAttribute("pseudo");	%> --%>
 	<%@ include file="/WEB-INF/fragments/navbar.jspf"%>
 	<div class="container text-center">
 		<h1 class="d-none d-sm-block">Liste des enchères</h1>
 		<div class="d-flex flex-column flex-column-reverse-xs">
 			<h4 class="container text-left">Filtres&#8239;:</h4>
-			<form class="d-flex" method="get" action="encheres">
+			<Form class="d-flex" method="get" action="encheres">
 				<div class="text-left w-100 searchModule">
-					<input name="filtres" type="search" class="form-control rounded mb-3 rounded" placeholder="${defaultFiltresPlaceHolder!= null ? defaultFiltresPlaceHolder:'&#x1F50D; le nom de l\'article contient'}" aria-label="Search" aria-describedby="search-addon" /> <span class="input-group-text border-0" id="search-addon"> <i class="fas fa-search"></i>
+					<input name="filtres" type="search" class="form-control rounded mb-3 rounded" placeholder="${defaultFiltresPlaceHolder!= null ? defaultFiltresPlaceHolder:
+						'&#x1F50D; le nom de l\'article contient'}" aria-label="Search" aria-describedby="search-addon" /> <span class="input-group-text border-0" id="search-addon"> <i class="fas fa-search"></i>
 					</span>
 					<div class="block">
-						<label for="categorie">Catégorie</label> <select name="categorie" class="custom-select custom-select-lg mb-3 w-75 float-right">
+						<label for="categorie">Catégorie </label> <select name="categorie" class="custom-select custom-select-lg mb-3 w-75 float-right">
 							<option value="0">Toutes</option>
 							<c:choose>
 								<c:when test="${categories.size()>0}">
@@ -37,7 +39,7 @@
 						<c:when test="${pseudo != null}">
 							<div class="d-flex justify-content-around mt-3 float-left blockRadioButton">
 								<div class="form-check">
-									<input class="form-check-input ml-0" type="radio" name="radioAchatVente" id="exampleRadios1" value="achat"> <label class="form-check-label" for="exampleRadios1">Achat</label>
+									<input class="form-check-input ml-0" type="radio" name="radioAchatVente" id="exampleRadios1" value="achat"> <label class="form-check-label" for="exampleRadios1"> Achat </label>
 									<div class="ml-5">
 										<div class="form-check">
 											<input class="form-check-input" name="checkboxAchat" type="checkbox" value="open" id="defaultCheck1"> <label class="form-check-label" for="defaultCheck1"> enchères ouvertes </label>
@@ -74,7 +76,7 @@
 				<div class="m-auto col-sm-6">
 					<button class="btn btn-primary mx-auto searchButton">Rechercher</button>
 				</div>
-			</form>
+			</Form>
 		</div>
 		<c:choose>
 			<c:when test="${articlesVendus.size()>0}">
@@ -84,10 +86,10 @@
 							<div class="card border border-dark flex-sm-row col col-lg-6 m-1 p-0 ">
 								<c:choose>
 									<c:when test="${c.photoNom != null}">
-										<img class="card-img-top col-4 m-1 p-0" alt="Pas de photo disponible" class="img-fluid" src="images?id=${c.no_article}">
+										<img class="card-img-top col-4 m-1 p-0" alt="Pas de photo disponible" class="img-fluid  max-width: 100%" src="images?id=${c.no_article}">
 									</c:when>
 									<c:otherwise>
-										<img class="card-img-top col-4 m-1 p-0" alt="Card image cap" class="img-fluid" src="https://via.placeholder.com/150	C/O https://placeholder.com/">
+										<img class="card-img-top col-4 m-1 p-0" alt="Card image cap" class="img-fluid  max-width: 100%" src="https://via.placeholder.com/150	C/O https://placeholder.com/">
 									</c:otherwise>
 								</c:choose>
 								<div class="card-body col-8 m-1 p-0">
@@ -98,8 +100,7 @@
 									<p class="card-text col-12">Categorie&#8239;: ${c.categorie.libelle}</p>
 									<p class="card-text col-12">Fin de l'enchère&#8239;: ${c.date_fin_encheres}</p>
 									<p class="card-text col-12">
-										<small class="text-muted"> <a href="${pageContext.request.contextPath}/profil?pseudo=${c.utilisateur.pseudo}" class="btn btn-primary">Vendeur&#8239;: ${c.utilisateur.pseudo}</a>
-										</small>
+										<small class="text-muted"><a href="${pageContext.request.contextPath}/profil?pseudo=${c.utilisateur.pseudo}" class="btn btn-primary">Vendeur&#8239;: ${c.utilisateur.pseudo}</a></small>
 									</p>
 								</div>
 							</div>
@@ -113,10 +114,10 @@
 		</c:choose>
 		<c:choose>
 			<c:when test="${pseudo != null}">
-				<p>Connecté comme ${pseudo}</p>
+				<p>connecté comme ${pseudo}</p>
 			</c:when>
 			<c:otherwise>
-				<p>Non connecté</p>
+				<p>non connecté</p>
 			</c:otherwise>
 		</c:choose>
 	</div>
