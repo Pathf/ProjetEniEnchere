@@ -17,6 +17,7 @@ import org.encheres.dal.sql.SQLRequete;
 public class UtilisateurDAOImpl implements UtilisateurDAO {
 	private static final String SQLSELECT_ID = SQLRequete.select(null, BDD.UTILISATEURS_TABLENOM, BDD.UTILISATEURS_IDS);
 	private static final String SQLSELECT_PSEUDO = SQLRequete.select(null, BDD.UTILISATEURS_TABLENOM, new String[] {"pseudo"} );
+	private static final String SQLSELECT_EMAIL = SQLRequete.select(null, BDD.UTILISATEURS_TABLENOM, new String[] {"email"} );
 	private static final String SQLSELECT_PSEUDO_MDP = SQLRequete.select(null, BDD.UTILISATEURS_TABLENOM, new String[] {"pseudo","mot_de_passe"});
 	private static final String SQLSELECT_EMAIL_MDP = SQLRequete.select(null, BDD.UTILISATEURS_TABLENOM, new String[] {"email","mot_de_passe"});
 	private static final String SQLSELECT_ALL = SQLRequete.select(BDD.UTILISATEURS_TABLENOM);
@@ -62,6 +63,27 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
 			}
 		} catch (SQLException e) {
 			throw new DALException("Select BYPSEUDO failed\n" + e);
+		}
+		return utilisateur;
+	}
+
+	@Override
+	public Utilisateur selectByEmail(String email) throws DALException {
+		Utilisateur utilisateur = null;
+		try (	Connection connection = DAOTools.getConnection();
+				PreparedStatement preparedStatement = connection.prepareStatement(SQLSELECT_EMAIL);
+				) {
+			preparedStatement.setString(1, email);
+
+			try (ResultSet rs = preparedStatement.executeQuery();){
+				if(rs.next()){
+					utilisateur = this.buildUtilisateur(rs);
+				}
+			}catch (SQLException e) {
+				throw new DALException("Select BYEMAIL failed - close failed for rs\n" + e);
+			}
+		} catch (SQLException e) {
+			throw new DALException("Select BYEMAIL failed\n" + e);
 		}
 		return utilisateur;
 	}

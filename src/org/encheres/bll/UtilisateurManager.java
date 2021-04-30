@@ -42,6 +42,16 @@ public class UtilisateurManager {
 		return utilisateur;
 	}
 
+	public Utilisateur getUtilisateurByEmail(String email) throws UtilisateurManagerException {
+		Utilisateur utilisateur = null;
+		try {
+			utilisateur = this.utilisateurDAO.selectByEmail(email);
+		} catch (DALException e) {
+			throw new UtilisateurManagerException("getUtilisateurByEmail failed\n" + e);
+		}
+		return utilisateur;
+	}
+
 	public Utilisateur getUtilisateurConnexion(String identifiant, String mdp) throws UtilisateurManagerException {
 		Utilisateur utilisateur = null;
 		try {
