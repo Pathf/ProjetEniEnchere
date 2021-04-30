@@ -102,9 +102,8 @@ public class UtilisateurManager {
 	}
 
 	public void inverseActiver(Utilisateur utilisateur) throws UtilisateurManagerException {
-		System.out.println(utilisateur.isActiver());
-		System.out.println(!utilisateur.isActiver());
 		utilisateur.setActiver(!utilisateur.isActiver());
 		this.updateUtilisateur(utilisateur);
+
 	}
 }

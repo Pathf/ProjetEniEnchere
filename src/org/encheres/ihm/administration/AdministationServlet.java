@@ -1,7 +1,6 @@
 package org.encheres.ihm.administration;
 
 import java.io.IOException;
-import java.sql.Date;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -60,7 +59,7 @@ public class AdministationServlet extends HttpServlet {
 		this.doGet(request, response);
 	}
 
-	private void desactivation(String no_desactivation, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, UtilisateurManagerException {
+	private void desactivation(String no_desactivation, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, UtilisateurManagerException, EnchereManagerException, ArticleVenduManagerException {
 		Integer no_utilisateurADesactiver = Integer.valueOf(no_desactivation);
 
 		Utilisateur utilisateur = this.utilisateurManager.getUtilisateur(no_utilisateurADesactiver);
@@ -68,6 +67,8 @@ public class AdministationServlet extends HttpServlet {
 			System.err.println("On ne peut pas désactiver un administrateur !");
 		} else {
 			this.utilisateurManager.inverseActiver(utilisateur);
+			this.enchereManager.annulerLesPropositionsDEnchereEnCours(utilisateur.getNo_utilisateur());
+			this.articleVenduManager.annuleLesVentesEnCoursDUnUtilisateur(utilisateur.getNo_utilisateur());
 		}
 	}
 
@@ -80,29 +81,9 @@ public class AdministationServlet extends HttpServlet {
 			this.doGet(request, response);
 			return;
 		}
-		// Proposition :
-		List<Enchere> encheresPosteParUtilisateurS = this.enchereManager.getListeEnchere(utilisateur.getNo_utilisateur());
-		for(Enchere enchere : encheresPosteParUtilisateurS) {
-			Date dateNow = new Date(System.currentTimeMillis());
-			Date dateFinEnchere = enchere.getArticle().getDate_fin_encheres();
-			if(dateNow.before(dateFinEnchere) || dateNow.toString().equals(dateFinEnchere.toString())) {
-				Enchere meilleureEnchere = this.enchereManager.getMeilleurEnchereByArticle(enchere.getArticle().getNo_article());
-				if(meilleureEnchere.getNo_enchere() == enchere.getNo_enchere()) {
-					this.enchereManager.suppressionDeLaMeilleureEnchere(enchere);
-				} else {
-					this.enchereManager.suppressionDeLaProposition(enchere);
-				}
-			}
-		}
-		// Vend : Recredité le dernier à avoir proposé > supprime les enchere > Supprime les articles
-		List<ArticleVendu> utilisateurArticleVendus = this.articleVenduManager.getListeArticleVenduByUtilisateur(utilisateur.getNo_utilisateur());
-		for(ArticleVendu articleVendu : utilisateurArticleVendus) {
-			Date dateNow = new Date(System.currentTimeMillis());
-			Date dateFinEnchere = articleVendu.getDate_fin_encheres();
-			if(dateNow.before(dateFinEnchere)) {
-				this.articleVenduManager.suppression(articleVendu);
-			}
-		}
+		this.enchereManager.annulerLesPropositionsDEnchereEnCours(utilisateur.getNo_utilisateur());
+		this.articleVenduManager.annuleLesVentesEnCoursDUnUtilisateur(utilisateur.getNo_utilisateur());
+
 		// modifier tous les article possedant le no_utilisateur correspondant à l'utilisateur
 		Utilisateur utilisateurInconnu = this.utilisateurManager.getUtilisateur("inconnu");
 		List<ArticleVendu> articleVendus = this.articleVenduManager.getListeArticleVenduByUtilisateur(utilisateur.getNo_utilisateur());
@@ -111,7 +92,7 @@ public class AdministationServlet extends HttpServlet {
 			this.articleVenduManager.updateArticleVendu(articleVendu);
 		}
 		// modifier toutes les encheres possedant le no_utilisateur correspondant à l'utilisateur
-		encheresPosteParUtilisateurS = this.enchereManager.getListeEnchere(utilisateur.getNo_utilisateur());
+		List<Enchere> encheresPosteParUtilisateurS = this.enchereManager.getListeEnchere(utilisateur.getNo_utilisateur());
 		for(Enchere enchere : encheresPosteParUtilisateurS) {
 			enchere.setUtilisateur(utilisateurInconnu);
 			this.enchereManager.updateEncher(enchere);
