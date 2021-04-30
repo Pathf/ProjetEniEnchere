@@ -49,8 +49,8 @@ public class ArticleVenduDAOImpl implements ArticleVenduDAO {
 	// SQLRequete.selectLeftJoin(TABLES, CHAMPALLTABLES, null);
 	private static final String SQLSELECT_ALL = "SELECT a.no_article, a.nom_article, a.description, a.date_debut_encheres, a.date_fin_encheres, a.prix_initial, a.prix_vente, a.photo_nom, a.photo_data, a.no_utilisateur, a.no_categorie, a.no_retrait, u.pseudo, u.nom, u.prenom, u.email, u.telephone, u.rue as rueUTILISATEURS, u.code_postal as code_postalUTILISATEURS, u.ville as villeUTILISATEURS, u.mot_de_passe, u.credit, u.administrateur, r.rue as rueRETRAITS, r.code_postal as code_postalRETRAITS, r.ville as villeRETRAITS, c.libelle FROM ARTICLES_VENDUS AS a LEFT JOIN UTILISATEURS AS u ON a.no_utilisateur = u.no_utilisateur LEFT JOIN RETRAITS AS r ON a.no_retrait = r.no_retrait LEFT JOIN CATEGORIES AS c ON a.no_categorie = c.no_categorie";
 	private static final String SQLINSERT = SQLRequete.insert(BDD.ARTICLESVENDUS_TABLENOM, BDD.ARTICLESVENDUS_CHAMPS);
-	private static final String SQLUPDATE = SQLRequete.update(BDD.ARTICLESVENDUS_TABLENOM, BDD.ARTICLESVENDUS_CHAMPS,
-			BDD.ARTICLESVENDUS_IDS);
+	private static final String SQLUPDATE = SQLRequete.update(BDD.ARTICLESVENDUS_TABLENOM, BDD.ARTICLESVENDUS_CHAMPS, BDD.ARTICLESVENDUS_IDS);
+	private static final String SQLDELETE = SQLRequete.delete(BDD.ARTICLESVENDUS_TABLENOM, BDD.ARTICLESVENDUS_IDS);
 
 	@Override
 	public ArticleVendu selectById(Integer id) throws DALException {
@@ -310,7 +310,8 @@ public class ArticleVenduDAOImpl implements ArticleVenduDAO {
 	@Override
 	public List<ArticleVendu> selectAll() throws DALException {
 		List<ArticleVendu> articles = new ArrayList<>();
-		try (Connection connection = DAOTools.getConnection(); Statement statement = connection.createStatement();) {
+		try (Connection connection = DAOTools.getConnection();
+				Statement statement = connection.createStatement();) {
 			statement.execute(SQLSELECT_ALL);
 			try (ResultSet rs = statement.getResultSet();) {
 				while (rs.next()) {
@@ -357,7 +358,7 @@ public class ArticleVenduDAOImpl implements ArticleVenduDAO {
 			preparedStatement.setDate(4, articleVendu.getDate_fin_encheres());
 			preparedStatement.setInt(5, articleVendu.getPrix_initial());
 			preparedStatement.setNull(6, Types.INTEGER);
-			if (articleVendu.getPhotoNom() != null) {
+			if(articleVendu.getPhotoNom() != null) {
 				preparedStatement.setString(7, articleVendu.getPhotoNom());
 				preparedStatement.setBytes(8, articleVendu.getPhotoData());
 			} else {
@@ -404,40 +405,70 @@ public class ArticleVenduDAOImpl implements ArticleVenduDAO {
 		}
 	}
 
-	private ArticleVendu buildArticleVendu(ResultSet rs, boolean avecUtilisateur, boolean avecCategorie,
-			boolean avecRetrait) throws SQLException {
+	@Override
+	public void remove(ArticleVendu articleVendu) throws DALException {
+		try (	Connection connection = DAOTools.getConnection();
+				PreparedStatement preparedStatement = connection.prepareStatement(SQLDELETE);
+				){
+			preparedStatement.setInt(1, articleVendu.getNo_article());
+			preparedStatement.executeUpdate();
+		} catch (SQLException e) {
+			throw new DALException("Remove article failed - " + articleVendu + "\n" + e);
+		}
+	}
+
+	private ArticleVendu buildArticleVendu(ResultSet rs, boolean avecUtilisateur, boolean avecCategorie, boolean avecRetrait) throws SQLException {
 		Utilisateur utilisateur = new Utilisateur();
 		Categorie categorie = new Categorie();
 		Retrait retrait = new Retrait();
 
-		if (avecUtilisateur) {
-			utilisateur = new Utilisateur(null, rs.getString(BDD.UTILISATEURS_CHAMPS[0]),
-					rs.getString(BDD.UTILISATEURS_CHAMPS[1]), rs.getString(BDD.UTILISATEURS_CHAMPS[2]),
-					rs.getString(BDD.UTILISATEURS_CHAMPS[3]), rs.getString(BDD.UTILISATEURS_CHAMPS[4]),
+		if(avecUtilisateur) {
+			utilisateur = new Utilisateur(
+					null,
+					rs.getString(BDD.UTILISATEURS_CHAMPS[0]),
+					rs.getString(BDD.UTILISATEURS_CHAMPS[1]),
+					rs.getString(BDD.UTILISATEURS_CHAMPS[2]),
+					rs.getString(BDD.UTILISATEURS_CHAMPS[3]),
+					rs.getString(BDD.UTILISATEURS_CHAMPS[4]),
 					rs.getString(BDD.UTILISATEURS_CHAMPS[5] + BDD.UTILISATEURS_TABLENOM),
 					rs.getString(BDD.UTILISATEURS_CHAMPS[6] + BDD.UTILISATEURS_TABLENOM),
 					rs.getString(BDD.UTILISATEURS_CHAMPS[7] + BDD.UTILISATEURS_TABLENOM),
-					rs.getString(BDD.UTILISATEURS_CHAMPS[8]), rs.getInt(BDD.UTILISATEURS_CHAMPS[9]),
+					rs.getString(BDD.UTILISATEURS_CHAMPS[8]),
+					rs.getInt(BDD.UTILISATEURS_CHAMPS[9]),
 					rs.getBoolean(BDD.UTILISATEURS_CHAMPS[10]));
 		}
 		utilisateur.setNo_utilisateur(rs.getInt(BDD.ARTICLESVENDUS_CHAMPS[8]));
 
-		if (avecCategorie) {
-			categorie = new Categorie(null, rs.getString(BDD.CATEGORIES_CHAMPS[0]));
+		if(avecCategorie) {
+			categorie = new Categorie(
+					null,
+					rs.getString(BDD.CATEGORIES_CHAMPS[0]));
 		}
 		categorie.setNo_categorie(rs.getInt(BDD.ARTICLESVENDUS_CHAMPS[9]));
 
-		if (avecRetrait) {
-			retrait = new Retrait(null, rs.getString(BDD.RETRAIT_CHAMPS[0] + BDD.RETRAITS_TABLENOM),
+		if(avecRetrait) {
+			retrait = new Retrait(
+					null,
+					rs.getString(BDD.RETRAIT_CHAMPS[0] + BDD.RETRAITS_TABLENOM),
 					rs.getString(BDD.RETRAIT_CHAMPS[1] + BDD.RETRAITS_TABLENOM),
-					rs.getString(BDD.RETRAIT_CHAMPS[2] + BDD.RETRAITS_TABLENOM));
+					rs.getString(BDD.RETRAIT_CHAMPS[2] + BDD.RETRAITS_TABLENOM)
+					);
 		}
 		retrait.setNo_retrait(rs.getInt(BDD.ARTICLESVENDUS_CHAMPS[10]));
 
-		return new ArticleVendu(rs.getInt(BDD.ARTICLESVENDUS_IDS[0]), rs.getString(BDD.ARTICLESVENDUS_CHAMPS[0]).trim(),
-				rs.getString(BDD.ARTICLESVENDUS_CHAMPS[1]), rs.getDate(BDD.ARTICLESVENDUS_CHAMPS[2]),
-				rs.getDate(BDD.ARTICLESVENDUS_CHAMPS[3]), rs.getInt(BDD.ARTICLESVENDUS_CHAMPS[4]),
-				rs.getInt(BDD.ARTICLESVENDUS_CHAMPS[5]), rs.getString(BDD.ARTICLESVENDUS_CHAMPS[6]),
-				rs.getBytes(BDD.ARTICLESVENDUS_CHAMPS[7]), utilisateur, categorie, retrait);
+		return new ArticleVendu(
+				rs.getInt(BDD.ARTICLESVENDUS_IDS[0]),
+				rs.getString(BDD.ARTICLESVENDUS_CHAMPS[0]).trim(),
+				rs.getString(BDD.ARTICLESVENDUS_CHAMPS[1]),
+				rs.getDate(BDD.ARTICLESVENDUS_CHAMPS[2]),
+				rs.getDate(BDD.ARTICLESVENDUS_CHAMPS[3]),
+				rs.getInt(BDD.ARTICLESVENDUS_CHAMPS[4]),
+				rs.getInt(BDD.ARTICLESVENDUS_CHAMPS[5]),
+				rs.getString(BDD.ARTICLESVENDUS_CHAMPS[6]),
+				rs.getBytes(BDD.ARTICLESVENDUS_CHAMPS[7]),
+				utilisateur,
+				categorie,
+				retrait
+				);
 	}
 }

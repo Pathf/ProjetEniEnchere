@@ -1,17 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd" id="WebApp_ID" version="3.1">
-  <display-name>Projet_Troc_Encheres</display-name>
-  <welcome-file-list>
-	  <welcome-file>encheres</welcome-file> 
-  </welcome-file-list>
+	<display-name>Projet_Troc_Encheres</display-name>
+	<welcome-file-list>
+		<welcome-file>encheres</welcome-file>
+	</welcome-file-list>
 
-  <!-- Les filtres -->
-  <filter>
-        <filter-name>NoCacheFilter</filter-name>
-        <filter-class>org.encheres.ihm.filter.NoCacheFilter</filter-class>
-    </filter>
-    <filter-mapping>
-        <filter-name>NoCacheFilter</filter-name>
-        <url-pattern>/*</url-pattern>
-    </filter-mapping>
+	<!-- Les filtres -->
+	<filter>
+		<filter-name>RestrictionFilter</filter-name>
+		<filter-class>org.encheres.ihm.filter.RestrictionFilter</filter-class>
+	</filter>
+	<filter>
+		<filter-name>NoCacheFilter</filter-name>
+		<filter-class>org.encheres.ihm.filter.NoCacheFilter</filter-class>
+	</filter>
+
+	<filter-mapping>
+		<filter-name>RestrictionFilter</filter-name>
+		<url-pattern>/deconnexion</url-pattern>
+		<url-pattern>/modifier-vente</url-pattern>
+		<url-pattern>/monProfil</url-pattern>
+		<url-pattern>/suppression*</url-pattern>
+		<url-pattern>/nouvelle-vente</url-pattern>
+		<url-pattern>/administration</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>NoCacheFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+
 </web-app>

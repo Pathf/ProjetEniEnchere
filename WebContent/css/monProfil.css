@@ -1,3 +1,8 @@
 .container {
 	max-width: 960px;
 }
+
+table {
+	white-space: normal !important; 
+  	word-wrap: break-word;  
+}

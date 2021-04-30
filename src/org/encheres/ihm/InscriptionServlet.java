@@ -29,57 +29,62 @@ public class InscriptionServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String bouton = request.getParameter("bouton");
 		if("creer".equals(bouton)) {
-			String erreur = null;
+			StringBuffer erreur = new StringBuffer();
 			String mot_de_passe = request.getParameter("mot_de_passe");
 			String confirmation = request.getParameter("confirmation");
 			String email = request.getParameter("email");
 			String pseudo = request.getParameter("pseudo");
-			if(mot_de_passe != null && !mot_de_passe.isEmpty() && mot_de_passe.equals(confirmation)) {
-				if(email.contains("@") && email.contains(".")) {
-					if(pseudo.matches("[a-zA-Z0-9]+")) {
-						String prenom = request.getParameter("prenom");
-						String telephone = request.getParameter("telephone");
-						String code_postal = request.getParameter("code_postal");
-						String nom = request.getParameter("nom");
-						String rue = request.getParameter("rue");
-						String ville = request.getParameter("ville");
-						if(		prenom != null && !prenom.isEmpty() &&
-								telephone != null && !telephone.isEmpty() &&
-								code_postal != null && !code_postal.isEmpty() &&
-								nom != null && !nom.isEmpty() &&
-								rue != null && !rue.isEmpty() &&
-								ville != null && !ville.isEmpty()
-								) {
-							Utilisateur utilisateur = new Utilisateur(null, pseudo, nom, prenom, email, telephone, rue, code_postal, ville, mot_de_passe, 100, false);
-							try {
-								this.utilisateurManager.addUtilisateur(utilisateur);
-								response.sendRedirect(request.getContextPath());
-								return ;
-							} catch (UtilisateurManagerException e) {
-								if(e.toString().contains("Impossible d'insérer une clé en double dans l'objet")) {
-									erreur = "L'utilisateur exista déjà !";
-								} else {
-									erreur = "Une erreur est survenue !";
-								}
-								System.err.println(e);
-							}
-						} else {
-							erreur = "Vous avez oublié de remplir un champ !";
-						}
-					} else {
-						erreur = "Le pseudo est incorrect !";
-					}
-				} else {
-					erreur = "L'email est incorrect !";
-				}
-			} else {
-				erreur = "Le mot de passe incorrect !";
+			String prenom = request.getParameter("prenom");
+			String telephone = request.getParameter("telephone");
+			String code_postal = request.getParameter("code_postal");
+			String nom = request.getParameter("nom");
+			String rue = request.getParameter("rue");
+			String ville = request.getParameter("ville");
+			if(mot_de_passe == null || !mot_de_passe.matches("^[a-zA-Z0-9@$+=]+$") || !mot_de_passe.equals(confirmation)) {
+				erreur.append("Le mot de passe incorrect ! ");
 			}
-			request.setAttribute("erreur", erreur);
-			RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/jsp/inscription.jsp");
-			rd.forward(request, response);
-		} else {
-			response.sendRedirect(request.getContextPath());
+			if(email == null || !email.matches("^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+$")) {
+				erreur.append("L'email est incorrect ! ");
+			}
+			if(pseudo == null || !pseudo.matches("^[a-zA-Z0-9]+$")) {
+				erreur.append("Le pseudo est incorrect ! ");
+			}
+			if(prenom == null || !prenom.matches("^[a-zA-Z0-9]+$")) {
+				erreur.append("Le prenom est incorrect ! ");
+			}
+			if(telephone == null || !telephone.matches("^[0-9]{2}\\.[0-9]{2}\\.[0-9]{2}\\.[0-9]{2}\\.[0-9]{2}$")) {
+				erreur.append("Le telephone est incorrect ! ");
+			}
+			if(code_postal == null || !code_postal.matches("^[0-9]{2,5}$")) {
+				erreur.append("Le code_postal est incorrect ! ");
+			}
+			if(nom == null || !nom.matches("^[a-zA-Z0-9]+$")) {
+				erreur.append("Le nom est incorrect ! ");
+			}
+			if(rue == null || !rue.matches("^[a-zA-Z0-9]+$")) {
+				erreur.append("La rue est incorrect ! ");
+			}
+			if(ville == null || !ville.matches("^[a-zA-Z]+$")) {
+				erreur.append("La ville est incorrect ! ");
+			}
+			try {
+				if(erreur.toString().isEmpty()) {
+					Utilisateur utilisateur = new Utilisateur(null, pseudo, nom, prenom, email, telephone, rue, code_postal, ville, mot_de_passe, 100, false);
+					this.utilisateurManager.addUtilisateur(utilisateur);
+				} else {
+					throw new UtilisateurManagerException(erreur.toString());
+				}
+			} catch (UtilisateurManagerException e) {
+				if(e.toString().contains("Impossible d'insérer une clé en double dans l'objet")) {
+					erreur = new StringBuffer().append("L'utilisateur exista déjà !");
+				}
+				// System.err.println(e.toString()); TODO : log
+				request.setAttribute("erreur", erreur.toString());
+				RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/jsp/inscription.jsp");
+				rd.forward(request, response);
+				return;
+			}
 		}
+		response.sendRedirect(request.getContextPath());
 	}
 }

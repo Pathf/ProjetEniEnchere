@@ -3,6 +3,7 @@ package org.encheres.bll;
 import java.util.List;
 
 import org.encheres.bo.ArticleVendu;
+import org.encheres.bo.Enchere;
 import org.encheres.dal.DALException;
 import org.encheres.dal.FactoryDAO;
 import org.encheres.dal.dao.ArticleVenduDAO;
@@ -110,6 +111,31 @@ public class ArticleVenduManager {
 			this.retraitDAO.update(articleVendu.getRetrait());
 		} catch (DALException e) {
 			throw new ArticleVenduManagerException("updateArticleVendu failed\n" + e);
+		}
+	}
+
+	public void delete(ArticleVendu articleVendu) throws ArticleVenduManagerException {
+		try {
+			this.articleVenduDAO.remove(articleVendu);
+		} catch (DALException e) {
+			throw new ArticleVenduManagerException("delete failed\n" +e);
+		}
+		
+	}
+
+	public void suppression(ArticleVendu articleVendu) throws ArticleVenduManagerException {
+		EnchereManager enchereManager = EnchereManager.getInstance();
+		List<Enchere> enchereASupprimer;
+		try {
+			enchereASupprimer = enchereManager.getListeEnchereByArticle(articleVendu.getNo_article());
+			enchereManager.suppressionDesEncheres(enchereASupprimer);
+		} catch (EnchereManagerException e) {
+			throw new ArticleVenduManagerException("suppression failed - " + e);
+		}
+		try {
+			this.articleVenduDAO.remove(articleVendu);
+		} catch (DALException e) {
+			throw new ArticleVenduManagerException("suppression failed\n" + e);
 		}
 	}
 }

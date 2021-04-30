@@ -24,4 +24,6 @@ public interface ArticleVenduDAO {
 	Integer countSelectByFilter(Integer no_categorie, String nom, Boolean date, Integer no_utilisateur,
 			Boolean process, Boolean start, Boolean finish)throws DALException;
 
+	void remove(ArticleVendu articleVendu) throws DALException;
+
 }

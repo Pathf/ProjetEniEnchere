@@ -115,11 +115,9 @@ public class EncherirServlet extends HttpServlet {
 					}
 					utilisateur = this.utilisateurManager.getUtilisateur(pseudo);
 					articleVendu = this.articleVenduManager.getArticleVendu(articleId);
-					
 					if (this.isCreditable(proposition, utilisateur)) {
 						Date date = new Date(this.calendar.getTime().getTime());
 						Enchere nouvelleEnchere = new Enchere(null, date, proposition, articleVendu, utilisateur);
-						
 						if (meilleurEnchereNotNull) {
 							if(proposition > meilleurEnchere.getMontant_enchere()) {
 								try {
@@ -141,16 +139,10 @@ public class EncherirServlet extends HttpServlet {
 						}
 					} else {
 						erreur ="Vous n'avez pas assez de crédits !";
-					}							
-				} catch (EnchereManagerException e) {
+					}
+				} catch (EnchereManagerException | UtilisateurManagerException | ArticleVenduManagerException e) {
 					System.err.println(e);
-				} catch (UtilisateurManagerException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (ArticleVenduManagerException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}		
+				}
 			} else {
 				erreur = "Veuillez faire une proposition !";
 			}

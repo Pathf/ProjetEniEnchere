@@ -1,5 +1,6 @@
 package org.encheres.bll;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.encheres.bo.Enchere;
@@ -53,10 +54,20 @@ public class EnchereManager {
 		return encheres;
 	}
 
+	public List<Enchere> getListeEnchereByArticle(Integer no_article) throws EnchereManagerException {
+		List<Enchere> encheres = new ArrayList<>();
+		try {
+			encheres = this.enchereDAO.selectByArticle(no_article);
+		} catch (DALException e) {
+			throw new EnchereManagerException("getListeEnchereByArticle failed article " + no_article + "\n" + e);
+		}
+		return encheres;
+	}
+
 	public void addEnchere(Enchere nouvelleEnchere) throws EnchereManagerException {
 		try {
 			if(nouvelleEnchere.getMontant_enchere() >= nouvelleEnchere.getArticle().getPrix_initial() &&
-						nouvelleEnchere.getUtilisateur().getCredit() >= nouvelleEnchere.getMontant_enchere()) {
+					nouvelleEnchere.getUtilisateur().getCredit() >= nouvelleEnchere.getMontant_enchere()) {
 				UtilisateurManager utilisateurManager = UtilisateurManager.getInstance();
 				// decredite le nouveau encherisseur
 				Utilisateur utilisateurNouvelleEnchere = nouvelleEnchere.getUtilisateur();
@@ -96,6 +107,57 @@ public class EnchereManager {
 			throw new EnchereManagerException("updateEncher failed\n" + e);
 		} catch (UtilisateurManagerException e) {
 			throw new EnchereManagerException("updateEncher failed - updateUtilisateur failed\n" + e);
+		}
+	}
+
+	public void suppressionDesEncheres(List<Enchere> enchereASupprimers) throws EnchereManagerException {
+		UtilisateurManager utilisateurManager = UtilisateurManager.getInstance();
+		// recredite l'ancien encherisseur
+		Enchere meilleureEnchere = this.getMeilleurEnchereByArticle(enchereASupprimers.get(0).getArticle().getNo_article());
+		Utilisateur utilisateurARecredite = meilleureEnchere.getUtilisateur();
+		utilisateurARecredite.setCredit(utilisateurARecredite.getCredit() + meilleureEnchere.getMontant_enchere());
+		try {
+			utilisateurManager.updateUtilisateur(utilisateurARecredite);
+		} catch (UtilisateurManagerException e) {
+			throw new EnchereManagerException("SuppressionDesEncheres failed - " + e);
+		}
+
+		for(Enchere enchere : enchereASupprimers) {
+			this.suppressionDeLaProposition(enchere);
+		}
+	}
+
+	public void suppressionDeLaMeilleureEnchere(Enchere enchere) throws EnchereManagerException {
+		// Suppression de la meilleure enchere
+		this.suppressionDeLaProposition(enchere);
+
+		List<Enchere> encheres = this.getListeEnchereByArticle(enchere.getArticle().getNo_article());
+		encheres.sort((enchere1, enchere2) -> (enchere2.getMontant_enchere() - enchere1.getMontant_enchere()));
+
+		//TODO : ameliorer la suppression en une seul requete
+		for(Enchere enchereTmp : encheres) {
+			try {
+				UtilisateurManager utilisateurManager = UtilisateurManager.getInstance();
+				Utilisateur utilisateur = utilisateurManager.getUtilisateur(enchereTmp.getUtilisateur().getNo_utilisateur());
+				Integer montantEnchere = enchereTmp.getMontant_enchere();
+				if(montantEnchere <= utilisateur.getCredit()) {
+					utilisateur.setCredit(utilisateur.getCredit() - montantEnchere);
+					utilisateurManager.updateUtilisateur(utilisateur);
+					return;
+				} else {
+					this.suppressionDeLaProposition(enchereTmp);
+				}
+			} catch (UtilisateurManagerException e) {
+				throw new EnchereManagerException("suppressionDeLaMeilleureEnchere failed - " + e);
+			}
+		}
+	}
+
+	public void suppressionDeLaProposition(Enchere enchere) throws EnchereManagerException {
+		try {
+			this.enchereDAO.remove(enchere);
+		} catch (DALException e) {
+			throw new EnchereManagerException("suppressionDesEncheres failed - failed de la suppression de l'enchere : " + enchere + "\n" + e);
 		}
 	}
 }
