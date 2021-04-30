@@ -133,7 +133,7 @@ public class ArticleVenduDAOImpl implements ArticleVenduDAO {
 			positionLastRow = position;
 			position++;
 		}
-System.out.println(query);
+
 		try (Connection connection = DAOTools.getConnection();
 				PreparedStatement preparedStatement = connection.prepareStatement(query);) {
 			if (nom != null) {
