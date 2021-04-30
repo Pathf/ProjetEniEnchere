@@ -100,7 +100,7 @@ public class ModifierProfilServlet extends HttpServlet {
 					erreur = new StringBuffer().append("L'utilisateur exista déjà !");
 				}
 				// System.err.println(e.toString()); TODO : log
-				request.setAttribute("erreur", erreur);
+				request.setAttribute("erreur", erreur.toString());
 				this.doGet(request, response);
 			}
 		} else {
