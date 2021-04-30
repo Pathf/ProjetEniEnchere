@@ -31,19 +31,31 @@ public class AccueilServlet extends HttpServlet {
 		HttpSession session = request.getSession();
 		List<ArticleVendu> articlesVendus = null;
 
-		// Verification du champ filtre
+		// Verification des champs filtres
 		String filtres = request.getParameter("filtres");
 		String categorie = request.getParameter("categorie");
 		String radioAchat = request.getParameter("radioAchatVente");
-		String noUtilisateur = request.getParameter("pseudo");
+
 		Integer categorieInt = null;
 		Boolean winBid = false;
 		Boolean process = false;
 		Boolean start = false;
 		Boolean finish = false;
 		Boolean filtreByDateDebut = false;
-		Integer idUtilisateur=null;
-		
+		boolean mine = false;
+		boolean win = false;
+		Integer idUtilisateur = null;
+		Integer numberResult = null;
+		Integer noOfPages = null;
+		// PAGINATION
+		Integer firstRow = 0;
+		Integer rowPerPage = 6; // nbre de retour par page
+		Integer lastRow = 6;
+
+		if (request.getParameter("page") != null) {
+			firstRow = Integer.parseInt(request.getParameter("page")) * rowPerPage;
+			lastRow = Integer.parseInt(request.getParameter("page")) * rowPerPage + rowPerPage;
+		}
 
 		// verification succinte du champs de saisi libre pour eviter injection SQL
 		if (filtres != null) {
@@ -56,26 +68,27 @@ public class AccueilServlet extends HttpServlet {
 		if ("achat".equals(radioAchat)) {
 			String[] checkboxAchat = null;
 			if (request.getParameterValues("checkboxAchat") != null) {
+				request.setAttribute("achat", true);
 				checkboxAchat = request.getParameterValues("checkboxAchat");
 				if (Arrays.stream(checkboxAchat).anyMatch("open"::equals)) {
 					filtreByDateDebut = true;
+					request.setAttribute("open", filtreByDateDebut);
 				}
 				if (Arrays.stream(checkboxAchat).anyMatch("mine"::equals)) {
-					if (session.getAttribute("pseudo") != null) {
-						noUtilisateur = (String) session.getAttribute("pseudo");
-					}
 					if (session.getAttribute("id") != null) {
-						 idUtilisateur = (Integer) session.getAttribute("id");	
-						}
+						idUtilisateur = (Integer) session.getAttribute("id");
+					}
+					mine = true;
+					request.setAttribute("mine", mine);
 				}
 				if (Arrays.stream(checkboxAchat).anyMatch("win"::equals)) {
 					winBid = true;
-					if (session.getAttribute("pseudo") != null) {
-						noUtilisateur = (String) session.getAttribute("pseudo");
-					}
+
 					if (session.getAttribute("id") != null) {
-						 idUtilisateur = (Integer) session.getAttribute("id");	
-						}
+						idUtilisateur = (Integer) session.getAttribute("id");
+					}
+					win = true;
+					request.setAttribute("win", win);
 				}
 			}
 		}
@@ -83,20 +96,21 @@ public class AccueilServlet extends HttpServlet {
 			String[] checkboxVente = null;
 			if (request.getParameterValues("checkboxVente") != null) {
 				checkboxVente = request.getParameterValues("checkboxVente");
+				request.setAttribute("vente", true);
 				if (Arrays.stream(checkboxVente).anyMatch("process"::equals)) {
 					process = true;
-					if (session.getAttribute("pseudo") != null) {
-						noUtilisateur = (String) session.getAttribute("pseudo");
-					}
+					request.setAttribute("process", process);
 					if (session.getAttribute("id") != null) {
-						 idUtilisateur = (Integer) session.getAttribute("id");	
-						}
+						idUtilisateur = (Integer) session.getAttribute("id");
+					}
 				}
 				if (Arrays.stream(checkboxVente).anyMatch("start"::equals)) {
 					start = true;
+					request.setAttribute("start", start);
 				}
 				if (Arrays.stream(checkboxVente).anyMatch("finish"::equals)) {
 					finish = true;
+					request.setAttribute("finish", finish);
 				}
 			}
 		}
@@ -112,8 +126,16 @@ public class AccueilServlet extends HttpServlet {
 		// TEST LES FILTRES DEMANDE//
 		try {
 			articlesVendus = this.articleVenduManager.selectByFiltre(categorieInt, filtres, filtreByDateDebut,
-					idUtilisateur, process, start, finish);
+					idUtilisateur, process, start, finish, firstRow, lastRow);
 			request.setAttribute("articlesVendus", articlesVendus);
+
+			numberResult = this.articleVenduManager.countSelectByFilter(categorieInt, filtres, filtreByDateDebut,
+					idUtilisateur, process, start, finish);
+
+			// calcul du nombre de page pour l'affichage
+			noOfPages = (int) Math.ceil(numberResult * 1.0 / rowPerPage);
+			request.setAttribute("nbreDePage", noOfPages);
+
 		} catch (ArticleVenduManagerException e) {
 			System.err.println(e);
 		}
@@ -127,6 +149,11 @@ public class AccueilServlet extends HttpServlet {
 				// ON COMPARE AVEC LA LISTE DE FILTRE PRECEDENTE
 				articlesVendus.retainAll(articlesVendusGagné);
 				request.setAttribute("articlesVendus", articlesVendus);
+
+				// calcul du nombre de page pour l'affichage
+				noOfPages = (int) Math.ceil(articlesVendus.size() * 1.0 / rowPerPage);
+				request.setAttribute("nbreDePage", noOfPages);
+
 			} catch (ArticleVenduManagerException e) {
 				System.err.println(e);
 			}
@@ -148,4 +175,5 @@ public class AccueilServlet extends HttpServlet {
 		}
 		return categories;
 	}
+
 }

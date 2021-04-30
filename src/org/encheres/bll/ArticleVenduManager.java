@@ -15,14 +15,13 @@ public class ArticleVenduManager {
 	private ArticleVenduDAO articleVenduDAO;
 	private RetraitDAO retraitDAO;
 
-
 	private ArticleVenduManager() {
 		this.articleVenduDAO = FactoryDAO.getArticleVendu();
 		this.retraitDAO = FactoryDAO.getRetrait();
 	}
 
 	public static ArticleVenduManager getInstance() {
-		if(articleVenduManager == null) {
+		if (articleVenduManager == null) {
 			articleVenduManager = new ArticleVenduManager();
 		}
 		return articleVenduManager;
@@ -48,7 +47,8 @@ public class ArticleVenduManager {
 		return articleVendus;
 	}
 
-	public List<ArticleVendu> getListeArticleVenduByUtilisateur(Integer no_utilisateur) throws ArticleVenduManagerException {
+	public List<ArticleVendu> getListeArticleVenduByUtilisateur(Integer no_utilisateur)
+			throws ArticleVenduManagerException {
 		List<ArticleVendu> articleVendus = null;
 		try {
 			articleVendus = this.articleVenduDAO.selectByUtilisateur(no_utilisateur);
@@ -58,11 +58,12 @@ public class ArticleVenduManager {
 		return articleVendus;
 	}
 
-	public List<ArticleVendu> selectByFiltre(Integer no_categorie , String nom, Boolean date,Integer no_utilisateur, Boolean process, Boolean start, Boolean finish) throws ArticleVenduManagerException {
+	public List<ArticleVendu> selectByFiltre(Integer no_categorie, String nom, Boolean date, Integer no_utilisateur,Boolean process, Boolean start, Boolean finish, Integer firstRow, Integer lastRow)
+			throws ArticleVenduManagerException {
 		List<ArticleVendu> articleVendus = null;
 
 		try {
-			articleVendus = this.articleVenduDAO.selectByFiltre(no_categorie,nom, date,no_utilisateur, process, start, finish );
+			articleVendus = this.articleVenduDAO.selectByFiltre(no_categorie, nom, date, no_utilisateur, process, start,finish, firstRow, lastRow);
 		} catch (DALException e) {
 			throw new ArticleVenduManagerException("selectByFiltre failed \n " + e);
 		}
@@ -70,7 +71,21 @@ public class ArticleVenduManager {
 		return articleVendus;
 	}
 
-	public List<ArticleVendu> listByWinBid(Integer no_utilisateur) throws ArticleVenduManagerException{
+	public Integer countSelectByFilter(Integer no_categorie, String nom, Boolean date, Integer no_utilisateur,
+			Boolean process, Boolean start, Boolean finish) throws ArticleVenduManagerException {
+		Integer number = null;
+
+		try {
+			number = this.articleVenduDAO.countSelectByFilter( no_categorie,  nom,  date,  no_utilisateur,
+					 process,  start,  finish);
+		} catch (DALException e) {
+			throw new ArticleVenduManagerException("countSelectByFiltre failed\n" + e);
+		}
+
+		return number;
+	}
+	
+	public List<ArticleVendu> listByWinBid(Integer no_utilisateur) throws ArticleVenduManagerException {
 		List<ArticleVendu> articleVendus = null;
 
 		try {

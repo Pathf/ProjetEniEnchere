@@ -83,7 +83,7 @@ public class ArticleVenduDAOImpl implements ArticleVenduDAO {
 		Integer positionNoUtilisateur = null;
 		String nomByDefault = null;
 
-		String query = "SELECT a.no_article, a.nom_article, a.description, a.date_debut_encheres, a.date_fin_encheres, a.prix_initial, a.prix_vente, a.photo_nom, a.photo_data, a.no_utilisateur, a.no_categorie, a.no_retrait, u.pseudo, u.nom, u.prenom, u.email, u.telephone, u.rue as rueUTILISATEURS, u.code_postal as code_postalUTILISATEURS, u.ville as villeUTILISATEURS, u.mot_de_passe, u.credit, u.administrateur, u.activer, r.rue as rueRETRAITS, r.code_postal as code_postalRETRAITS, r.ville as villeRETRAITS, c.libelle FROM ARTICLES_VENDUS AS a LEFT JOIN UTILISATEURS AS u ON a.no_utilisateur = u.no_utilisateur LEFT JOIN RETRAITS AS r ON a.no_retrait = r.no_retrait LEFT JOIN CATEGORIES AS c ON a.no_categorie = c.no_categorie WHERE ";
+		String query = "WITH Results_CTE AS ( SELECT a.no_article, a.nom_article, a.description, a.date_debut_encheres, a.date_fin_encheres, a.prix_initial, a.prix_vente, a.photo_nom, a.photo_data, a.no_utilisateur, a.no_categorie, a.no_retrait, u.pseudo, u.nom, u.prenom, u.email, u.telephone, u.rue as rueUTILISATEURS, u.code_postal as code_postalUTILISATEURS, u.ville as villeUTILISATEURS, u.mot_de_passe, u.credit, u.administrateur, u.activer, r.rue as rueRETRAITS, r.code_postal as code_postalRETRAITS, r.ville as villeRETRAITS, c.libelle , ROW_NUMBER() OVER (ORDER BY a.date_debut_encheres ) AS RowNum FROM ARTICLES_VENDUS AS a LEFT JOIN UTILISATEURS AS u ON a.no_utilisateur = u.no_utilisateur LEFT JOIN RETRAITS AS r ON a.no_retrait = r.no_retrait LEFT JOIN CATEGORIES AS c ON a.no_categorie = c.no_categorie WHERE ";
 
 		if (nom == null) {
 			query += " nom_article LIKE ?";
@@ -104,21 +104,26 @@ public class ArticleVenduDAOImpl implements ArticleVenduDAO {
 		if (date == true) {
 			query += " AND date_debut_encheres <= getDate() AND date_fin_encheres > getdate()";
 		}
-		// TODO a revoir lorsque l'on aura l'id en session
 		if (no_utilisateur != null) {
-			//			query += " AND no_utilisateur = ?";// query += " AND no_utilisateur = (SELECTED no_utilisateur WHERE pseudo
 			query += " AND a.no_utilisateur = ?";
 			positionNoUtilisateur = position;
 			position++;
 		}
-		if (process == true) {
+		if (process) {
 			query += " AND date_debut_encheres < getDate() AND date_fin_encheres > getdate() ";
 		}
-		if (start == true) {
+		if (start) {
 			query += " AND date_debut_encheres >= getDate()";
 		}
-		if (finish == true) {
+		if (finish) {
 			query += " AND date_fin_encheres <= getDate()";
+		}
+		if (firstRow != null && lastRow != null) {
+			query += " ) SELECT * FROM Results_CTE WHERE RowNum > ? AND RowNum <= ?";
+			positionFirstRow = position;
+			position++;
+			positionLastRow = position;
+			position++;
 		}
 
 		try (Connection connection = DAOTools.getConnection();
@@ -133,6 +138,12 @@ public class ArticleVenduDAOImpl implements ArticleVenduDAO {
 			}
 			if (no_utilisateur != null) {
 				preparedStatement.setInt(positionNoUtilisateur, no_utilisateur);
+			}
+			if (firstRow != null) {
+				preparedStatement.setInt(positionFirstRow, firstRow);
+			}
+			if (lastRow != null) {
+				preparedStatement.setInt(positionLastRow, lastRow);
 			}
 
 			try (ResultSet rs = preparedStatement.executeQuery();) {
@@ -157,8 +168,7 @@ public class ArticleVenduDAOImpl implements ArticleVenduDAO {
 		List<Integer> no_retraits = new ArrayList<>();
 
 		String query = "SELECT e2.no_article,a.nom_article, a.description, a.date_debut_encheres, a.date_fin_encheres,a.prix_initial,a.prix_vente, e2.no_utilisateur, a.no_categorie, a.no_retrait , a.photo_nom , a.photo_data FROM ENCHERES AS e2 LEFT JOIN ARTICLES_VENDUS AS a ON e2.no_article = a.no_article\r\n"
-				+ "WHERE a.date_fin_encheres <= GETDATE()\r\n"
-				+ "AND e2.no_utilisateur = ?\r\n"
+				+ "WHERE a.date_fin_encheres <= GETDATE()\r\n" + "AND e2.no_utilisateur = ?\r\n"
 				+ "AND e2.no_enchere IN (SELECT no_enchere\r\n"
 				+ "FROM ENCHERES AS e LEFT JOIN (SELECT no_article, max(montant_enchere)\r\n"
 				+ "AS montant FROM ENCHERES GROUP BY no_article) AS tmp ON e.no_article = tmp.no_article\r\n"
