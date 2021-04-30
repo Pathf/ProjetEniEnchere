@@ -122,14 +122,13 @@ public class ArticleVenduDAOImpl implements ArticleVenduDAO {
 			query += " AND date_fin_encheres <= getDate()";
 		}
 		if (firstRow != null && lastRow != null) {
-//			query += " ORDER by a.nom_article OFFSET ? ROWS FETCH NEXT ? ROW ONLY";
 			query += " ) SELECT * FROM Results_CTE WHERE RowNum > ? AND RowNum <= ?";
 			positionFirstRow = position;
 			position++;
 			positionLastRow = position;
 			position++;
 		}
-System.out.println(firstRow + " " + lastRow);
+
 		try (Connection connection = DAOTools.getConnection();
 				PreparedStatement preparedStatement = connection.prepareStatement(query);) {
 			if (nom != null) {
