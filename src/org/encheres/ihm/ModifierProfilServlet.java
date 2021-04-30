@@ -71,7 +71,7 @@ public class ModifierProfilServlet extends HttpServlet {
 			if(nom == null || !nom.matches("^[a-zA-Z0-9]+$")) {
 				erreur.append("Le nom est incorrect ! ");
 			}
-			if(rue == null || !rue.matches("^[a-zA-Z0-9]+$")) {
+			if(rue == null || !rue.matches("[a-zA-Z0-9 ]+")) {
 				erreur.append("La rue est incorrect ! ");
 			}
 			if(ville == null || !ville.matches("^[a-zA-Z]+$")) {
