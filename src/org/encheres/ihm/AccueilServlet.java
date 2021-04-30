@@ -127,14 +127,15 @@ public class AccueilServlet extends HttpServlet {
 		try {
 			articlesVendus = this.articleVenduManager.selectByFiltre(categorieInt, filtres, filtreByDateDebut,
 					idUtilisateur, process, start, finish, firstRow, lastRow);
-			request.setAttribute("articlesVendus", articlesVendus);
+			
 
 			numberResult = this.articleVenduManager.countSelectByFilter(categorieInt, filtres, filtreByDateDebut,
 					idUtilisateur, process, start, finish);
 
 			// calcul du nombre de page pour l'affichage
 			noOfPages = (int) Math.ceil(numberResult * 1.0 / rowPerPage);
-			request.setAttribute("nbreDePage", noOfPages);
+			
+			
 
 		} catch (ArticleVenduManagerException e) {
 			System.err.println(e);
@@ -148,17 +149,23 @@ public class AccueilServlet extends HttpServlet {
 
 				// ON COMPARE AVEC LA LISTE DE FILTRE PRECEDENTE
 				articlesVendus.retainAll(articlesVendusGagné);
-				request.setAttribute("articlesVendus", articlesVendus);
+				
 
 				// calcul du nombre de page pour l'affichage
 				noOfPages = (int) Math.ceil(articlesVendus.size() * 1.0 / rowPerPage);
-				request.setAttribute("nbreDePage", noOfPages);
 
 			} catch (ArticleVenduManagerException e) {
 				System.err.println(e);
 			}
 		}
 
+		//Prevoir l'affichage d'au moins une page pour le réusltats même nul
+		if (noOfPages == 0) {
+			noOfPages = 1;
+		}
+		request.setAttribute("articlesVendus", articlesVendus);
+		request.setAttribute("nbreDePage", noOfPages);
+		
 		// on liste l'ensemble des catégories pour générer le select correspondant
 		request.setAttribute("categories", this.listCategorie());
 
