@@ -35,7 +35,7 @@ public class AccueilServlet extends HttpServlet {
 		String filtres = request.getParameter("filtres");
 		String categorie = request.getParameter("categorie");
 		String radioAchat = request.getParameter("radioAchatVente");
-		String noUtilisateur = request.getParameter("pseudo");
+
 		Integer categorieInt = null;
 		Boolean winBid = false;
 		Boolean process = false;
@@ -44,8 +44,6 @@ public class AccueilServlet extends HttpServlet {
 		Boolean filtreByDateDebut = false;
 		boolean mine = false;
 		boolean win = false;
-//		boolean radioVente = false;
-//		boolean radioAchat = false;
 		Integer idUtilisateur = null;
 		Integer numberResult = null;
 		
@@ -55,12 +53,8 @@ public class AccueilServlet extends HttpServlet {
 		Integer lastRow = 6;
 
 		if (request.getParameter("page") != null) {
-			System.out.println(request.getParameter("page"));
 			firstRow = Integer.parseInt(request.getParameter("page"))*rowPerPage ;
 			lastRow = Integer.parseInt(request.getParameter("page"))*rowPerPage + rowPerPage;
-			
-			System.out.println("commence page " + firstRow );
-			System.out.println("termine page " + lastRow);
 		}
 
 		// verification succinte du champs de saisi libre pour eviter injection SQL
@@ -138,13 +132,10 @@ public class AccueilServlet extends HttpServlet {
 			numberResult = this.articleVenduManager.countSelectByFilter(categorieInt, filtres, filtreByDateDebut,
 					idUtilisateur, process, start, finish);
 			
+			// calcul du nombre de page pour l'affichage
 			int noOfPages = (int) Math.ceil(numberResult * 1.0 / rowPerPage);
 			request.setAttribute("nbreDePage", noOfPages);
 			
-			System.out.println("nbre de page " + noOfPages);
-			System.out.println("commence récup à la row : " + firstRow);
-			
-//			request.setAttribute("lastRow", lastRow);
 		} catch (ArticleVenduManagerException e) {
 			System.err.println(e);
 		}
@@ -158,6 +149,11 @@ public class AccueilServlet extends HttpServlet {
 				// ON COMPARE AVEC LA LISTE DE FILTRE PRECEDENTE
 				articlesVendus.retainAll(articlesVendusGagné);
 				request.setAttribute("articlesVendus", articlesVendus);
+				
+				// calcul du nombre de page pour l'affichage
+				int noOfPages = (int) Math.ceil(articlesVendus.size() * 1.0 / rowPerPage);
+				request.setAttribute("nbreDePage", noOfPages);
+				
 			} catch (ArticleVenduManagerException e) {
 				System.err.println(e);
 			}
@@ -165,22 +161,6 @@ public class AccueilServlet extends HttpServlet {
 
 		// on liste l'ensemble des catégories pour générer le select correspondant
 		request.setAttribute("categories", this.listCategorie());
-
-		// PAGINATION
-//		System.out.println(articlesVendus.size());
-//		int page = 1;
-//		int recordsPerPage = 5;
-//		if (request.getParameter("page") != null)
-//			page = Integer.parseInt(request.getParameter("page"));
-//		EmployeeDAO dao = new EmployeeDAO();
-//		List<Employee> list = dao.viewAllEmployees((page - 1) * recordsPerPage, recordsPerPage);
-//		int noOfRecords = dao.getNoOfRecords();
-//		int noOfPages = (int) Math.ceil(noOfRecords * 1.0 / recordsPerPage);
-////		request.setAttribute("employeeList", list);
-//		request.setAttribute("noOfPages", noOfPages);
-//		request.setAttribute("currentPage", page);
-//		RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/jsp/accueil.jsp");
-//		rd.forward(request, response);
 
 		RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/jsp/accueil.jsp");
 		rd.forward(request, response);
