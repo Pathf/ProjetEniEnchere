@@ -399,7 +399,7 @@ public class ArticleVenduDAOImpl implements ArticleVenduDAO {
 	@Override
 	public Integer countSelectByFilter(Integer no_categorie, String nom, Boolean date, Integer no_utilisateur,
 			Boolean process, Boolean start, Boolean finish) throws DALException {
-		List<ArticleVendu> articles = new ArrayList<>();
+		//List<ArticleVendu> articles = new ArrayList<>();
 		Integer number = null;
 		Integer position = 1;
 		Integer positionNom = null;
