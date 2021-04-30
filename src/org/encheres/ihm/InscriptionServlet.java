@@ -69,7 +69,7 @@ public class InscriptionServlet extends HttpServlet {
 			}
 			try {
 				if(erreur.toString().isEmpty()) {
-					Utilisateur utilisateur = new Utilisateur(null, pseudo, nom, prenom, email, telephone, rue, code_postal, ville, mot_de_passe, 100, false);
+					Utilisateur utilisateur = new Utilisateur(null, pseudo, nom, prenom, email, telephone, rue, code_postal, ville, mot_de_passe, 100, false, true);
 					this.utilisateurManager.addUtilisateur(utilisateur);
 				} else {
 					throw new UtilisateurManagerException(erreur.toString());
