@@ -9,7 +9,7 @@
 	<jsp:param value="./css/accueil.css" name="style" />
 </jsp:include>
 <body>
-	<%-- <%		String isConnecte = (String) request.getSession().getAttribute("pseudo");	%> --%>
+
 	<%@ include file="/WEB-INF/fragments/navbar.jspf"%>
 	<div class="container text-center">
 		<h1 class="d-none d-sm-block">Liste des enchères</h1>
@@ -80,17 +80,6 @@
 					<div class="m-auto col-sm-6">
 						<button class="btn btn-primary mx-auto searchButton">Rechercher</button>
 					</div>
-					<%-- 	<c:for var="c" items="${nbreDePage}"> --%>
-				
-					<%-- <button name="page" value="${page = 1}" class="btn btn-primary mx-auto searchButton">1</button> --%>
-
-					<%-- <button name="page" value="${page = 5}" class="btn btn-primary mx-auto searchButton">2</button>
-				<button name="page" value="${page = 10}" class="btn btn-primary mx-auto searchButton">3</button>
-				<button name="page" value="${page = 15}" class="btn btn-primary mx-auto searchButton">4</button>
-				<button name="page" value="${page = 20}" class="btn btn-primary mx-auto searchButton">5</button>
-				<button name="page" value="${page = 25}" class="btn btn-primary mx-auto searchButton">6</button>
-				<button name="page" value="${page = 35}" class="btn btn-primary mx-auto searchButton">7</button>
-				<button name="page" value="${page = 45}" class="btn btn-primary mx-auto searchButton">8</button> --%>
 				</div>
 					<div class="m-auto col-sm-6">
 						<c:forEach var="i" begin="0" end="${nbreDePage -1}" step="1">

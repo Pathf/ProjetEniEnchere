@@ -31,7 +31,7 @@ public class AccueilServlet extends HttpServlet {
 		HttpSession session = request.getSession();
 		List<ArticleVendu> articlesVendus = null;
 
-		// Verification du champ filtre
+		// Verification des champs filtres
 		String filtres = request.getParameter("filtres");
 		String categorie = request.getParameter("categorie");
 		String radioAchat = request.getParameter("radioAchatVente");
@@ -46,15 +46,15 @@ public class AccueilServlet extends HttpServlet {
 		boolean win = false;
 		Integer idUtilisateur = null;
 		Integer numberResult = null;
-		
+		Integer noOfPages = null;
 		// PAGINATION
 		Integer firstRow = 0;
-		Integer rowPerPage = 6 ; // nbre de retour par page
+		Integer rowPerPage = 6; // nbre de retour par page
 		Integer lastRow = 6;
 
 		if (request.getParameter("page") != null) {
-			firstRow = Integer.parseInt(request.getParameter("page"))*rowPerPage ;
-			lastRow = Integer.parseInt(request.getParameter("page"))*rowPerPage + rowPerPage;
+			firstRow = Integer.parseInt(request.getParameter("page")) * rowPerPage;
+			lastRow = Integer.parseInt(request.getParameter("page")) * rowPerPage + rowPerPage;
 		}
 
 		// verification succinte du champs de saisi libre pour eviter injection SQL
@@ -131,11 +131,11 @@ public class AccueilServlet extends HttpServlet {
 
 			numberResult = this.articleVenduManager.countSelectByFilter(categorieInt, filtres, filtreByDateDebut,
 					idUtilisateur, process, start, finish);
-			
+
 			// calcul du nombre de page pour l'affichage
-			int noOfPages = (int) Math.ceil(numberResult * 1.0 / rowPerPage);
+			noOfPages = (int) Math.ceil(numberResult * 1.0 / rowPerPage);
 			request.setAttribute("nbreDePage", noOfPages);
-			
+
 		} catch (ArticleVenduManagerException e) {
 			System.err.println(e);
 		}
@@ -149,11 +149,11 @@ public class AccueilServlet extends HttpServlet {
 				// ON COMPARE AVEC LA LISTE DE FILTRE PRECEDENTE
 				articlesVendus.retainAll(articlesVendusGagné);
 				request.setAttribute("articlesVendus", articlesVendus);
-				
+
 				// calcul du nombre de page pour l'affichage
-				int noOfPages = (int) Math.ceil(articlesVendus.size() * 1.0 / rowPerPage);
+				noOfPages = (int) Math.ceil(articlesVendus.size() * 1.0 / rowPerPage);
 				request.setAttribute("nbreDePage", noOfPages);
-				
+
 			} catch (ArticleVenduManagerException e) {
 				System.err.println(e);
 			}
