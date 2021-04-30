@@ -65,6 +65,10 @@ public class AccueilServlet extends HttpServlet {
 			;
 		}
 
+		
+		if (filtres != null) {
+			request.setAttribute("filtreSaisie",filtres);
+		}
 		if ("achat".equals(radioAchat)) {
 			String[] checkboxAchat = null;
 			if (request.getParameterValues("checkboxAchat") != null) {
@@ -134,8 +138,11 @@ public class AccueilServlet extends HttpServlet {
 
 			// calcul du nombre de page pour l'affichage
 			noOfPages = (int) Math.ceil(numberResult * 1.0 / rowPerPage);
-			request.setAttribute("nbreDePage", noOfPages);
-
+//			if ( noOfPages == 0 ) {
+//				noOfPages = 1;
+//			}
+//			request.setAttribute("nbreDePage", noOfPages);
+		
 		} catch (ArticleVenduManagerException e) {
 			System.err.println(e);
 		}
@@ -152,13 +159,22 @@ public class AccueilServlet extends HttpServlet {
 
 				// calcul du nombre de page pour l'affichage
 				noOfPages = (int) Math.ceil(articlesVendus.size() * 1.0 / rowPerPage);
-				request.setAttribute("nbreDePage", noOfPages);
+//				if ( noOfPages == 0 ) {
+//					noOfPages = 1;
+//				}
+//				request.setAttribute("nbreDePage", noOfPages);
 
 			} catch (ArticleVenduManagerException e) {
 				System.err.println(e);
 			}
 		}
 
+		if ( noOfPages == 0 ) {
+			noOfPages = 1;
+		}
+		request.setAttribute("nbreDePage", noOfPages);
+
+		
 		// on liste l'ensemble des catégories pour générer le select correspondant
 		request.setAttribute("categories", this.listCategorie());
 

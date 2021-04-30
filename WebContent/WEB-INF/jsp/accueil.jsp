@@ -20,7 +20,7 @@
 				<div class="d-flex">
 					<div class="text-left w-100 searchModule">
 						<input name="filtres" type="search" class="form-control rounded mb-3 rounded" placeholder="${defaultFiltresPlaceHolder!= null ? defaultFiltresPlaceHolder:
-						'&#x1F50D; le nom de l\'article contient'}" aria-label="Search" aria-describedby="search-addon" /> <span class="input-group-text border-0" id="search-addon"> <i class="fas fa-search"></i>
+						'&#x1F50D; le nom de l\'article contient'}" aria-label="Search" aria-describedby="search-addon"  value="${filtreSaisie }"/> <span class="input-group-text border-0" id="search-addon"> <i class="fas fa-search"></i>
 						</span>
 						<div class="block">
 							<label for="categorie">Catégorie </label> <select name="categorie" class="custom-select custom-select-lg mb-3 w-75 float-right">
