@@ -13,7 +13,7 @@ String pseudo = (String) request.getSession().getAttribute("pseudo");
 	<div class="collapse navbar-collapse" id="navbarNav">
 		<ul class="navbar-nav col-md-right ml-auto">
 			<c:choose>
-				<c:when test="${utilisateur != null && utilisateur.pseudo != null}">
+				<c:when test="<%= pseudo != null %>">
 					<li class="nav-item"><a class="nav-link <%=(uri.contains("accueil")) ? "active" : ""%>" aria-current="page" href="<%=path%>/encheres">Encheres</a></li>
 					<li class="nav-item"><a class="nav-link <%=(uri.contains("vendre")) ? "active" : ""%>" href="<%=path%>/nouvelle-vente">Vendre un article</a></li>
 					<li class="nav-item"><a class="nav-link <%=(uri.contains("profil")) ? "active" : ""%>" href="<%=path%>/profil?pseudo=<%=pseudo%>">Mon profil</a></li>

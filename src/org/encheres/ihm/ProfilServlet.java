@@ -25,15 +25,17 @@ public class ProfilServlet extends HttpServlet {
 
 		Boolean isMonProfil = false;
 		try {
-			if(session.getAttribute("pseudo") != null) {
-				Utilisateur utilisateur = this.utilisateurManager.getUtilisateur(pseudo);
-				request.setAttribute("utilisateur", utilisateur);
-				isMonProfil= session.getAttribute("pseudo").equals(pseudo);
-			}
+
+			Utilisateur utilisateur = this.utilisateurManager.getUtilisateur(pseudo);
+			request.setAttribute("utilisateur", utilisateur);
+
+
 		} catch (UtilisateurManagerException e) {
 			System.err.println(e);
 		}
-
+		if(session.getAttribute("pseudo") != null) {
+			isMonProfil= session.getAttribute("pseudo").equals(pseudo);
+		}
 		request.setAttribute("isMonProfil", isMonProfil);
 		request.getRequestDispatcher("/WEB-INF/jsp/profil.jsp").forward(request, response);
 	}
