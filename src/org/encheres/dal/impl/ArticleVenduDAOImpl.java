@@ -73,8 +73,8 @@ public class ArticleVenduDAOImpl implements ArticleVenduDAO {
 	}
 
 	@Override
-	public List<ArticleVendu> selectByFiltre(Integer no_categorie, String nom, Boolean date, Integer no_utilisateur, Boolean process, Boolean start, Boolean finish)
-			throws DALException {
+	public List<ArticleVendu> selectByFiltre(Integer no_categorie, String nom, Boolean date, Integer no_utilisateur,
+			Boolean process, Boolean start, Boolean finish, Integer firstRow, Integer lastRow) throws DALException {
 		List<ArticleVendu> articles = new ArrayList<>();
 
 		Integer position = 1;
@@ -82,6 +82,9 @@ public class ArticleVenduDAOImpl implements ArticleVenduDAO {
 		Integer positionCategorie = null;
 		Integer positionNoUtilisateur = null;
 		String nomByDefault = null;
+		Integer positionFirstRow = null;
+		Integer positionLastRow = null;
+
 
 		String query = "WITH Results_CTE AS ( SELECT a.no_article, a.nom_article, a.description, a.date_debut_encheres, a.date_fin_encheres, a.prix_initial, a.prix_vente, a.photo_nom, a.photo_data, a.no_utilisateur, a.no_categorie, a.no_retrait, u.pseudo, u.nom, u.prenom, u.email, u.telephone, u.rue as rueUTILISATEURS, u.code_postal as code_postalUTILISATEURS, u.ville as villeUTILISATEURS, u.mot_de_passe, u.credit, u.administrateur, u.activer, r.rue as rueRETRAITS, r.code_postal as code_postalRETRAITS, r.ville as villeRETRAITS, c.libelle , ROW_NUMBER() OVER (ORDER BY a.date_debut_encheres ) AS RowNum FROM ARTICLES_VENDUS AS a LEFT JOIN UTILISATEURS AS u ON a.no_utilisateur = u.no_utilisateur LEFT JOIN RETRAITS AS r ON a.no_retrait = r.no_retrait LEFT JOIN CATEGORIES AS c ON a.no_categorie = c.no_categorie WHERE ";
 
@@ -391,5 +394,83 @@ public class ArticleVenduDAOImpl implements ArticleVenduDAO {
 				categorie,
 				retrait
 				);
+	}
+
+	@Override
+	public Integer countSelectByFilter(Integer no_categorie, String nom, Boolean date, Integer no_utilisateur,
+			Boolean process, Boolean start, Boolean finish) throws DALException {
+		List<ArticleVendu> articles = new ArrayList<>();
+		Integer number = null;
+		Integer position = 1;
+		Integer positionNom = null;
+		Integer positionCategorie = null;
+		Integer positionNoUtilisateur = null;
+		String nomByDefault = null;
+		Integer positionFirstRow = null;
+		Integer positionLastRow = null;
+
+		String query = "SELECT Count(*) FROM ARTICLES_VENDUS as a WHERE";
+
+		if (nom == null) {
+			query += " nom_article LIKE ?";
+			nomByDefault = "%";
+			positionNom = position;
+			position++;
+		}
+		if (nom != null) {
+			query += " nom_article LIKE ?";
+			positionNom = position;
+			position++;
+		}
+		if (no_categorie != null) {
+			query += " AND a.no_categorie = ?";
+			positionCategorie = position;
+			position++;
+		}
+		if (date) {
+			query += " AND date_debut_encheres <= getDate() AND date_fin_encheres > getdate()";
+		}
+		if (no_utilisateur != null) {
+			query += " AND a.no_utilisateur = ?";
+			positionNoUtilisateur = position;
+			position++;
+		}
+		if (process) {
+			query += " AND date_debut_encheres < getDate() AND date_fin_encheres > getdate() ";
+		}
+		if (start) {
+			query += " AND date_debut_encheres >= getDate()";
+		}
+		if (finish) {
+			query += " AND date_fin_encheres <= getDate()";
+		}
+
+		try (Connection connection = DAOTools.getConnection();
+				PreparedStatement preparedStatement = connection.prepareStatement(query);) {
+			if (nom != null) {
+				preparedStatement.setString(positionNom, "%" + nom + "%");
+			} else {
+				preparedStatement.setString(positionNom, nomByDefault);
+			}
+			if (no_categorie != null) {
+				preparedStatement.setInt(positionCategorie, no_categorie);
+			}
+			if (no_utilisateur != null) {
+				preparedStatement.setInt(positionNoUtilisateur, no_utilisateur);
+			}
+
+
+			try (ResultSet rs = preparedStatement.executeQuery();) {
+				if (rs.next()) {
+					number = rs.getInt(1);
+				}
+			} catch (SQLException e) {
+				throw new DALException("CountSelect failed - close failed for rs\n" + e);
+			}
+		} catch (SQLException e) {
+			throw new DALException("CounSelectfailed\n" + e);
+		}
+
+		return number;
 	}
 }
