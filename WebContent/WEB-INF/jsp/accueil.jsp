@@ -17,7 +17,7 @@
 			<h4 class="container text-left">Filtres&#8239;:</h4>
 
 			<Form method="get" action="encheres">
-				<div class="d-flex">
+				<div class="d-flex ">
 					<div class="text-left w-100 searchModule">
 						<input name="filtres" type="search" class="form-control rounded mb-3 rounded" placeholder="${defaultFiltresPlaceHolder!= null ? defaultFiltresPlaceHolder:
 						'&#x1F50D; le nom de l\'article contient'}" aria-label="Search" aria-describedby="search-addon"  value="${filtreSaisie }"/> <span class="input-group-text border-0" id="search-addon"> <i class="fas fa-search"></i>
