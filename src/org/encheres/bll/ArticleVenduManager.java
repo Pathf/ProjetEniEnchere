@@ -57,12 +57,12 @@ public class ArticleVenduManager {
 		return articleVendus;
 	}
 
-	public List<ArticleVendu> selectByFiltre(Integer no_categorie, String nom, Boolean date, Integer no_utilisateur,Boolean process, Boolean start, Boolean finish, Integer firstRow, Integer lastRow)
+	public List<ArticleVendu> selectByFiltre(Integer no_categorie, String nom, Boolean date, Integer no_utilisateur,Boolean process, Boolean start, Boolean finish, Integer firstRow, Integer lastRow, Boolean mine)
 			throws ArticleVenduManagerException {
 		List<ArticleVendu> articleVendus = null;
 
 		try {
-			articleVendus = this.articleVenduDAO.selectByFiltre(no_categorie, nom, date, no_utilisateur, process, start,finish, firstRow, lastRow);
+			articleVendus = this.articleVenduDAO.selectByFiltre(no_categorie, nom, date, no_utilisateur, process, start,finish, firstRow, lastRow, mine);
 		} catch (DALException e) {
 			throw new ArticleVenduManagerException("selectByFiltre failed \n " + e);
 		}
@@ -71,12 +71,12 @@ public class ArticleVenduManager {
 	}
 
 	public Integer countSelectByFilter(Integer no_categorie, String nom, Boolean date, Integer no_utilisateur,
-			Boolean process, Boolean start, Boolean finish) throws ArticleVenduManagerException {
+			Boolean process, Boolean start, Boolean finish, Boolean mine) throws ArticleVenduManagerException {
 		Integer number = null;
 
 		try {
 			number = this.articleVenduDAO.countSelectByFilter( no_categorie,  nom,  date,  no_utilisateur,
-					 process,  start,  finish);
+					 process,  start,  finish, mine);
 		} catch (DALException e) {
 			throw new ArticleVenduManagerException("countSelectByFiltre failed\n" + e);
 		}

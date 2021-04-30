@@ -74,7 +74,7 @@ public class ArticleVenduDAOImpl implements ArticleVenduDAO {
 
 	@Override
 	public List<ArticleVendu> selectByFiltre(Integer no_categorie, String nom, Boolean date, Integer no_utilisateur,
-			Boolean process, Boolean start, Boolean finish, Integer firstRow, Integer lastRow) throws DALException {
+			Boolean process, Boolean start, Boolean finish, Integer firstRow, Integer lastRow, Boolean mine) throws DALException {
 		List<ArticleVendu> articles = new ArrayList<>();
 
 		Integer position = 1;
@@ -84,7 +84,7 @@ public class ArticleVenduDAOImpl implements ArticleVenduDAO {
 		String nomByDefault = null;
 		Integer positionFirstRow = null;
 		Integer positionLastRow = null;
-
+		Integer positionMine = null;
 	
 		String query = "WITH Results_CTE AS ( SELECT a.no_article, a.nom_article, a.description, a.date_debut_encheres, a.date_fin_encheres, a.prix_initial, a.prix_vente, a.photo_nom, a.photo_data, a.no_utilisateur, a.no_categorie, a.no_retrait, u.pseudo, u.nom, u.prenom, u.email, u.telephone, u.rue as rueUTILISATEURS, u.code_postal as code_postalUTILISATEURS, u.ville as villeUTILISATEURS, u.mot_de_passe, u.credit, u.administrateur, r.rue as rueRETRAITS, r.code_postal as code_postalRETRAITS, r.ville as villeRETRAITS, c.libelle , ROW_NUMBER() OVER (ORDER BY a.date_debut_encheres ) AS RowNum FROM ARTICLES_VENDUS AS a LEFT JOIN UTILISATEURS AS u ON a.no_utilisateur = u.no_utilisateur LEFT JOIN RETRAITS AS r ON a.no_retrait = r.no_retrait LEFT JOIN CATEGORIES AS c ON a.no_categorie = c.no_categorie WHERE ";
 
@@ -121,6 +121,11 @@ public class ArticleVenduDAOImpl implements ArticleVenduDAO {
 		if (finish) {
 			query += " AND date_fin_encheres <= getDate()";
 		}
+		if(mine) {
+			query += " AND no_article IN (select e.no_article from ENCHERES as e where e.no_utilisateur = ?)";
+			positionMine = position;
+			position++;
+		}
 		if (firstRow != null && lastRow != null) {
 			query += " ) SELECT * FROM Results_CTE WHERE RowNum > ? AND RowNum <= ?";
 			positionFirstRow = position;
@@ -128,7 +133,7 @@ public class ArticleVenduDAOImpl implements ArticleVenduDAO {
 			positionLastRow = position;
 			position++;
 		}
-
+System.out.println(query);
 		try (Connection connection = DAOTools.getConnection();
 				PreparedStatement preparedStatement = connection.prepareStatement(query);) {
 			if (nom != null) {
@@ -141,6 +146,9 @@ public class ArticleVenduDAOImpl implements ArticleVenduDAO {
 			}
 			if (no_utilisateur != null) {
 				preparedStatement.setInt(positionNoUtilisateur, no_utilisateur);
+			}
+			if (mine) {
+				preparedStatement.setInt(positionMine, no_utilisateur);
 			}
 			if (firstRow != null) {
 				preparedStatement.setInt(positionFirstRow, firstRow);
@@ -165,7 +173,7 @@ public class ArticleVenduDAOImpl implements ArticleVenduDAO {
 
 	@Override
 	public Integer countSelectByFilter(Integer no_categorie, String nom, Boolean date, Integer no_utilisateur,
-			Boolean process, Boolean start, Boolean finish) throws DALException {
+			Boolean process, Boolean start, Boolean finish, Boolean mine) throws DALException {
 		List<ArticleVendu> articles = new ArrayList<>();
 		Integer number = null;
 		Integer position = 1;
@@ -175,6 +183,7 @@ public class ArticleVenduDAOImpl implements ArticleVenduDAO {
 		String nomByDefault = null;
 		Integer positionFirstRow = null;
 		Integer positionLastRow = null;
+		Integer positionMine = null;
 
 		String query = "SELECT Count(*) FROM ARTICLES_VENDUS as a WHERE";
 		
@@ -202,6 +211,11 @@ public class ArticleVenduDAOImpl implements ArticleVenduDAO {
 			positionNoUtilisateur = position;
 			position++;
 		}
+		if(mine) {
+			query += " AND no_article in (select no_article from ENCHERES where no_utilisateur = ?)";
+			positionMine = position;
+			position++;
+		}
 		if (process) {
 			query += " AND date_debut_encheres < getDate() AND date_fin_encheres > getdate() ";
 		}
@@ -224,6 +238,9 @@ public class ArticleVenduDAOImpl implements ArticleVenduDAO {
 			}
 			if (no_utilisateur != null) {
 				preparedStatement.setInt(positionNoUtilisateur, no_utilisateur);
+			}
+			if (mine) {
+				preparedStatement.setInt(positionMine, no_utilisateur);
 			}
 			
 

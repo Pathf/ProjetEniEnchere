@@ -126,11 +126,11 @@ public class AccueilServlet extends HttpServlet {
 		// TEST LES FILTRES DEMANDE//
 		try {
 			articlesVendus = this.articleVenduManager.selectByFiltre(categorieInt, filtres, filtreByDateDebut,
-					idUtilisateur, process, start, finish, firstRow, lastRow);
+					idUtilisateur, process, start, finish, firstRow, lastRow,mine);
 			
 
 			numberResult = this.articleVenduManager.countSelectByFilter(categorieInt, filtres, filtreByDateDebut,
-					idUtilisateur, process, start, finish);
+					idUtilisateur, process, start, finish,mine);
 
 			// calcul du nombre de page pour l'affichage
 			noOfPages = (int) Math.ceil(numberResult * 1.0 / rowPerPage);
