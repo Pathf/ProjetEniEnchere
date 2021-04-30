@@ -1,5 +1,6 @@
 package org.encheres.bll;
 
+import java.sql.Date;
 import java.util.List;
 
 import org.encheres.bo.ArticleVendu;
@@ -120,7 +121,7 @@ public class ArticleVenduManager {
 		} catch (DALException e) {
 			throw new ArticleVenduManagerException("delete failed\n" +e);
 		}
-		
+
 	}
 
 	public void suppression(ArticleVendu articleVendu) throws ArticleVenduManagerException {
@@ -136,6 +137,18 @@ public class ArticleVenduManager {
 			this.articleVenduDAO.remove(articleVendu);
 		} catch (DALException e) {
 			throw new ArticleVenduManagerException("suppression failed\n" + e);
+		}
+	}
+
+	// Vend : Recredité le dernier à avoir proposé > supprime les enchere > Supprime les articles
+	public void annuleLesVentesEnCoursDUnUtilisateur(Integer no_utilisateur) throws ArticleVenduManagerException {
+		List<ArticleVendu> utilisateurArticleVendus = this.getListeArticleVenduByUtilisateur(no_utilisateur);
+		for(ArticleVendu articleVendu : utilisateurArticleVendus) {
+			Date dateNow = new Date(System.currentTimeMillis());
+			Date dateFinEnchere = articleVendu.getDate_fin_encheres();
+			if(dateNow.before(dateFinEnchere)) {
+				this.suppression(articleVendu);
+			}
 		}
 	}
 }

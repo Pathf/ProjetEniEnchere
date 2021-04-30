@@ -67,79 +67,84 @@ public class VendreUnArticleServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession session = request.getSession();
 		if (session.getAttribute("pseudo") != null) {
-			Utilisateur utilisateur = null;
-			Categorie categorie = null;
-			String pseudo = (String) session.getAttribute("pseudo");
 			String erreur = null;
-			Date debutEnchere = null;
-			Date finEnchere = null;
-			String article = request.getParameter("article");
-			String description = request.getParameter("description");
-			Integer categorieId = Integer.parseInt(request.getParameter("categorie"));
-			Part filePart = request.getPart("photoArticle");
-			String photoNom = null;
-			byte[] photoData = null;
-			if(filePart != null) {
-				photoNom = filePart.getSubmittedFileName();
-				photoData = this.toByteArray(filePart.getInputStream());
-			}
-			try {
-				debutEnchere = new java.sql.Date(new SimpleDateFormat("yyyy-MM-dd").parse(request.getParameter("debutEnchere")).getTime());
-			} catch (ParseException e) {
-				System.err.println(e);
-			}
-			try {
-				finEnchere = new java.sql.Date(new SimpleDateFormat("yyyy-MM-dd").parse(request.getParameter("finEnchere")).getTime());
-			} catch (ParseException e) {
-				System.err.println(e);
-			}
-			String rue = request.getParameter("rue");
-			String codePostal = request.getParameter("codePostal");
-			String ville = request.getParameter("ville");
-			String miseAPrixString = request.getParameter("miseAPrix");
-			if (miseAPrixString != null && !miseAPrixString.isEmpty()) {
-				Integer miseAPrix = Integer.parseInt(miseAPrixString);
-				if(		article != null && !article.isEmpty() &&
-						description != null && !description.isEmpty() &&
-						categorieId != null &&
-						debutEnchere != null &&
-						rue != null && !rue.isEmpty() &&
-						codePostal != null && !codePostal.isEmpty() &&
-						ville != null && !ville.isEmpty()
-						) {
-					if(finEnchere != null) {
-						if (finEnchere.after(debutEnchere)) {
-							try {
-								utilisateur = this.utilisateurManager.getUtilisateur(pseudo);
-							} catch (UtilisateurManagerException e) {
-								System.err.println(e);
-							}
-							try {
-								categorie = this.categoriesManager.getCategorie(categorieId);
-							} catch (CategorieManagerException e) {
-								System.err.println(e);
-							}
-							Retrait retrait = new Retrait(null, rue, codePostal, ville);
-							ArticleVendu articleVendu = new ArticleVendu(null, article, description, debutEnchere, finEnchere, miseAPrix, null, photoNom, photoData, utilisateur, categorie, retrait);
-							try {
-								this.articleVenduManager.addArticleVendu(articleVendu);
-								response.sendRedirect(request.getContextPath());
-								return;
-							} catch (ArticleVenduManagerException e) {
-								System.err.println(e);
-								erreur = "Une erreur est survenue !";
+			boolean isActiver = ((Utilisateur)session.getAttribute("utilisateur")).isActiver();
+			if(isActiver) {
+				Utilisateur utilisateur = null;
+				Categorie categorie = null;
+				String pseudo = (String) session.getAttribute("pseudo");
+				Date debutEnchere = null;
+				Date finEnchere = null;
+				String article = request.getParameter("article");
+				String description = request.getParameter("description");
+				Integer categorieId = Integer.parseInt(request.getParameter("categorie"));
+				Part filePart = request.getPart("photoArticle");
+				String photoNom = null;
+				byte[] photoData = null;
+				if(filePart != null) {
+					photoNom = filePart.getSubmittedFileName();
+					photoData = this.toByteArray(filePart.getInputStream());
+				}
+				try {
+					debutEnchere = new java.sql.Date(new SimpleDateFormat("yyyy-MM-dd").parse(request.getParameter("debutEnchere")).getTime());
+				} catch (ParseException e) {
+					System.err.println(e);
+				}
+				try {
+					finEnchere = new java.sql.Date(new SimpleDateFormat("yyyy-MM-dd").parse(request.getParameter("finEnchere")).getTime());
+				} catch (ParseException e) {
+					System.err.println(e);
+				}
+				String rue = request.getParameter("rue");
+				String codePostal = request.getParameter("codePostal");
+				String ville = request.getParameter("ville");
+				String miseAPrixString = request.getParameter("miseAPrix");
+				if (miseAPrixString != null && !miseAPrixString.isEmpty()) {
+					Integer miseAPrix = Integer.parseInt(miseAPrixString);
+					if(		article != null && !article.isEmpty() &&
+							description != null && !description.isEmpty() &&
+							categorieId != null &&
+							debutEnchere != null &&
+							rue != null && !rue.isEmpty() &&
+							codePostal != null && !codePostal.isEmpty() &&
+							ville != null && !ville.isEmpty()
+							) {
+						if(finEnchere != null) {
+							if (finEnchere.after(debutEnchere)) {
+								try {
+									utilisateur = this.utilisateurManager.getUtilisateur(pseudo);
+								} catch (UtilisateurManagerException e) {
+									System.err.println(e);
+								}
+								try {
+									categorie = this.categoriesManager.getCategorie(categorieId);
+								} catch (CategorieManagerException e) {
+									System.err.println(e);
+								}
+								Retrait retrait = new Retrait(null, rue, codePostal, ville);
+								ArticleVendu articleVendu = new ArticleVendu(null, article, description, debutEnchere, finEnchere, miseAPrix, null, photoNom, photoData, utilisateur, categorie, retrait);
+								try {
+									this.articleVenduManager.addArticleVendu(articleVendu);
+									response.sendRedirect(request.getContextPath());
+									return;
+								} catch (ArticleVenduManagerException e) {
+									System.err.println(e);
+									erreur = "Une erreur est survenue !";
+								}
+							} else {
+								erreur = "La date de fin de l'enchère ne peut être inferieur à la date de début !";
 							}
 						} else {
-							erreur = "La date de fin de l'enchère ne peut être inferieur à la date de début !";
+							erreur = "La date de fin de l'enchère est obligatoire !";
 						}
 					} else {
-						erreur = "La date de fin de l'enchère est obligatoire !";
+						erreur = "Vous avez oublié de remplir un champ !";
 					}
 				} else {
-					erreur = "Vous avez oublié de remplir un champ !";
+					erreur = "La mise à prix est obligatoire !";
 				}
 			} else {
-				erreur = "La mise à prix est obligatoire !";
+				erreur = "Vous avez été désactiver veuillez contacter l'admin !";
 			}
 			request.setAttribute("erreur", erreur);
 			this.doGet(request, response);

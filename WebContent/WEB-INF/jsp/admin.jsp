@@ -32,27 +32,48 @@
 								<th scope="col">Adresse</th>
 								<th scope="col">Crédit</th>
 								<th scope="col">Admin</th>
-								<th scope="col">Suppression</th>
+								<th scope="col">Activer</th>
+								<th scope="col">Désactiver</th>
+								<th scope="col">Supprimer</th>
 							</tr>
 						</thead>
 						<tbody>
 							<c:forEach var="utilisateur" items="${utilisateurs}">
-								<tr>
-									<th scope="row">${utilisateur.no_utilisateur}</th>
-									<td>${utilisateur.pseudo}</td>
-									<td>${utilisateur.nom}</td>
-									<td>${utilisateur.prenom}</td>
-									<td>${utilisateur.email}</td>
-									<td>${utilisateur.telephone}</td>
-									<td>${utilisateur.rue}&#8239;${utilisateur.code_postal}&#8239;${utilisateur.ville}</td>
-									<td>${utilisateur.credit}</td>
-									<td>${utilisateur.administrateur}</td>
-									<td><c:choose>
-											<c:when test="${!utilisateur.administrateur}">
-												<button type="submit" class="btn btn-danger" name="no_suppression" value="${utilisateur.no_utilisateur}">X</button>
-											</c:when>
-										</c:choose></td>
-								</tr>
+								<c:choose>
+									<c:when test="${utilisateur.pseudo != 'inconnu'}">
+										<tr>
+											<th scope="row">${utilisateur.no_utilisateur}</th>
+											<td>${utilisateur.pseudo}</td>
+											<td>${utilisateur.nom}</td>
+											<td>${utilisateur.prenom}</td>
+											<td>${utilisateur.email}</td>
+											<td>${utilisateur.telephone}</td>
+											<td>${utilisateur.rue}&#8239;${utilisateur.code_postal}&#8239;${utilisateur.ville}</td>
+											<td>${utilisateur.credit}</td>
+											<td>${utilisateur.administrateur}</td>
+											<td>${utilisateur.activer}</td>
+											<td><c:choose>
+													<c:when test="${!utilisateur.administrateur}">
+														<button type="submit" class="btn btn-secondary" name="no_desactivation" value="${utilisateur.no_utilisateur}">
+															<c:choose>
+																<c:when test="${utilisateur.activer}">
+																	D
+																</c:when>
+																<c:otherwise>
+																	A
+																</c:otherwise>
+															</c:choose>
+														</button>
+													</c:when>
+												</c:choose></td>
+											<td><c:choose>
+													<c:when test="${!utilisateur.administrateur}">
+														<button type="submit" class="btn btn-danger" name="no_suppression" value="${utilisateur.no_utilisateur}">X</button>
+													</c:when>
+												</c:choose></td>
+										</tr>
+									</c:when>
+								</c:choose>
 							</c:forEach>
 						</tbody>
 					</table>

@@ -10,7 +10,7 @@ public class BDD {
 	// UTILISATEURS :
 	public static final String UTILISATEURS_TABLENOM = "UTILISATEURS";
 	public static final String[] UTILISATEURS_IDS = new String[]{"no_utilisateur"};
-	public static final String[] UTILISATEURS_CHAMPS = new String[] {"pseudo", "nom", "prenom", "email", "telephone", "rue", "code_postal", "ville", "mot_de_passe", "credit", "administrateur"};
+	public static final String[] UTILISATEURS_CHAMPS = new String[] {"pseudo", "nom", "prenom", "email", "telephone", "rue", "code_postal", "ville", "mot_de_passe", "credit", "administrateur","activer"};
 	public static final String[][] UTILISATEURS_TABLE = new String[][] {new String[] {UTILISATEURS_TABLENOM}, UTILISATEURS_IDS, UTILISATEURS_CHAMPS};
 
 	// RETRAITS :

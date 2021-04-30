@@ -16,21 +16,22 @@ public class Utilisateur {
 	String mot_de_passe;
 	Integer credit;
 	boolean administrateur;
+	boolean activer;
 
 	public Utilisateur() {
-		this(null, null, null, null, null, null, null, null, null, null, null, false);
+		this(null, null, null, null, null, null, null, null, null, null, null, false, true);
 	}
-	
+
 	public Utilisateur(Integer no_utilisateur) {
-		this(no_utilisateur, null, null, null, null, null, null, null, null, null, null, false);
+		this(no_utilisateur, null, null, null, null, null, null, null, null, null, null, false, true);
 	}
 
 	public Utilisateur(Integer no_utilisateur, String pseudo, boolean administrateur) {
-		this(no_utilisateur, pseudo, null, null, null, null, null, null, null, null, null, administrateur);
+		this(no_utilisateur, pseudo, null, null, null, null, null, null, null, null, null, administrateur, true);
 	}
 
 	public Utilisateur(Integer no_utilisateur, String pseudo, String nom, String prenom, String email, String telephone,
-			String rue, String code_postal, String ville, String mot_de_passe, Integer credit, boolean administrateur) {
+			String rue, String code_postal, String ville, String mot_de_passe, Integer credit, boolean administrateur, boolean activer) {
 		this.no_utilisateur = no_utilisateur;
 		this.pseudo = pseudo;
 		this.nom = nom;
@@ -43,6 +44,7 @@ public class Utilisateur {
 		this.mot_de_passe = mot_de_passe;
 		this.credit = credit;
 		this.administrateur = administrateur;
+		this.activer = activer;
 	}
 
 	public Integer getNo_utilisateur() {
@@ -141,6 +143,14 @@ public class Utilisateur {
 		this.administrateur = administrateur;
 	}
 
+	public boolean isActiver() {
+		return this.activer;
+	}
+
+	public void setActiver(boolean activer) {
+		this.activer = activer;
+	}
+
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj) {
@@ -153,6 +163,9 @@ public class Utilisateur {
 			return false;
 		}
 		Utilisateur other = (Utilisateur) obj;
+		if (this.activer != other.activer) {
+			return false;
+		}
 		if (this.administrateur != other.administrateur) {
 			return false;
 		}
@@ -197,6 +210,6 @@ public class Utilisateur {
 		return "Utilisateur [no_utilisateur=" + this.no_utilisateur + ", pseudo=" + this.pseudo + ", nom=" + this.nom + ", prenom="
 				+ this.prenom + ", email=" + this.email + ", telephone=" + this.telephone + ", rue=" + this.rue + ", code_postal="
 				+ this.code_postal + ", ville=" + this.ville + ", mot_de_passe=" + this.mot_de_passe + ", credit=" + this.credit
-				+ ", administrateur=" + this.administrateur + "]";
+				+ ", administrateur=" + this.administrateur + ", activer=" + this.activer + "]";
 	}
 }

@@ -42,6 +42,16 @@ public class UtilisateurManager {
 		return utilisateur;
 	}
 
+	public Utilisateur getUtilisateurByEmail(String email) throws UtilisateurManagerException {
+		Utilisateur utilisateur = null;
+		try {
+			utilisateur = this.utilisateurDAO.selectByEmail(email);
+		} catch (DALException e) {
+			throw new UtilisateurManagerException("getUtilisateurByEmail failed\n" + e);
+		}
+		return utilisateur;
+	}
+
 	public Utilisateur getUtilisateurConnexion(String identifiant, String mdp) throws UtilisateurManagerException {
 		Utilisateur utilisateur = null;
 		try {
@@ -99,5 +109,11 @@ public class UtilisateurManager {
 		} catch (DALException e) {
 			throw new UtilisateurManagerException("Delete failed\n" + e);
 		}
+	}
+
+	public void inverseActiver(Utilisateur utilisateur) throws UtilisateurManagerException {
+		utilisateur.setActiver(!utilisateur.isActiver());
+		this.updateUtilisateur(utilisateur);
+
 	}
 }

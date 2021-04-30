@@ -49,6 +49,7 @@ public class ConnexionServlet extends HttpServlet {
 			}
 			HttpSession session = request.getSession();
 			Utilisateur utilisateurAMetreDansSession = new Utilisateur(utilisateur.getNo_utilisateur(), utilisateur.getPseudo(),utilisateur.getAdministrateur());
+			utilisateurAMetreDansSession.setActiver(utilisateur.isActiver());
 			session.setAttribute("pseudo", utilisateur.getPseudo());
 			session.setAttribute("id", utilisateur.getNo_utilisateur());
 			session.setAttribute("utilisateur", utilisateurAMetreDansSession);

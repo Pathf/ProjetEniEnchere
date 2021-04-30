@@ -98,53 +98,58 @@ public class EncherirServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession session = request.getSession();
 		if (session.getAttribute("pseudo") != null) {
-			String pseudo = (String) session.getAttribute("pseudo");
-			Utilisateur utilisateur = null;
-			boolean meilleurEnchereNotNull = false;
 			String erreur = null;
-			String propositionString = request.getParameter("proposition");
-			Integer articleId = Integer.parseInt(request.getParameter("id"));
-			if (propositionString != null && !propositionString.isEmpty()) {
-				Integer proposition = Integer.parseInt(propositionString);
-				Enchere meilleurEnchere = null;
-				ArticleVendu articleVendu = null;
-				try {
-					meilleurEnchere = this.enchereManager.getMeilleurEnchereByArticle(articleId);
-					if(meilleurEnchere != null) {
-						meilleurEnchereNotNull = true;
-					}
-					utilisateur = this.utilisateurManager.getUtilisateur(pseudo);
-					articleVendu = this.articleVenduManager.getArticleVendu(articleId);
-					if (this.isCreditable(proposition, utilisateur)) {
-						Date date = new Date(this.calendar.getTime().getTime());
-						Enchere nouvelleEnchere = new Enchere(null, date, proposition, articleVendu, utilisateur);
-						if (meilleurEnchereNotNull) {
-							if(proposition > meilleurEnchere.getMontant_enchere()) {
-								try {
-									this.enchereManager.updateEncher(nouvelleEnchere);
-								} catch (EnchereManagerException e) {
-								}
-							}else {
-								erreur ="Votre proposition n'est pas valable !";
-							}
-						} else {
-							if(proposition >= articleVendu.getPrix_initial()) {
-								try {
-									this.enchereManager.addEnchere(nouvelleEnchere);
-								} catch (EnchereManagerException e) {
+			boolean isActiver = ((Utilisateur)session.getAttribute("utilisateur")).isActiver();
+			if(isActiver) {
+				String pseudo = (String) session.getAttribute("pseudo");
+				Utilisateur utilisateur = null;
+				boolean meilleurEnchereNotNull = false;
+				String propositionString = request.getParameter("proposition");
+				Integer articleId = Integer.parseInt(request.getParameter("id"));
+				if (propositionString != null && !propositionString.isEmpty()) {
+					Integer proposition = Integer.parseInt(propositionString);
+					Enchere meilleurEnchere = null;
+					ArticleVendu articleVendu = null;
+					try {
+						meilleurEnchere = this.enchereManager.getMeilleurEnchereByArticle(articleId);
+						if(meilleurEnchere != null) {
+							meilleurEnchereNotNull = true;
+						}
+						utilisateur = this.utilisateurManager.getUtilisateur(pseudo);
+						articleVendu = this.articleVenduManager.getArticleVendu(articleId);
+						if (this.isCreditable(proposition, utilisateur)) {
+							Date date = new Date(this.calendar.getTime().getTime());
+							Enchere nouvelleEnchere = new Enchere(null, date, proposition, articleVendu, utilisateur);
+							if (meilleurEnchereNotNull) {
+								if(proposition > meilleurEnchere.getMontant_enchere()) {
+									try {
+										this.enchereManager.updateEncher(nouvelleEnchere);
+									} catch (EnchereManagerException e) {
+									}
+								}else {
+									erreur ="Votre proposition n'est pas valable !";
 								}
 							} else {
-								erreur ="Votre proposition n'est pas valable !";
+								if(proposition >= articleVendu.getPrix_initial()) {
+									try {
+										this.enchereManager.addEnchere(nouvelleEnchere);
+									} catch (EnchereManagerException e) {
+									}
+								} else {
+									erreur ="Votre proposition n'est pas valable !";
+								}
 							}
+						} else {
+							erreur ="Vous n'avez pas assez de crédits !";
 						}
-					} else {
-						erreur ="Vous n'avez pas assez de crédits !";
+					} catch (EnchereManagerException | UtilisateurManagerException | ArticleVenduManagerException e) {
+						System.err.println(e);
 					}
-				} catch (EnchereManagerException | UtilisateurManagerException | ArticleVenduManagerException e) {
-					System.err.println(e);
+				} else {
+					erreur = "Veuillez faire une proposition !";
 				}
 			} else {
-				erreur = "Veuillez faire une proposition !";
+				erreur = "Vous avez été désactiver veuillez contacter l'admin !";
 			}
 			request.setAttribute("erreur", erreur);
 			this.doGet(request, response);

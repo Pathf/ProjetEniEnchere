@@ -42,7 +42,7 @@
 						<label class="mr-1" for="souvenir"> Se souvenir de moi</label>
 					</div>
 					<div class="row">
-						<a href="">Mot de passe oublié</a>
+						<a href="oubliemdp">Mot de passe oublié</a>
 					</div>
 				</div>
 			</div> 

@@ -1,5 +1,6 @@
 package org.encheres.bll;
 
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -158,6 +159,23 @@ public class EnchereManager {
 			this.enchereDAO.remove(enchere);
 		} catch (DALException e) {
 			throw new EnchereManagerException("suppressionDesEncheres failed - failed de la suppression de l'enchere : " + enchere + "\n" + e);
+		}
+	}
+
+	// Proposition :
+	public void annulerLesPropositionsDEnchereEnCours(Integer no_utilisateur) throws EnchereManagerException {
+		List<Enchere> encheresPosteParUtilisateurS = this.getListeEnchere(no_utilisateur);
+		for(Enchere enchere : encheresPosteParUtilisateurS) {
+			Date dateNow = new Date(System.currentTimeMillis());
+			Date dateFinEnchere = enchere.getArticle().getDate_fin_encheres();
+			if(dateNow.before(dateFinEnchere) || dateNow.toString().equals(dateFinEnchere.toString())) {
+				Enchere meilleureEnchere = this.getMeilleurEnchereByArticle(enchere.getArticle().getNo_article());
+				if(meilleureEnchere.getNo_enchere() == enchere.getNo_enchere()) {
+					this.suppressionDeLaMeilleureEnchere(enchere);
+				} else {
+					this.suppressionDeLaProposition(enchere);
+				}
+			}
 		}
 	}
 }
