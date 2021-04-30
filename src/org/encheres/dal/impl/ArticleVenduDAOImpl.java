@@ -406,8 +406,8 @@ public class ArticleVenduDAOImpl implements ArticleVenduDAO {
 		Integer positionCategorie = null;
 		Integer positionNoUtilisateur = null;
 		String nomByDefault = null;
-		Integer positionFirstRow = null;
-		Integer positionLastRow = null;
+		//Integer positionFirstRow = null;
+		//Integer positionLastRow = null;
 
 		String query = "SELECT Count(*) FROM ARTICLES_VENDUS as a WHERE";
 
