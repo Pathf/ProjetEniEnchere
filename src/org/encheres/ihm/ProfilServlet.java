@@ -22,17 +22,18 @@ public class ProfilServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession session = request.getSession();
 		String pseudo = request.getParameter("pseudo");
-		Utilisateur utilisateur = null;
+
 		Boolean isMonProfil = false;
 		try {
-			utilisateur = this.utilisateurManager.getUtilisateur(pseudo);
+			if(session.getAttribute("pseudo") != null) {
+				Utilisateur utilisateur = this.utilisateurManager.getUtilisateur(pseudo);
+				request.setAttribute("utilisateur", utilisateur);
+				isMonProfil= session.getAttribute("pseudo").equals(pseudo);
+			}
 		} catch (UtilisateurManagerException e) {
 			System.err.println(e);
 		}
-		if (session.getAttribute("pseudo") != null) {
-			isMonProfil= session.getAttribute("pseudo").equals(pseudo);
-		}
-		request.setAttribute("utilisateur", utilisateur);
+
 		request.setAttribute("isMonProfil", isMonProfil);
 		request.getRequestDispatcher("/WEB-INF/jsp/profil.jsp").forward(request, response);
 	}

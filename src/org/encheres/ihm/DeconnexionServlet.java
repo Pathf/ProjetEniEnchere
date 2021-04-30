@@ -18,6 +18,8 @@ public class DeconnexionServlet extends HttpServlet {
 		request.getSession().removeAttribute("pseudo");
 		request.getSession().setAttribute("id", "");
 		request.getSession().removeAttribute("id");
+		request.getSession().setAttribute("utilisateur", null);
+		request.getSession().removeAttribute("utilisateur");
 		request.getSession().invalidate();
 		response.sendRedirect(request.getContextPath());
 	}
