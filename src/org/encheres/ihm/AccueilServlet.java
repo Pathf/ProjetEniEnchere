@@ -22,6 +22,7 @@ import org.encheres.bo.Categorie;
 @WebServlet("/encheres")
 public class AccueilServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+	
 	private ArticleVenduManager articleVenduManager = ArticleVenduManager.getInstance();
 	private CategoriesManager categorieManager = CategoriesManager.getInstance();
 
@@ -52,6 +53,7 @@ public class AccueilServlet extends HttpServlet {
 		Integer rowPerPage = 6; // nbre de retour par page
 		Integer lastRow = 6;
 
+		// vérif de la page demandé
 		if (request.getParameter("page") != null) {
 			firstRow = Integer.parseInt(request.getParameter("page")) * rowPerPage;
 			lastRow = Integer.parseInt(request.getParameter("page")) * rowPerPage + rowPerPage;
@@ -62,13 +64,11 @@ public class AccueilServlet extends HttpServlet {
 			if (!filtres.matches("[a-zA-Z0-9]+")) {
 				filtres = null;
 			}
+			request.setAttribute("filtreSaisie",filtres);
 			;
 		}
 
 		
-		if (filtres != null) {
-			request.setAttribute("filtreSaisie",filtres);
-		}
 		if ("achat".equals(radioAchat)) {
 			String[] checkboxAchat = null;
 			if (request.getParameterValues("checkboxAchat") != null) {
@@ -138,10 +138,7 @@ public class AccueilServlet extends HttpServlet {
 
 			// calcul du nombre de page pour l'affichage
 			noOfPages = (int) Math.ceil(numberResult * 1.0 / rowPerPage);
-//			if ( noOfPages == 0 ) {
-//				noOfPages = 1;
-//			}
-//			request.setAttribute("nbreDePage", noOfPages);
+
 		
 		} catch (ArticleVenduManagerException e) {
 			System.err.println(e);
@@ -159,10 +156,6 @@ public class AccueilServlet extends HttpServlet {
 
 				// calcul du nombre de page pour l'affichage
 				noOfPages = (int) Math.ceil(articlesVendus.size() * 1.0 / rowPerPage);
-//				if ( noOfPages == 0 ) {
-//					noOfPages = 1;
-//				}
-//				request.setAttribute("nbreDePage", noOfPages);
 
 			} catch (ArticleVenduManagerException e) {
 				System.err.println(e);

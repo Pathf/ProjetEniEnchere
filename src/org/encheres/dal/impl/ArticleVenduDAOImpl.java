@@ -104,7 +104,7 @@ public class ArticleVenduDAOImpl implements ArticleVenduDAO {
 			positionCategorie = position;
 			position++;
 		}
-		if (date == true) {
+		if (date ) {
 			query += " AND date_debut_encheres <= getDate() AND date_fin_encheres > getdate()";
 		}
 		if (no_utilisateur != null) {
