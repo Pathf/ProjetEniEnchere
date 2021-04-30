@@ -26,12 +26,12 @@ public class EnchereDAOImpl implements EnchereDAO {
 	private static final String SQLSELECT_UTILISATEUR = "SELECT * FROM ENCHERES as e INNER JOIN ARTICLES_VENDUS as a ON e.no_article = a.no_article INNER JOIN UTILISATEURS as u ON e.no_utilisateur = u.no_utilisateur WHERE e.no_utilisateur=?";
 	private static final String SQLSELECT_ARTICLE = SQLRequete.select(null, BDD.ENCHERES_TABLENOM, BDD.ARTICLESVENDUS_IDS);
 	private static final String SQLSELECT_MEILLEUR_ARTICLE = "SELECT e.no_enchere, e.date_enchere, MAX(e.montant_enchere) as montant_enchere, e.no_article, e.no_utilisateur, \r\n" +
-			"u.no_utilisateur, u.pseudo, u.nom, u.prenom, u.email, u.telephone, u.rue, u.code_postal, u.ville, u.mot_de_passe, u.credit, u.administrateur\r\n" +
+			"u.no_utilisateur, u.pseudo, u.nom, u.prenom, u.email, u.telephone, u.rue, u.code_postal, u.ville, u.mot_de_passe, u.credit, u.administrateur, u.activer\r\n" +
 			"FROM ENCHERES as e\r\n" +
 			"INNER JOIN UTILISATEURS as u ON e.no_utilisateur = u.no_utilisateur\r\n" +
 			"WHERE e.no_article=? AND e.montant_enchere = (SELECT MAX(montant_enchere) FROM ENCHERES WHERE ENCHERES.no_article=?)\r\n" +
 			"GROUP BY e.no_enchere, e.date_enchere, e.montant_enchere, e.no_article, e.no_utilisateur, \r\n" +
-			"u.no_utilisateur , u.pseudo, u.nom, u.prenom, u.email, u.telephone, u.rue, u.code_postal, u.ville, u.mot_de_passe, u.credit, u.administrateur";
+			"u.no_utilisateur , u.pseudo, u.nom, u.prenom, u.email, u.telephone, u.rue, u.code_postal, u.ville, u.mot_de_passe, u.credit, u.administrateur, u.activer";
 	private static final String SQLINSERT = SQLRequete.insert(BDD.ENCHERES_TABLENOM, BDD.ENCHERES_CHAMPS);
 	private static final String SQLUPDATE = SQLRequete.update(BDD.ENCHERES_TABLENOM, BDD.ENCHERES_CHAMPS, BDD.ENCHERES_IDS);
 	private static final String SQLDELETE = SQLRequete.delete(BDD.ENCHERES_TABLENOM, BDD.ENCHERES_IDS);
